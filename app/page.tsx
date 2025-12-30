@@ -12,8 +12,14 @@ import {
   Star, Film, Wrench, Briefcase, Smartphone, Car, Rainbow,
   FolderOpen, UserSearch, Users, Target, RefreshCw, Gamepad, Drama,
   Sparkles as SparklesIcon, PenTool, Box, CreditCard, MessageSquare,
-  Mic, Hand, AlertCircle, Flame, BookOpen
+  Mic, Hand, AlertCircle, Flame, BookOpen, Download, Share
 } from "lucide-react"
+
+// Interfaz para el evento de instalación PWA
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+}
 
 // Helper function to generate a stable hash from string
 const hashString = (str: string): number => {
@@ -718,6 +724,13 @@ export default function ImpostorGame() {
   const [aiPrompt, setAiPrompt] = useState("")
   const [isGenerating, setIsGenerating] = useState(false)
   const [isEditingExisting, setIsEditingExisting] = useState(false)
+  
+  // PWA Install States
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
+  const [isInstallable, setIsInstallable] = useState(false)
+  const [isIOS, setIsIOS] = useState(false)
+  const [isStandalone, setIsStandalone] = useState(false)
+  const [showIOSInstructions, setShowIOSInstructions] = useState(false)
 
   // Cargar categorías personalizadas al iniciar
   useEffect(() => {
@@ -728,6 +741,38 @@ export default function ImpostorGame() {
       } catch (error) {
         console.error('Error loading custom categories:', error)
       }
+    }
+  }, [])
+
+  // PWA Install Detection
+  useEffect(() => {
+    // Detectar si es iOS
+    const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream
+    setIsIOS(isIOSDevice)
+
+    // Detectar si ya está instalado como PWA
+    const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches || 
+                               (window.navigator as any).standalone === true
+    setIsStandalone(isInStandaloneMode)
+
+    // Escuchar el evento beforeinstallprompt (Chrome, Edge, etc.)
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault()
+      setDeferredPrompt(e as BeforeInstallPromptEvent)
+      setIsInstallable(true)
+    }
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+
+    // Detectar cuando la app fue instalada
+    window.addEventListener('appinstalled', () => {
+      setIsInstallable(false)
+      setDeferredPrompt(null)
+      setIsStandalone(true)
+    })
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
     }
   }, [])
 
@@ -848,6 +893,25 @@ export default function ImpostorGame() {
     setCurrentPalette(paletteName)
   }
 
+  // Función para instalar PWA
+  const handleInstallClick = async () => {
+    if (isIOS) {
+      // En iOS mostramos las instrucciones
+      setShowIOSInstructions(true)
+      return
+    }
+
+    if (!deferredPrompt) return
+
+    // Mostrar el prompt de instalación
+    deferredPrompt.prompt()
+    const { outcome } = await deferredPrompt.userChoice
+    
+    if (outcome === 'accepted') {
+      setIsInstallable(false)
+    }
+    setDeferredPrompt(null)
+  }
 
   const deleteCustomCategory = (categoryName: string) => {
     setCustomCategories(prev => {
@@ -1252,9 +1316,53 @@ export default function ImpostorGame() {
       <div className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden">
         <DoodleStars />
         <DoodleCircles />
+        
+        {/* Modal de instrucciones para iOS */}
+        {showIOSInstructions && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <Card className="w-full max-w-sm">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-title font-bold text-foreground flex items-center gap-2">
+                    <DoodleIcon icon={Smartphone} size={24} thick uniqueId="ios-modal" />
+                    Instalar en iPhone/iPad
+                  </h3>
+                  <Button variant="ghost" size="icon" onClick={() => setShowIOSInstructions(false)}>
+                    <X className="h-5 w-5" />
+                  </Button>
+                </div>
+                <div className="space-y-4 text-sm text-muted-foreground">
+                  <div className="flex items-start gap-3">
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">1</span>
+                    <p>Toca el botón <Share className="inline h-4 w-4 mx-1" /> <strong>Compartir</strong> en la barra de Safari</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">2</span>
+                    <p>Desliza hacia abajo y toca <strong>"Agregar a pantalla de inicio"</strong></p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">3</span>
+                    <p>Toca <strong>"Agregar"</strong> y ¡listo!</p>
+                  </div>
+                </div>
+                <Button onClick={() => setShowIOSInstructions(false)} className="w-full mt-6">
+                  ¡Entendido!
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+        
         <Card className="w-full max-w-2xl relative z-10 flex flex-col max-h-[90vh]">
           <CardContent className="p-4 md:p-6 flex flex-col flex-1 min-h-0">
-            <div className="flex justify-end mb-2 flex-shrink-0">
+            <div className="flex justify-end mb-2 flex-shrink-0 gap-2">
+              {/* Botón de instalación PWA */}
+              {!isStandalone && (isInstallable || isIOS) && (
+                <Button variant="ghost" size="sm" onClick={handleInstallClick} className="gap-2">
+                  <Download className="h-4 w-4" />
+                  <span className="hidden sm:inline">Instalar App</span>
+                </Button>
+              )}
               <Button variant="ghost" size="sm" onClick={openThemeSettings} className="gap-2">
                 <Palette className="h-4 w-4" />
                 Tema

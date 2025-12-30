@@ -44,3 +44,4 @@ Disallow: /_next/image
 # Host preferido
 Host: https://impostor.pablocarvalho.dev
 
+
