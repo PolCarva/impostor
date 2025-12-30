@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { GoogleGenerativeAI } from "@google/generative-ai"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
 import { X, Plus, Check, Settings, Palette, Sparkles, Loader2, Edit } from "lucide-react"
 
@@ -484,6 +485,7 @@ export default function ImpostorGame() {
     }
   }
 
+
   const removeWordFromCategory = (index: number) => {
     setEditingCategoryWords(prev => prev.filter((_, i) => i !== index))
   }
@@ -495,7 +497,7 @@ export default function ImpostorGame() {
   }
 
   const generateWordsWithAI = async (prompt: string) => {
-    if (!prompt.trim() || prompt.length > 100) return
+    if (!prompt.trim() || prompt.length > 200) return
 
     // Verificar que la API key esté configurada
     if (!process.env.NEXT_PUBLIC_GEMINI_API_KEY) {
@@ -754,18 +756,18 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
               })}
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex flex-col md:flex-row items-stretch gap-3">
               <Button
                 variant="outline"
                 onClick={openCustomTheme}
-                className="flex-1 bg-background border-border hover:bg-muted"
+                className="flex-1 py-5 md:py-0 bg-background border-border hover:bg-muted"
                 size="lg"
               >
                 🎨 Tema Personalizado
               </Button>
               <Button
                 onClick={closeThemeSettings}
-                className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
+                className="flex-1 py-5 md:py-0 bg-primary text-primary-foreground hover:bg-primary/90"
                 size="lg"
               >
                 Aplicar y Continuar
@@ -836,7 +838,7 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               {/* Panel de controles */}
-              <div className="space-y-4 md:space-y-6">
+              <div className="space-y-6 md:space-y-4">
                 {colorGroups.map((group) => (
                   <div key={group.title} className="space-y-3">
                     <h3 className="text-lg font-semibold text-foreground">{group.title}</h3>
@@ -998,54 +1000,52 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
       <div className="min-h-screen flex items-center justify-center p-4 bg-background">
         <Card className="w-full max-w-4xl bg-card border-border">
           <CardContent className="p-2 md:p-6 lg:p-8">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2">
-                <h1 className="text-3xl font-bold text-primary text-balance">
-                  {isEditingExisting ? "Editar Categoría" : "Crear Nueva Categoría"}
-                </h1>
-              </div>
-              <Button variant="ghost" size="icon" onClick={cancelEditCategory} className="hover:bg-muted">
-                <X className="h-5 w-5" />
+            <div className="flex items-center justify-between mb-6 md:mb-4">
+              <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-primary text-balance">
+                {isEditingExisting ? "Editar Categoría" : "Crear Nueva Categoría"}
+              </h1>
+              <Button variant="ghost" size="icon" onClick={cancelEditCategory} className="hover:bg-muted h-10 w-10">
+                <X className="h-4 w-4 md:h-5 md:w-5" />
               </Button>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-6 md:space-y-4">
               {/* Nombre de la categoría */}
               <div>
-                <label className="text-sm font-medium text-foreground mb-2 block">
+                <label className="text-base md:text-sm font-medium text-foreground mb-3 md:mb-2 block">
                   Nombre de la categoría:
                 </label>
                 <Input
                   placeholder="Ej: Personajes Familiares, Dibujos Animados..."
                   value={editingCategoryName}
                   onChange={(e) => setEditingCategoryName(e.target.value)}
-                  className="bg-background border-border text-base"
+                  className="bg-background border-border text-base py-3"
                 />
               </div>
 
               {/* Generación con IA */}
-              <div className="bg-muted/30 p-4 rounded-lg border border-border">
-                <h3 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
-                  <Sparkles className="h-5 w-5" />
+              <div className="bg-muted/30 p-4 md:p-3 rounded-lg border border-border">
+                <h3 className="text-lg md:text-base font-semibold text-foreground mb-3 md:mb-2 flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 md:h-5 md:w-5" />
                   Asistente de IA (Opcional)
                 </h3>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-sm md:text-xs text-muted-foreground mb-4 md:mb-3">
                   Usa la IA para generar sugerencias de palabras automáticamente
                 </p>
 
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="Ej: 'personajes de Naruto', 'tubérculos', 'capitales de países', 'marcas de autos'..."
+                <div className="flex flex-col gap-2">
+                  <Textarea
+                    placeholder="Describe el tema para generar palabras...&#10;&#10;Ejemplos:&#10;'personajes de Naruto'&#10;'tipos de verduras'&#10;'marcas de autos deportivos'&#10;'países de Sudamérica'"
                     value={aiPrompt}
-                    onChange={(e) => setAiPrompt(e.target.value.slice(0, 100))}
-                    className="flex-1 bg-background border-border"
+                    onChange={(e) => setAiPrompt(e.target.value.slice(0, 200))}
+                    className="flex-1 bg-background border-border min-h-[80px] resize-none"
                     disabled={isGenerating}
                   />
-                  <div className="flex gap-2">
+                  <div className="flex justify-end">
                     <Button
                       onClick={() => generateWordsWithAI(aiPrompt)}
-                      disabled={!aiPrompt.trim() || aiPrompt.length > 100 || isGenerating}
-                      className="bg-primary text-primary-foreground hover:bg-primary/90"
+                      disabled={!aiPrompt.trim() || aiPrompt.length > 200 || isGenerating}
+                      className="bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-2"
                       title="Generar palabras con IA"
                     >
                       {isGenerating ? (
@@ -1068,15 +1068,15 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
 
               {/* Lista de palabras */}
               <div>
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-lg font-semibold text-foreground">
+                <div className="flex flex-col items-center justify-between mb-3 md:mb-2">
+                  <h3 className="text-lg md:text-base font-semibold text-foreground">
                     Palabras ({editingCategoryWords.length})
                   </h3>
-                  <div className="flex flex-col sm:flex-row gap-2">
+                  <div className="flex flex-col w-full gap-2">
                     <Input
                       id="add-word-input"
                       placeholder="Nueva palabra..."
-                      className="flex-1 bg-background border-border"
+                      className="min-w-40 bg-background border-border"
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           const input = e.target as HTMLInputElement
@@ -1093,55 +1093,56 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
                           input.value = ''
                         }
                       }}
-                      className="bg-secondary text-secondary-foreground hover:bg-secondary/90 px-4 py-2"
+                      size="sm"
+                      className="bg-secondary text-secondary-foreground hover:bg-secondary/90"
                     >
-                      <Plus className="h-4 w-4 mr-1 sm:mr-2" />
-                      <span className="hidden sm:inline">Agregar</span>
+                      <Plus className="h-4 w-4" />
+                      Agregar
                     </Button>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 max-h-96 overflow-y-auto">
                   {editingCategoryWords.map((word, index) => (
-                    <div key={index} className="flex items-center gap-1 p-2 bg-muted rounded-lg">
+                    <div key={index} className="flex items-center gap-1 p-3 md:p-2 bg-muted rounded-lg">
                       <Input
                         value={word}
                         onChange={(e) => updateWordInCategory(index, e.target.value)}
-                        className="flex-1 h-8 text-sm bg-background border-border"
+                        className="flex-1 h-10 md:h-9 text-base md:text-sm bg-background border-border py-3 md:py-2"
                       />
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => removeWordFromCategory(index)}
-                        className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                        className="h-10 w-10 md:h-9 md:w-9 p-0 text-muted-foreground hover:text-destructive"
                       >
-                        <X className="h-3 w-3" />
+                        <X className="h-3 w-3 md:h-4 md:w-4" />
                       </Button>
                     </div>
                   ))}
                 </div>
 
                 {editingCategoryWords.length === 0 && (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <p>No hay palabras aún.</p>
-                    <p className="text-sm">Usa la IA o agrega palabras manualmente.</p>
+                  <div className="text-center py-8 md:py-6 text-muted-foreground">
+                    <p className="text-base md:text-sm">No hay palabras aún.</p>
+                    <p className="text-sm md:text-xs">Usa la IA o agrega palabras manualmente.</p>
                   </div>
                 )}
               </div>
 
               {/* Botones de acción */}
-              <div className="flex flex-col sm:flex-row gap-3 pt-4">
+              <div className="flex flex-col sm:flex-row gap-3 md:gap-2 pt-4 md:pt-3">
                 <Button
                   variant="outline"
                   onClick={cancelEditCategory}
-                  className="flex-1 bg-background border-border hover:bg-muted py-3 text-base"
+                  className="flex-1 bg-background border-border hover:bg-muted py-4 md:py-3 text-base min-h-[48px]"
                 >
                   Cancelar
                 </Button>
                 <Button
                   onClick={saveCustomCategory}
                   disabled={!editingCategoryName.trim() || editingCategoryWords.length === 0}
-                  className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 py-3 text-base"
+                  className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 py-4 md:py-3 text-base min-h-[48px]"
                 >
                   {isEditingExisting ? "Guardar Cambios" : "Crear Categoría"}
                 </Button>
@@ -1251,19 +1252,18 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
             )}
 
              {/* Crear Nueva Categoría Personalizada */}
-             <div className="bg-muted/30 p-6 rounded-lg border-2 border-dashed border-border text-center">
-               <h3 className="text-lg font-semibold text-foreground mb-2">
+             <div className="bg-muted/30 p-6 md:p-4 rounded-lg border-2 border-dashed border-border text-center">
+               <h3 className="text-lg md:text-base font-semibold text-foreground mb-3 md:mb-2">
                  Crear Nueva Categoría Personalizada
                </h3>
-               <p className="text-sm text-muted-foreground mb-4">
+               <p className="text-sm md:text-xs text-muted-foreground mb-4 md:mb-3">
                  Crea tu propia categoría con palabras personalizadas
                </p>
                <Button
                  onClick={openCreateCustomCategory}
-                 className="bg-primary text-primary-foreground hover:bg-primary/90"
-                 size="lg"
+                 className="bg-primary text-primary-foreground hover:bg-primary/90 py-4 md:py-3 px-6 text-base"
                >
-                 <Plus className="h-5 w-5 mr-2" />
+                 <Plus className="h-4 w-4 md:h-5 md:w-5 mr-2" />
                  Crear Categoría
                </Button>
              </div>
