@@ -1,0 +1,74 @@
+{
+  "name": "El Impostor - Juego de Fiesta",
+  "short_name": "El Impostor",
+  "description": "¡El mejor juego de fiesta gratis! Descubre quién es el impostor entre tus amigos. Perfecto para grupos de 3 a 20 jugadores.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8e8ef",
+  "theme_color": "#f8e8ef",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "es",
+  "dir": "ltr",
+  "categories": ["games", "entertainment", "social"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-light-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-dark-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "label": "El Impostor - Pantalla principal del juego"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Jugar Ahora",
+      "short_name": "Jugar",
+      "description": "Comienza una nueva partida del Impostor",
+      "url": "/",
+      "icons": [
+        {
+          "src": "/icon.svg",
+          "sizes": "any"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "share_target": {
+    "action": "/",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
+}
+

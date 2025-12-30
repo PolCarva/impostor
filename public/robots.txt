@@ -1,0 +1,46 @@
+# robots.txt para El Impostor - Juego de Fiesta
+# https://impostor.pablocarvalho.dev
+
+# Permitir todos los crawlers
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://impostor.pablocarvalho.dev/sitemap.xml
+
+# Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# Google Images
+User-agent: Googlebot-Image
+Allow: /
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Yandex
+User-agent: Yandex
+Allow: /
+Crawl-delay: 2
+
+# DuckDuckGo
+User-agent: DuckDuckBot
+Allow: /
+
+# Baidu
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 2
+
+# Archivos que no necesitan indexación
+Disallow: /api/
+Disallow: /_next/static/
+Disallow: /_next/image
+
+# Host preferido
+Host: https://impostor.pablocarvalho.dev
+
