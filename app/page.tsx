@@ -719,8 +719,8 @@ export default function ImpostorGame() {
     if (!prompt.trim() || prompt.length > 200) return
 
     // Verificar que la API key esté configurada
-    if (!process.env.NEXT_PUBLIC_GEMINI_API_KEY) {
-      alert('❌ API Key no configurada\n\nPor favor configura tu API key de Gemini:\n1. Ve a: https://makersuite.google.com/app/apikey\n2. Crea una API key gratuita\n3. Agrega al archivo .env.local:\n   NEXT_PUBLIC_GEMINI_API_KEY=tu_clave_aqui\n\n¡Sin la API key, la IA no funcionará!')
+    if (!process.env.GEMINI_API_KEY) {
+      alert('❌ API Key no configurada\n\nPor favor configura tu API key de Gemini:\n1. Ve a: https://makersuite.google.com/app/apikey\n2. Crea una API key gratuita\n3. Agrega al archivo .env.local:\n   GEMINI_API_KEY=tu_clave_aqui\n\n¡Sin la API key, la IA no funcionará!')
       return
     }
 
@@ -740,7 +740,7 @@ export default function ImpostorGame() {
         let genAI
         try {
           // Método 1: Cliente básico
-          genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!)
+          genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
         } catch (clientError) {
           console.warn(`❌ Error creando cliente para ${modelName}:`, clientError.message)
           continue
@@ -991,9 +991,9 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
                       )}
                     </Button>
                   </div>
-                  {!process.env.NEXT_PUBLIC_GEMINI_API_KEY && (
+                  {!process.env.GEMINI_API_KEY && (
                     <div className="text-xs text-orange-600 bg-orange-50 p-2 rounded border border-orange-200">
-                      ⚠️ API key de Gemini no configurada. La IA no funcionará hasta que agregues NEXT_PUBLIC_GEMINI_API_KEY en .env.local
+                      ⚠️ API key de Gemini no configurada. La IA no funcionará hasta que agregues GEMINI_API_KEY en .env.local
                     </div>
                   )}
                 </div>
