@@ -718,123 +718,56 @@ export default function ImpostorGame() {
   const generateWordsWithAI = async (prompt: string) => {
     if (!prompt.trim() || prompt.length > 200) return
 
-    // Verificar que la API key esté configurada
-    if (!process.env.GEMINI_API_KEY) {
-      alert('❌ API Key no configurada\n\nPor favor configura tu API key de Gemini:\n1. Ve a: https://makersuite.google.com/app/apikey\n2. Crea una API key gratuita\n3. Agrega al archivo .env.local:\n   GEMINI_API_KEY=tu_clave_aqui\n\n¡Sin la API key, la IA no funcionará!')
-      return
-    }
-
     setIsGenerating(true)
 
-    // Lista de modelos a probar - basado en código que funciona en producción
-    // Prioridad: modelo probado -> alternativas
-    const modelsToTry = ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-pro", "gemini-1.0-pro"]
+    try {
+      console.log('🚀 Llamando a API route para generar palabras...')
 
-    let success = false
+      const response = await fetch('/api/generate-words', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt }),
+      })
 
-    for (const modelName of modelsToTry) {
-      try {
-        console.log(`🔄 Probando modelo: ${modelName}`)
-
-        // Intentar crear el cliente de diferentes maneras
-        let genAI
-        try {
-          // Método 1: Cliente básico
-          genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
-        } catch (clientError) {
-          console.warn(`❌ Error creando cliente para ${modelName}:`, clientError.message)
-          continue
-        }
-
-        let model
-        try {
-          model = genAI.getGenerativeModel({ model: modelName })
-        } catch (modelError) {
-          console.warn(`❌ Error obteniendo modelo ${modelName}:`, modelError.message)
-          continue
-        }
-
-        const fullPrompt = `Genera exactamente 10 elementos específicos y concretos relacionados con: "${prompt}"
-
-INSTRUCCIONES IMPORTANTES:
-- Si es una categoría específica (ej: "personajes de Naruto", "tubérculos", "capitales de países", "marcas de autos"), genera EJEMPLOS REALES Y ESPECÍFICOS de esa categoría
-- Si es un tema general (ej: "colores", "animales", "profesiones"), genera palabras relacionadas con ese tema
-
-EJEMPLOS:
-- "personajes de Naruto" → Naruto,Sasuke,Sakura,Kakashi,Hinata,Neji,Gaara,Lee,Itachi,Madara
-- "tubérculos" → papa,boniato,yuca,malanga,ñame,batata,camote,jícama,oca,cebada
-- "capitales de países" → Madrid,París,Londres,Berlín,Roma,Madrid,Tokio,Pekín,Moscú,Sídney
-- "marcas de autos" → Toyota,Ford,BMW,Volkswagen,Honda,Nissan,Mercedes,Audi,Chevrolet,Ferrari
-- "meses del año" → enero,febrero,marzo,abril,mayo,junio,julio,agosto,septiembre,octubre
-- "colores primarios" → rojo,azul,amarillo,verde,naranja,morado,rosa,negro,blanco,gris
-
-SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explicaciones adicionales.`
-
-        let result
-        try {
-          result = await model.generateContent(fullPrompt)
-        } catch (generationError) {
-          console.warn(`❌ Error generando contenido con ${modelName}:`, generationError.message)
-          continue
-        }
-
-        let response
-        try {
-          response = await result.response
-        } catch (responseError) {
-          console.warn(`❌ Error obteniendo respuesta de ${modelName}:`, responseError.message)
-          continue
-        }
-
-        const text = response.text()
-        console.log(`📄 Respuesta de ${modelName}:`, text)
-
-        // Parsear la respuesta y limpiar las palabras
-        const newWords = text.split(',')
-          .map(word => word.trim())
-          .filter(word => word.length > 0 && word.length < 25) // Permitir nombres más largos
-          .filter(word => /^[a-zA-ZáéíóúñÁÉÍÓÚÑ\s]+$/.test(word)) // Permitir mayúsculas y espacios para nombres
-          .map(word => word.toLowerCase().trim()) // Convertir a minúsculas después de validar
-          .filter((word, index, arr) => arr.indexOf(word) === index) // Eliminar duplicados
-          .slice(0, 10) // Máximo 10 palabras
-
-        if (newWords.length === 0) {
-          console.warn(`⚠️ No se pudieron parsear palabras de la respuesta de ${modelName}`)
-          continue
-        }
-
-        // Agregar las nuevas palabras a las existentes (sin duplicados)
-        setEditingCategoryWords(prev => {
-          const combined = [...prev]
-          newWords.forEach(word => {
-            if (!combined.includes(word)) {
-              combined.push(word)
-            }
-          })
-          return combined.slice(0, 20) // Limitar a 20 palabras máximo
-        })
-
-        console.log(`✅ ¡Éxito con modelo ${modelName}! Se agregaron ${newWords.length} palabras:`, newWords)
-        alert(`✅ ¡Éxito! Se generaron ${newWords.length} elementos para "${prompt}" usando ${modelName}`)
-        success = true
-        break // Salir del loop si funcionó
-
-      } catch (modelError) {
-        console.error(`💥 Error completo con ${modelName}:`, modelError)
-        continue // Intentar con el siguiente modelo
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
       }
-    }
 
-    // Si ningún modelo funcionó, usar fallback
-    if (!success) {
-      console.error('🚫 Error generating words with AI: Todos los modelos fallaron')
+      const data = await response.json()
+
+      if (data.error) {
+        throw new Error(data.error)
+      }
+
+      if (!data.words || !Array.isArray(data.words)) {
+        throw new Error('Respuesta inválida del servidor')
+      }
+
+      // Agregar las nuevas palabras a las existentes (sin duplicados)
+      setEditingCategoryWords(prev => {
+        const combined = [...prev]
+        data.words.forEach((word: string) => {
+          if (!combined.includes(word)) {
+            combined.push(word)
+          }
+        })
+        return combined.slice(0, 20) // Limitar a 20 palabras máximo
+      })
+
+      console.log(`✅ ¡Éxito! Se generaron ${data.words.length} elementos usando ${data.model}`)
+      alert(`✅ ¡Éxito! Se generaron ${data.words.length} elementos para "${prompt}" usando ${data.model}`)
+
+    } catch (error) {
+      console.error('❌ Error llamando a la API:', error)
 
       // En caso de error, agregar palabras de respaldo
       const fallbackWords = [
-        "Casa", "Perro", "Gato", "Árbol", "Libro",
-        "Sol", "Luna", "Agua", "Fuego", "Tierra",
-        "Aire", "Tiempo", "Amor", "Paz", "Alegría"
+        "casa", "perro", "gato", "árbol", "libro",
+        "sol", "luna", "agua", "fuego", "tierra"
       ]
+
       setEditingCategoryWords(prev => {
         const combined = [...prev]
         fallbackWords.forEach(word => {
@@ -845,8 +778,7 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
         return combined.slice(0, 20)
       })
 
-      // Mostrar mensaje de error al usuario
-      alert('🚫 Error de conexión con Gemini AI\n\nSe agregaron palabras de ejemplo en su lugar.\n\nPosibles soluciones:\n• Verifica que tu API key sea correcta\n• Asegúrate de que esté en .env.local (no .env)\n• Confirma que creaste la key en Google AI Studio\n• Revisa tu conexión a internet\n\nSi el problema persiste, la funcionalidad manual sigue funcionando perfectamente.')
+      alert('🚫 Error conectando con el servidor de IA\n\nSe agregaron palabras de ejemplo en su lugar.\n\nVerifica que:\n• El servidor esté funcionando\n• La API key de Gemini esté configurada en el servidor\n• Tu conexión a internet funcione')
     }
 
     setIsGenerating(false)
@@ -991,11 +923,7 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
                       )}
                     </Button>
                   </div>
-                  {!process.env.GEMINI_API_KEY && (
-                    <div className="text-xs text-orange-600 bg-orange-50 p-2 rounded border border-orange-200">
-                      ⚠️ API key de Gemini no configurada. La IA no funcionará hasta que agregues GEMINI_API_KEY en .env.local
-                    </div>
-                  )}
+                
                 </div>
                 <div className="text-xs text-muted-foreground mt-1">
                   {aiPrompt.length}/100 caracteres
