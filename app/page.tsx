@@ -10,9 +10,9 @@ import {
   Heart, Sun, Waves, Grape, Leaf, Circle, Moon,
   Package, Globe, CircleDot, Gamepad2, PawPrint, Pizza,
   Star, Film, Wrench, Briefcase, Smartphone, Car, Rainbow,
-  FolderOpen, UserSearch, Users, Target, RefreshCw, Gamepad,
+  FolderOpen, UserSearch, Users, Target, RefreshCw, Gamepad, Drama,
   Sparkles as SparklesIcon, PenTool, Box, CreditCard, MessageSquare,
-  Mic, Hand, AlertCircle
+  Mic, Hand, AlertCircle, Flame
 } from "lucide-react"
 
 // Helper function to generate a stable hash from string
@@ -67,21 +67,41 @@ const DoodleIcon = ({ icon: Icon, size = 24, className = "", randomRotate = true
 // Doodle decorations component
 const DoodleStars = () => (
   <div className="absolute inset-0 pointer-events-none overflow-hidden">
-    <span className="absolute top-[10%] left-[5%] text-2xl opacity-40 animate-[twinkle_3s_ease-in-out_infinite]">✦</span>
-    <span className="absolute top-[15%] right-[10%] text-xl opacity-30 animate-[twinkle_2s_ease-in-out_infinite_0.5s]">★</span>
-    <span className="absolute bottom-[20%] left-[8%] text-lg opacity-35 animate-[twinkle_2.5s_ease-in-out_infinite_1s]">✧</span>
-    <span className="absolute top-[40%] right-[5%] text-2xl opacity-25 animate-[twinkle_3.5s_ease-in-out_infinite_0.3s]">⋆</span>
-    <span className="absolute bottom-[30%] right-[15%] text-xl opacity-30 animate-[twinkle_2.8s_ease-in-out_infinite_0.8s]">✦</span>
-    <span className="absolute top-[60%] left-[3%] text-lg opacity-35 animate-[twinkle_3.2s_ease-in-out_infinite_1.2s]">★</span>
+    <div className="absolute top-[10%] left-[5%] opacity-40 animate-[twinkle_3s_ease-in-out_infinite]">
+      <DoodleIcon icon={Star} size={24} uniqueId="star-1" />
+    </div>
+    <div className="absolute top-[15%] right-[10%] opacity-30 animate-[twinkle_2s_ease-in-out_infinite_0.5s]">
+      <DoodleIcon icon={Sparkles} size={20} uniqueId="star-2" />
+    </div>
+    <div className="absolute bottom-[20%] left-[8%] opacity-35 animate-[twinkle_2.5s_ease-in-out_infinite_1s]">
+      <DoodleIcon icon={Star} size={18} uniqueId="star-3" />
+    </div>
+    <div className="absolute top-[40%] right-[5%] opacity-25 animate-[twinkle_3.5s_ease-in-out_infinite_0.3s]">
+      <DoodleIcon icon={Sparkles} size={24} uniqueId="star-4" />
+    </div>
+    <div className="absolute bottom-[30%] right-[15%] opacity-30 animate-[twinkle_2.8s_ease-in-out_infinite_0.8s]">
+      <DoodleIcon icon={Star} size={20} uniqueId="star-5" />
+    </div>
+    <div className="absolute top-[60%] left-[3%] opacity-35 animate-[twinkle_3.2s_ease-in-out_infinite_1.2s]">
+      <DoodleIcon icon={Sparkles} size={18} uniqueId="star-6" />
+    </div>
   </div>
 )
 
 const DoodleCircles = () => (
   <div className="absolute inset-0 pointer-events-none overflow-hidden">
-    <div className="absolute top-[5%] left-[15%] w-3 h-3 border-2 border-primary/30 rounded-full animate-[pulse-soft_4s_ease-in-out_infinite]" />
-    <div className="absolute top-[25%] right-[8%] w-4 h-4 border-2 border-secondary/40 rounded-full animate-[pulse-soft_3s_ease-in-out_infinite_1s]" />
-    <div className="absolute bottom-[15%] left-[10%] w-2 h-2 border-2 border-accent/30 rounded-full animate-[pulse-soft_3.5s_ease-in-out_infinite_0.5s]" />
-    <div className="absolute bottom-[40%] right-[12%] w-3 h-3 border-2 border-primary/25 rounded-full animate-[pulse-soft_4.5s_ease-in-out_infinite_1.5s]" />
+    <div className="absolute top-[5%] left-[15%] opacity-30 text-primary">
+      <DoodleIcon icon={Circle} size={12} uniqueId="circle-1" />
+    </div>
+    <div className="absolute top-[25%] right-[8%] opacity-40 text-secondary">
+      <DoodleIcon icon={Circle} size={16} uniqueId="circle-2" />
+    </div>
+    <div className="absolute bottom-[15%] left-[10%] opacity-30 text-accent">
+      <DoodleIcon icon={Circle} size={8} uniqueId="circle-3" />
+    </div>
+    <div className="absolute bottom-[40%] right-[12%] opacity-25 text-primary">
+      <DoodleIcon icon={Circle} size={12} uniqueId="circle-4" />
+    </div>
   </div>
 )
 
@@ -618,6 +638,28 @@ const COLOR_PALETTES = {
       border: "oklch(0.35 0.04 280)",
       accent: "oklch(0.72 0.18 270)",
       "accent-foreground": "oklch(0.15 0.03 280)",
+    },
+  },
+  // Fuego Nocturno - Oscuro con tonos cálidos y juguetones
+  ember: {
+    name: "Fuego Nocturno",
+    icon: Flame,
+    colors: {
+      background: "oklch(0.12 0.04 25)",
+      foreground: "oklch(0.96 0.02 25)",
+      card: "oklch(0.18 0.05 30)",
+      "card-foreground": "oklch(0.96 0.02 25)",
+      primary: "oklch(0.70 0.22 35)",
+      "primary-foreground": "oklch(0.12 0.04 25)",
+      secondary: "oklch(0.65 0.20 50)",
+      "secondary-foreground": "oklch(0.12 0.04 25)",
+      muted: "oklch(0.25 0.04 25)",
+      "muted-foreground": "oklch(0.70 0.02 25)",
+      destructive: "oklch(0.58 0.24 10)",
+      "destructive-foreground": "oklch(0.96 0.02 25)",
+      border: "oklch(0.32 0.05 30)",
+      accent: "oklch(0.68 0.18 40)",
+      "accent-foreground": "oklch(0.12 0.04 25)",
     },
   },
 }
@@ -1186,7 +1228,7 @@ export default function ImpostorGame() {
 
             <div className="text-center mb-8">
               <div className="flex justify-center mb-4">
-                <DoodleIcon icon={Gamepad} size={64} thick className="animate-[bounce-soft_2s_ease-in-out_infinite]" uniqueId="categories-title" />
+                <DoodleIcon icon={Drama} size={64} thick className="animate-[bounce-soft_2s_ease-in-out_infinite]" uniqueId="categories-title" />
               </div>
               <h1 className="text-4xl md:text-5xl font-title font-bold text-primary mb-2">El Impostor</h1>
               <p className="text-muted-foreground text-lg flex items-center justify-center gap-2">
@@ -1304,7 +1346,7 @@ export default function ImpostorGame() {
             </div>
 
             <div className="text-center mb-6">
-              <p className={`text-sm py-2 px-4 rounded-full flex items-center gap-2 justify-center ${selectedCategories.length === 0 ? 'bg-muted/50' : 'bg-primary/20 text-primary'}`}>
+              <p className={`text-sm py-2 px-4 rounded-full flex items-center gap-2 justify-center ${selectedCategories.length === 0 ? 'bg-muted/50' : 'bg-primary/20 text-primary-foreground'}`}>
                 {selectedCategories.length === 0 ? (
                   <>
                     <DoodleIcon icon={Gamepad} size={16} className="stroke-[2.5]" uniqueId="all-categories" />
