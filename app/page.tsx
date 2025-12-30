@@ -238,8 +238,26 @@ const COLOR_PALETTES = {
   },
 }
 
-type GameState = "categories" | "setup" | "playing" | "finished" | "theme"
+type GameState = "categories" | "setup" | "playing" | "finished" | "theme" | "custom-theme"
 type PaletteName = keyof typeof COLOR_PALETTES
+
+type CustomColors = {
+  background: string
+  foreground: string
+  card: string
+  "card-foreground": string
+  primary: string
+  "primary-foreground": string
+  secondary: string
+  "secondary-foreground": string
+  muted: string
+  "muted-foreground": string
+  destructive: string
+  "destructive-foreground": string
+  border: string
+  accent: string
+  "accent-foreground": string
+}
 
 export default function ImpostorGame() {
   const [gameState, setGameState] = useState<GameState>("categories")
@@ -254,14 +272,55 @@ export default function ImpostorGame() {
   const [currentPalette, setCurrentPalette] = useState<PaletteName>("mystery")
   const [previousGameState, setPreviousGameState] = useState<GameState>("categories")
   const [numImpostors, setNumImpostors] = useState(1)
+  const [customColors, setCustomColors] = useState<CustomColors>({
+    background: "#0f0f0f",
+    foreground: "#ffffff",
+    card: "#1a1a1a",
+    "card-foreground": "#ffffff",
+    primary: "#8b5cf6",
+    "primary-foreground": "#ffffff",
+    secondary: "#f59e0b",
+    "secondary-foreground": "#ffffff",
+    muted: "#262626",
+    "muted-foreground": "#a3a3a3",
+    destructive: "#ef4444",
+    "destructive-foreground": "#ffffff",
+    border: "#262626",
+    accent: "#a855f7",
+    "accent-foreground": "#ffffff",
+  })
+  const [savedThemes, setSavedThemes] = useState<Record<string, CustomColors>>({})
+
+  // Cargar temas guardados al iniciar
+  useEffect(() => {
+    const saved = localStorage.getItem('custom-themes')
+    if (saved) {
+      try {
+        setSavedThemes(JSON.parse(saved))
+      } catch (error) {
+        console.error('Error loading saved themes:', error)
+      }
+    }
+  }, [])
+
+  // Guardar temas en localStorage cuando cambien
+  useEffect(() => {
+    localStorage.setItem('custom-themes', JSON.stringify(savedThemes))
+  }, [savedThemes])
 
   useEffect(() => {
-    const palette = COLOR_PALETTES[currentPalette]
     const root = document.documentElement
-    Object.entries(palette.colors).forEach(([key, value]) => {
-      root.style.setProperty(`--${key}`, value)
-    })
-  }, [currentPalette])
+    if (gameState === "custom-theme") {
+      Object.entries(customColors).forEach(([key, value]) => {
+        root.style.setProperty(`--${key}`, value)
+      })
+    } else {
+      const palette = COLOR_PALETTES[currentPalette]
+      Object.entries(palette.colors).forEach(([key, value]) => {
+        root.style.setProperty(`--${key}`, value)
+      })
+    }
+  }, [currentPalette, customColors, gameState])
 
   const toggleCategory = (category: string) => {
     if (selectedCategories.includes(category)) {
@@ -348,6 +407,72 @@ export default function ImpostorGame() {
     setCurrentPalette(paletteName)
   }
 
+  const openCustomTheme = () => {
+    setPreviousGameState(gameState)
+    setGameState("custom-theme")
+  }
+
+  const closeCustomTheme = () => {
+    setGameState(previousGameState)
+  }
+
+  const updateCustomColor = (colorKey: keyof CustomColors, value: string) => {
+    setCustomColors(prev => ({
+      ...prev,
+      [colorKey]: value
+    }))
+  }
+
+  const resetCustomColors = () => {
+    const defaultColors: CustomColors = {
+      background: "#0f0f0f",
+      foreground: "#ffffff",
+      card: "#1a1a1a",
+      "card-foreground": "#ffffff",
+      primary: "#8b5cf6",
+      "primary-foreground": "#ffffff",
+      secondary: "#f59e0b",
+      "secondary-foreground": "#ffffff",
+      muted: "#262626",
+      "muted-foreground": "#a3a3a3",
+      destructive: "#ef4444",
+      "destructive-foreground": "#ffffff",
+      border: "#262626",
+      accent: "#a855f7",
+      "accent-foreground": "#ffffff",
+    }
+    setCustomColors(defaultColors)
+  }
+
+  const applyCustomTheme = () => {
+    // El tema personalizado ya se aplica automáticamente por el useEffect
+    setGameState(previousGameState)
+  }
+
+  const saveCustomTheme = (name: string) => {
+    if (name.trim()) {
+      setSavedThemes(prev => ({
+        ...prev,
+        [name.trim()]: { ...customColors }
+      }))
+    }
+  }
+
+  const loadCustomTheme = (name: string) => {
+    const theme = savedThemes[name]
+    if (theme) {
+      setCustomColors({ ...theme })
+    }
+  }
+
+  const deleteCustomTheme = (name: string) => {
+    setSavedThemes(prev => {
+      const newThemes = { ...prev }
+      delete newThemes[name]
+      return newThemes
+    })
+  }
+
   if (gameState === "theme") {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-background">
@@ -405,13 +530,239 @@ export default function ImpostorGame() {
               })}
             </div>
 
-            <Button
-              onClick={closeThemeSettings}
-              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-              size="lg"
-            >
-              Aplicar y Continuar
-            </Button>
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={openCustomTheme}
+                className="flex-1 bg-background border-border hover:bg-muted"
+                size="lg"
+              >
+                🎨 Tema Personalizado
+              </Button>
+              <Button
+                onClick={closeThemeSettings}
+                className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
+                size="lg"
+              >
+                Aplicar y Continuar
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  if (gameState === "custom-theme") {
+    const colorGroups = [
+      {
+        title: "Fondos y Texto",
+        colors: [
+          { key: "background" as keyof CustomColors, label: "Fondo Principal" },
+          { key: "foreground" as keyof CustomColors, label: "Texto Principal" },
+          { key: "card" as keyof CustomColors, label: "Fondo de Tarjetas" },
+          { key: "card-foreground" as keyof CustomColors, label: "Texto de Tarjetas" },
+        ]
+      },
+      {
+        title: "Colores Principales",
+        colors: [
+          { key: "primary" as keyof CustomColors, label: "Color Principal" },
+          { key: "primary-foreground" as keyof CustomColors, label: "Texto Principal" },
+          { key: "secondary" as keyof CustomColors, label: "Color Secundario" },
+          { key: "secondary-foreground" as keyof CustomColors, label: "Texto Secundario" },
+        ]
+      },
+      {
+        title: "Colores de Apoyo",
+        colors: [
+          { key: "muted" as keyof CustomColors, label: "Fondo Atenuado" },
+          { key: "muted-foreground" as keyof CustomColors, label: "Texto Atenuado" },
+          { key: "accent" as keyof CustomColors, label: "Color de Acento" },
+          { key: "accent-foreground" as keyof CustomColors, label: "Texto de Acento" },
+        ]
+      },
+      {
+        title: "Estados Especiales",
+        colors: [
+          { key: "destructive" as keyof CustomColors, label: "Color Destructivo" },
+          { key: "destructive-foreground" as keyof CustomColors, label: "Texto Destructivo" },
+          { key: "border" as keyof CustomColors, label: "Color de Bordes" },
+        ]
+      }
+    ]
+
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4 bg-background">
+        <Card className="w-full max-w-4xl bg-card border-border">
+          <CardContent className="p-8">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
+                <Palette className="h-6 w-6 text-primary" />
+                <h1 className="text-3xl font-bold text-primary text-balance">Tema Personalizado</h1>
+              </div>
+              <Button variant="ghost" size="icon" onClick={closeCustomTheme} className="hover:bg-muted">
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+
+            <p className="text-center text-muted-foreground mb-8 text-pretty">
+              Personaliza los colores de tu tema con vista previa en tiempo real
+            </p>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Panel de controles */}
+              <div className="space-y-6">
+                {colorGroups.map((group) => (
+                  <div key={group.title} className="space-y-3">
+                    <h3 className="text-lg font-semibold text-foreground">{group.title}</h3>
+                    <div className="grid grid-cols-1 gap-3">
+                      {group.colors.map((color) => (
+                        <div key={color.key} className="flex items-center gap-3 p-3 bg-muted rounded-lg">
+                          <input
+                            type="color"
+                            value={customColors[color.key]}
+                            onChange={(e) => updateCustomColor(color.key, e.target.value)}
+                            className="w-12 h-8 rounded border border-border cursor-pointer"
+                          />
+                          <div className="flex-1">
+                            <label className="text-sm font-medium text-foreground block">
+                              {color.label}
+                            </label>
+                            <span className="text-xs text-muted-foreground font-mono">
+                              {customColors[color.key]}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+
+                {/* Guardar tema */}
+                <div className="space-y-3 pt-4">
+                  <div className="flex gap-3">
+                    <Input
+                      id="theme-name"
+                      placeholder="Nombre del tema"
+                      className="flex-1 bg-muted border-border text-foreground placeholder:text-muted-foreground"
+                    />
+                    <Button
+                      onClick={() => {
+                        const input = document.getElementById('theme-name') as HTMLInputElement
+                        if (input?.value.trim()) {
+                          saveCustomTheme(input.value.trim())
+                          input.value = ''
+                        }
+                      }}
+                      className="bg-primary text-primary-foreground hover:bg-primary/90"
+                    >
+                      💾 Guardar
+                    </Button>
+                  </div>
+
+                  {/* Temas guardados */}
+                  {Object.keys(savedThemes).length > 0 && (
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-semibold text-foreground">Temas Guardados:</h4>
+                      <div className="max-h-32 overflow-y-auto space-y-2">
+                        {Object.entries(savedThemes).map(([name, theme]) => (
+                          <div key={name} className="flex items-center gap-2 p-2 bg-muted rounded-lg">
+                            <div className="flex gap-1 flex-1">
+                              <div
+                                className="w-4 h-4 rounded-full border border-border cursor-pointer"
+                                style={{ backgroundColor: theme.primary }}
+                                onClick={() => loadCustomTheme(name)}
+                                title="Cargar tema"
+                              />
+                              <span className="text-sm text-foreground flex-1 truncate">{name}</span>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => deleteCustomTheme(name)}
+                              className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive"
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex gap-3">
+                    <Button
+                      variant="outline"
+                      onClick={resetCustomColors}
+                      className="flex-1 bg-background border-border hover:bg-muted"
+                    >
+                      Restablecer
+                    </Button>
+                    <Button
+                      onClick={applyCustomTheme}
+                      className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
+                    >
+                      Aplicar Tema
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Panel de vista previa */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-foreground">Vista Previa</h3>
+
+                {/* Card de ejemplo */}
+                <Card className="bg-card border-border">
+                  <CardContent className="p-6">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-xl font-bold text-primary">Ejemplo de Tarjeta</h4>
+                        <div className="flex gap-2">
+                          <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
+                            Principal
+                          </Button>
+                          <Button size="sm" variant="secondary" className="bg-secondary text-secondary-foreground hover:bg-secondary/90">
+                            Secundario
+                          </Button>
+                        </div>
+                      </div>
+
+                      <p className="text-muted-foreground">
+                        Este es un texto de ejemplo para mostrar cómo se ven los colores en diferentes elementos.
+                      </p>
+
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="outline" className="border-border hover:bg-accent text-accent-foreground">
+                          Acento
+                        </Button>
+                        <Button size="sm" variant="destructive" className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                          Destructivo
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Elementos de ejemplo */}
+                <div className="space-y-3">
+                  <div className="p-3 bg-muted rounded-lg">
+                    <span className="text-sm text-muted-foreground">Texto atenuado en fondo atenuado</span>
+                  </div>
+
+                  <div className="flex items-center gap-3 p-3 bg-card border border-border rounded-lg">
+                    <div className="w-4 h-4 bg-primary rounded-full"></div>
+                    <span className="text-foreground">Elemento con indicador primario</span>
+                  </div>
+
+                  <div className="flex items-center gap-3 p-3 bg-card border border-border rounded-lg">
+                    <div className="w-4 h-4 bg-secondary rounded-full"></div>
+                    <span className="text-foreground">Elemento con indicador secundario</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
