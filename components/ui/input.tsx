@@ -17,7 +17,7 @@ function Input({ className, type, ...props }: React.ComponentProps<'input'>) {
         'outline-none',
         'file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium',
         'disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50',
-        'focus:border-primary focus:shadow-[4px_4px_0_0_var(--primary)] focus:translate-x-[-1px] focus:translate-y-[-1px] focus:scale-[1.01]',
+        'focus:border-primary md:focus:shadow-[4px_4px_0_0_var(--primary)] md:focus:translate-x-[-1px] md:focus:translate-y-[-1px] focus:scale-[1.01]',
         'aria-invalid:border-destructive aria-invalid:shadow-[3px_3px_0_0_var(--destructive)]',
         className,
       )}

@@ -962,12 +962,12 @@ export default function ImpostorGame() {
       <div className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden">
         <DoodleStars />
         <DoodleCircles />
-        <Card className="w-full max-w-2xl relative z-10">
-          <CardContent className="p-4 md:p-8">
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-3">
-                <DoodleIcon icon={Palette} size={32} thick className="animate-[bounce-soft_2s_ease-in-out_infinite]" uniqueId="theme-header" />
-                <h1 className="text-2xl md:text-3xl font-title font-bold text-primary">Elige tu estilo</h1>
+        <Card className="w-full max-w-2xl relative z-10 flex flex-col max-h-[90vh]">
+          <CardContent className="p-4 md:p-6 flex flex-col flex-1 min-h-0">
+            <div className="flex items-center justify-between mb-4 shrink-0">
+              <div className="flex items-center gap-2">
+                <DoodleIcon icon={Palette} size={28} thick className="animate-[bounce-soft_2s_ease-in-out_infinite]" uniqueId="theme-header" />
+                <h1 className="text-xl md:text-2xl font-title font-bold text-primary">Elige tu estilo</h1>
               </div>
               <Button variant="ghost" size="icon" onClick={() => {
                 setGameState(previousGameState)
@@ -976,60 +976,64 @@ export default function ImpostorGame() {
               </Button>
             </div>
 
-            <p className="text-center text-muted-foreground mb-8 text-lg flex items-center justify-center gap-2">
+            <p className="text-center text-muted-foreground mb-4 text-sm md:text-base shrink-0">
               ¡Personaliza los colores de tu juego!
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-              {(Object.keys(COLOR_PALETTES) as PaletteName[]).map((paletteName) => {
-                const palette = COLOR_PALETTES[paletteName]
-                const isSelected = currentPalette === paletteName
-                return (
-                  <button
-                    key={paletteName}
-                    onClick={() => selectPalette(paletteName)}
-                    className={`relative p-5 transition-all duration-200 ${
-                      isSelected
-                        ? "rounded-[30px_10px_30px_10px/10px_30px_10px_30px] border-[3px] border-primary shadow-[6px_6px_0_0_var(--primary)] translate-x-[-3px] translate-y-[-3px] -rotate-1"
-                        : "rounded-[25px_8px_25px_8px/8px_25px_8px_25px] border-2 border-border hover:border-primary/50 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[4px_4px_0_0_var(--border)]"
-                    }`}
-                    style={{ backgroundColor: palette.colors.card }}
-                  >
-                    <div className="flex flex-col items-start gap-3">
-                      <div className="w-full flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          {palette.icon && (
-                            <DoodleIcon 
-                              icon={palette.icon} 
-                              size={20} 
-                              className="stroke-[2.5]"
-                              uniqueId={`palette-${paletteName}`}
-                              style={{ stroke: palette.colors["card-foreground"] }}
-                            />
-                          )}
-                          <span className="font-title font-bold text-lg" style={{ color: palette.colors["card-foreground"] }}>
-                            {palette.name}
-                          </span>
-                        </div>
-                        {isSelected && (
-                          <div className="rounded-full p-1.5 animate-[bounce-soft_1s_ease-in-out_infinite]" style={{ backgroundColor: palette.colors.primary }}>
-                            <Check className="h-4 w-4" style={{ color: palette.colors["primary-foreground"] }} />
+            {/* Contenido scrolleable */}
+            <div className="flex-1 overflow-y-auto pr-2 -mr-2 min-h-0 overflow-x-hidden">
+              <div className="grid pt-4 grid-cols-1 md:grid-cols-2 gap-3 px-1">
+                {(Object.keys(COLOR_PALETTES) as PaletteName[]).map((paletteName) => {
+                  const palette = COLOR_PALETTES[paletteName]
+                  const isSelected = currentPalette === paletteName
+                  return (
+                    <button
+                      key={paletteName}
+                      onClick={() => selectPalette(paletteName)}
+                      className={`relative p-4 transition-all duration-200 ${
+                        isSelected
+                          ? "rounded-[30px_10px_30px_10px/10px_30px_10px_30px] border-[3px] border-primary md:shadow-[6px_6px_0_0_var(--primary)] md:translate-x-[-3px] md:translate-y-[-3px] -rotate-1"
+                          : "rounded-[25px_8px_25px_8px/8px_25px_8px_25px] border-2 border-border hover:border-primary/50 md:hover:translate-x-[-2px] md:hover:translate-y-[-2px] md:hover:shadow-[4px_4px_0_0_var(--border)]"
+                      }`}
+                      style={{ backgroundColor: palette.colors.card }}
+                    >
+                      <div className="flex flex-col items-start gap-2">
+                        <div className="w-full flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            {palette.icon && (
+                              <DoodleIcon 
+                                icon={palette.icon} 
+                                size={18} 
+                                className="stroke-[2.5]"
+                                uniqueId={`palette-${paletteName}`}
+                                style={{ stroke: palette.colors["card-foreground"] }}
+                              />
+                            )}
+                            <span className="font-title font-bold text-base" style={{ color: palette.colors["card-foreground"] }}>
+                              {palette.name}
+                            </span>
                           </div>
-                        )}
-                      </div>
+                          {isSelected && (
+                            <div className="rounded-full p-1 animate-[bounce-soft_1s_ease-in-out_infinite]" style={{ backgroundColor: palette.colors.primary }}>
+                              <Check className="h-3 w-3" style={{ color: palette.colors["primary-foreground"] }} />
+                            </div>
+                          )}
+                        </div>
 
-                      <div className="w-full flex gap-2">
-                        <div className="h-10 flex-1 rounded-[10px_3px_10px_3px/3px_10px_3px_10px] border-2 border-white/20" style={{ backgroundColor: palette.colors.primary }} />
-                        <div className="h-10 flex-1 rounded-[10px_3px_10px_3px/3px_10px_3px_10px] border-2 border-white/20" style={{ backgroundColor: palette.colors.secondary }} />
-                        <div className="h-10 flex-1 rounded-[10px_3px_10px_3px/3px_10px_3px_10px] border-2 border-white/20" style={{ backgroundColor: palette.colors.accent }} />
+                        <div className="w-full flex gap-1.5">
+                          <div className="h-8 flex-1 rounded-[10px_3px_10px_3px/3px_10px_3px_10px] border-2 border-white/20" style={{ backgroundColor: palette.colors.primary }} />
+                          <div className="h-8 flex-1 rounded-[10px_3px_10px_3px/3px_10px_3px_10px] border-2 border-white/20" style={{ backgroundColor: palette.colors.secondary }} />
+                          <div className="h-8 flex-1 rounded-[10px_3px_10px_3px/3px_10px_3px_10px] border-2 border-white/20" style={{ backgroundColor: palette.colors.accent }} />
+                        </div>
                       </div>
-                    </div>
-                  </button>
-                )
-              })}
+                    </button>
+                  )
+                })}
+              </div>
             </div>
 
-            <div className="mt-6">
+            {/* Footer fijo con CTA */}
+            <div className="shrink-0 pt-4 border-t border-border/50 mt-4">
               <Button
                 onClick={closeThemeSettings}
                 className="w-full"
@@ -1049,12 +1053,12 @@ export default function ImpostorGame() {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden">
         <DoodleStars />
-        <Card className="w-full max-w-4xl relative z-10">
-          <CardContent className="p-4 md:p-8">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <DoodleIcon icon={PenTool} size={32} thick className="animate-[wiggle_1s_ease-in-out_infinite]" uniqueId="edit-header" />
-                <h1 className="text-2xl md:text-3xl font-title font-bold text-primary">
+        <Card className="w-full max-w-4xl relative z-10 flex flex-col max-h-[90vh]">
+          <CardContent className="p-4 md:p-6 flex flex-col flex-1 min-h-0">
+            <div className="flex items-center justify-between mb-4 shrink-0">
+              <div className="flex items-center gap-2">
+                <DoodleIcon icon={PenTool} size={28} thick className="animate-[wiggle_1s_ease-in-out_infinite]" uniqueId="edit-header" />
+                <h1 className="text-xl md:text-2xl font-title font-bold text-primary">
                   {isEditingExisting ? "Editar Categoría" : "Nueva Categoría"}
                 </h1>
               </div>
@@ -1063,50 +1067,55 @@ export default function ImpostorGame() {
               </Button>
             </div>
 
-            <div className="space-y-6">
+            {/* Contenido scrolleable */}
+            <div className="flex-1 overflow-y-auto pr-2 -mr-2 min-h-0">
+            <div className="space-y-4">
               {/* Nombre de la categoría */}
               <div>
-                <label className="text-lg font-title font-bold text-foreground mb-3 block flex items-center gap-2">
-                  <DoodleIcon icon={PenTool} size={20} className="stroke-[2.5]" uniqueId="edit-label" />
+                <label className="text-sm font-title font-bold text-foreground mb-2 block flex items-center gap-2">
+                  <DoodleIcon icon={PenTool} size={18} className="stroke-[2.5]" uniqueId="edit-label" />
                   Nombre de la categoría:
                 </label>
                 <Input
                   placeholder="Ej: Personajes de Anime, Comidas Típicas..."
                   value={editingCategoryName}
                   onChange={(e) => setEditingCategoryName(e.target.value)}
+                  className="text-sm"
                 />
               </div>
 
               {/* Generación con IA */}
-              <div className="bg-muted/30 p-5 rounded-[20px_8px_20px_8px/8px_20px_8px_20px] border-[3px] border-dashed border-border">
-                <h3 className="text-lg font-title font-bold text-foreground mb-3 flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-secondary animate-[twinkle_2s_ease-in-out_infinite]" />
+              <div className="bg-muted/30 p-4 rounded-[20px_8px_20px_8px/8px_20px_8px_20px] border-[3px] border-dashed border-border">
+                <h3 className="text-base font-title font-bold text-foreground mb-2 flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-secondary animate-[twinkle_2s_ease-in-out_infinite]" />
                   Asistente Mágico ✨
                 </h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="text-sm text-muted-foreground mb-3">
                   ¡Deja que la IA te sugiera palabras automáticamente!
                 </p>
 
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-2">
                   <Textarea
                     placeholder="Describe el tema para generar palabras...&#10;&#10;Ejemplos:&#10;'personajes de Naruto'&#10;'tipos de verduras'&#10;'marcas de autos deportivos'"
                     value={aiPrompt}
                     onChange={(e) => setAiPrompt(e.target.value.slice(0, 200))}
                     disabled={isGenerating}
+                    className="text-sm min-h-[80px]"
                   />
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-xs text-muted-foreground">
                       {aiPrompt.length}/200 caracteres
                     </span>
                     <Button
                       onClick={() => generateWordsWithAI(aiPrompt)}
                       disabled={!aiPrompt.trim() || aiPrompt.length > 200 || isGenerating}
                       className="gap-2"
+                      size="sm"
                     >
                       {isGenerating ? (
-                        <Loader2 className="h-5 w-5 animate-spin" />
+                        <Loader2 className="h-4 w-4 animate-spin" />
                       ) : (
-                        <Sparkles className="h-5 w-5" />
+                        <Sparkles className="h-4 w-4" />
                       )}
                       {isGenerating ? "Generando..." : "¡Generar!"}
                     </Button>
@@ -1116,16 +1125,16 @@ export default function ImpostorGame() {
 
               {/* Lista de palabras */}
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
-                  <h3 className="text-lg font-title font-bold text-foreground flex items-center gap-2">
-                    <DoodleIcon icon={Box} size={20} className="stroke-[2.5]" uniqueId="words-header" />
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-3">
+                  <h3 className="text-sm font-title font-bold text-foreground flex items-center gap-2">
+                    <DoodleIcon icon={Box} size={18} className="stroke-[2.5]" uniqueId="words-header" />
                     Palabras ({editingCategoryWords.length})
                   </h3>
                   <div className="flex w-full sm:w-auto gap-2">
                     <Input
                       id="add-word-input"
                       placeholder="Nueva palabra..."
-                      className="flex-1 sm:w-48"
+                      className="flex-1 sm:w-40 text-sm h-9"
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           const input = e.target as HTMLInputElement
@@ -1143,51 +1152,55 @@ export default function ImpostorGame() {
                         }
                       }}
                       variant="secondary"
-                      className="gap-2"
+                      className="gap-1"
+                      size="sm"
                     >
-                      <Plus className="h-4 w-4" />
+                      <Plus className="h-3 w-3" />
                       Agregar
                     </Button>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-h-72 overflow-y-auto p-2">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 p-2">
                   {editingCategoryWords.map((word, index) => (
                     <div 
                       key={index} 
-                      className="flex items-center gap-2 p-3 bg-muted rounded-[15px_5px_15px_5px/5px_15px_5px_15px] border-2 border-border group hover:border-primary/50 transition-all"
+                      className="flex items-center gap-1.5 p-2 bg-muted rounded-[15px_5px_15px_5px/5px_15px_5px_15px] border-2 border-border group hover:border-primary/50 transition-all"
                       style={{ transform: `rotate(${(index % 3 - 1) * 0.5}deg)` }}
                     >
                       <Input
                         value={word}
                         onChange={(e) => updateWordInCategory(index, e.target.value)}
-                        className="flex-1 h-9 text-sm border-0 bg-transparent p-1 focus:bg-background/50"
+                        className="flex-1 h-8 text-xs border-0 bg-transparent p-1 focus:bg-background/50"
                       />
                       <Button
                         variant="ghost"
                         size="icon-sm"
                         onClick={() => removeWordFromCategory(index)}
-                        className="opacity-50 group-hover:opacity-100 text-muted-foreground hover:text-destructive"
+                        className="opacity-50 group-hover:opacity-100 text-muted-foreground hover:text-destructive h-7 w-7"
                       >
-                        <X className="h-4 w-4" />
+                        <X className="h-3 w-3" />
                       </Button>
                     </div>
                   ))}
                 </div>
 
                 {editingCategoryWords.length === 0 && (
-                  <div className="text-center py-12 text-muted-foreground">
-                    <div className="flex justify-center mb-4">
-                      <DoodleIcon icon={Box} size={48} thick className="opacity-50" uniqueId="empty-state" />
+                  <div className="text-center py-8 text-muted-foreground">
+                    <div className="flex justify-center mb-3">
+                      <DoodleIcon icon={Box} size={40} thick className="opacity-50" uniqueId="empty-state" />
                     </div>
-                    <p className="text-lg font-title">No hay palabras aún</p>
-                    <p className="text-sm">Usa el asistente mágico o agrega palabras manualmente</p>
+                    <p className="text-base font-title">No hay palabras aún</p>
+                    <p className="text-xs">Usa el asistente mágico o agrega palabras manualmente</p>
                   </div>
                 )}
               </div>
+            </div>
+            </div>
 
-              {/* Botones de acción */}
-              <div className="flex flex-col sm:flex-row gap-3 pt-4">
+            {/* Footer fijo con botones de acción */}
+            <div className="shrink-0 pt-4 border-t border-border/50 mt-4">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <Button
                   variant="outline"
                   onClick={cancelEditCategory}
@@ -1217,157 +1230,163 @@ export default function ImpostorGame() {
       <div className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden">
         <DoodleStars />
         <DoodleCircles />
-        <Card className="w-full max-w-2xl relative z-10">
-          <CardContent className="p-4 md:p-8">
-            <div className="flex justify-end mb-2">
+        <Card className="w-full max-w-2xl relative z-10 flex flex-col max-h-[90vh]">
+          <CardContent className="p-4 md:p-6 flex flex-col flex-1 min-h-0">
+            <div className="flex justify-end mb-2 flex-shrink-0">
               <Button variant="ghost" size="sm" onClick={openThemeSettings} className="gap-2">
                 <Palette className="h-4 w-4" />
                 Tema
               </Button>
             </div>
 
-            <div className="text-center mb-8">
-              <div className="flex justify-center mb-4">
-                <DoodleIcon icon={Drama} size={64} thick className="animate-[bounce-soft_2s_ease-in-out_infinite]" uniqueId="categories-title" />
+            <div className="text-center mb-4 flex-shrink-0">
+              <div className="flex justify-center mb-2">
+                <DoodleIcon icon={Drama} size={48} thick className="animate-[bounce-soft_2s_ease-in-out_infinite]" uniqueId="categories-title" />
               </div>
-              <h1 className="text-4xl md:text-5xl font-title font-bold text-primary mb-2">El Impostor</h1>
-              <p className="text-muted-foreground text-lg flex items-center justify-center gap-2">
+              <h1 className="text-3xl md:text-4xl font-title font-bold text-primary mb-1">El Impostor</h1>
+              <p className="text-muted-foreground text-sm md:text-base flex items-center justify-center gap-2">
                 ¡Elige las categorías para jugar!
               </p>
             </div>
 
-            {/* Categorías Default */}
-            <div className="mb-8">
-              <h3 className="text-xl font-title font-bold text-foreground mb-4 flex items-center gap-2">
-                <DoodleIcon icon={Package} size={24} className="stroke-[2.5]" uniqueId="predefined-header" />
-                Categorías Predefinidas
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {Object.keys(DEFAULT_CATEGORIES).map((category, index) => {
-                  const isSelected = selectedCategories.includes(category)
-                  const categoryIcons = [Globe, CircleDot, Gamepad2, PawPrint, Pizza, Star, Film, Wrench, Briefcase, Smartphone, Car, Rainbow]
-                  const CategoryIcon = categoryIcons[index % categoryIcons.length]
-                  return (
-                    <button
-                      key={category}
-                      onClick={() => toggleCategory(category)}
-                      className={`cursor-pointer relative p-4 text-left transition-all duration-200 ${
-                        isSelected
-                          ? "rounded-[100px_10px_100px_10px/10px_100px_10px_100px] bg-primary text-primary-foreground border-[3px] border-primary-foreground/30 shadow-[4px_4px_0_0_rgba(0,0,0,0.3)] translate-x-[-2px] translate-y-[-2px] rotate-[-1deg]"
-                          : "rounded-[80px_8px_80px_8px/8px_80px_8px_80px] bg-muted border-[2px] border-border hover:border-primary/50 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[3px_3px_0_0_var(--border)]"
-                      }`}
-                      style={{ transform: isSelected ? `rotate(${-1 + (index % 3) * 0.5}deg) translateX(-2px) translateY(-2px)` : `rotate(${(index % 3 - 1) * 0.3}deg)` }}
-                    >
-                      <DoodleIcon icon={CategoryIcon} size={18} className="inline-block mr-2 stroke-[2.5]" uniqueId={`category-${category}-${index}`} />
-                      <span className="font-bold text-sm">{category}</span>
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-
-            {/* Categorías Personalizadas */}
-            {Object.keys(customCategories).length > 0 && (
-              <div className="mb-8">
-                <h3 className="text-xl font-title font-bold text-foreground mb-4 flex items-center gap-2">
-                  <DoodleIcon icon={SparklesIcon} size={24} className="stroke-[2.5]" uniqueId="custom-header" />
-                  Tus Categorías
+            {/* Contenido scrolleable */}
+            <div className="flex-1 overflow-y-auto overflow-x-hidden pr-2 -mr-2 min-h-0">
+              {/* Categorías Default */}
+              <div className="mb-4 overflow-hidden">
+                <h3 className="text-lg font-title font-bold text-foreground mb-2 flex items-center gap-2">
+                  <DoodleIcon icon={Package} size={20} className="stroke-[2.5]" uniqueId="predefined-header" />
+                  Categorías Predefinidas
                 </h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {Object.entries(customCategories).map(([categoryName, words], index) => {
-                    const isSelected = selectedCategories.includes(categoryName)
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 px-1">
+                  {Object.keys(DEFAULT_CATEGORIES).map((category, index) => {
+                    const isSelected = selectedCategories.includes(category)
+                    const categoryIcons = [Globe, CircleDot, Gamepad2, PawPrint, Pizza, Star, Film, Wrench, Briefcase, Smartphone, Car, Rainbow]
+                    const CategoryIcon = categoryIcons[index % categoryIcons.length]
                     return (
-                      <div key={categoryName} className="relative">
-                        <button
-                          onClick={() => toggleCategory(categoryName)}
-                          className={`relative w-full p-4 text-left transition-all duration-200 ${
-                            isSelected
-                              ? "rounded-[100px_10px_100px_10px/10px_100px_10px_100px] bg-primary text-primary-foreground border-[3px] border-primary-foreground/30 shadow-[4px_4px_0_0_rgba(0,0,0,0.3)] rotate-[-1deg]"
-                              : "rounded-[80px_8px_80px_8px/8px_80px_8px_80px] bg-muted border-[2px] border-border hover:border-primary/50 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[3px_3px_0_0_var(--border)]"
-                          }`}
-                          style={{ transform: `rotate(${(index % 3 - 1) * 0.5}deg)` }}
-                        >
-                          <div className="flex flex-col">
-                            <span className="font-bold text-sm flex items-center gap-1">
-                              <DoodleIcon icon={Star} size={14} className="stroke-[2.5]" uniqueId={`custom-cat-${categoryName}-${index}`} />
-                              {categoryName}
-                            </span>
-                            <span className={`text-xs mt-1 ${isSelected ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
-                              {words.length} palabras
-                            </span>
-                          </div>
-                        </button>
-                        <div className="absolute -top-2 -right-2 flex gap-1 z-10">
-                          <Button
-                            variant="ghost"
-                            size="icon-sm"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              openEditCustomCategory(categoryName)
-                            }}
-                            className="h-7 w-7 bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-full shadow-md"
-                          >
-                            <Edit className="h-3 w-3" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon-sm"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              deleteCustomCategory(categoryName)
-                            }}
-                            className="h-7 w-7 bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full shadow-md"
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </div>
+                      <button
+                        key={category}
+                        onClick={() => toggleCategory(category)}
+                        className={`cursor-pointer relative p-2.5 text-left transition-all duration-200 ${
+                          isSelected
+                            ? "rounded-[100px_10px_100px_10px/10px_100px_10px_100px] bg-primary text-primary-foreground border-[3px] border-primary-foreground/30 md:shadow-[4px_4px_0_0_rgba(0,0,0,0.3)] md:translate-x-[-2px] md:translate-y-[-2px] rotate-[-1deg]"
+                            : "rounded-[80px_8px_80px_8px/8px_80px_8px_80px] bg-muted border-[2px] border-border hover:border-primary/50 md:hover:translate-x-[-2px] md:hover:translate-y-[-2px] md:hover:shadow-[3px_3px_0_0_var(--border)]"
+                        }`}
+                        style={{ transform: isSelected ? `rotate(${-1 + (index % 3) * 0.5}deg)` : `rotate(${(index % 3 - 1) * 0.3}deg)` }}
+                      >
+                        <DoodleIcon icon={CategoryIcon} size={16} className="inline-block mr-1.5 stroke-[2.5]" uniqueId={`category-${category}-${index}`} />
+                        <span className="font-bold text-xs">{category}</span>
+                      </button>
                     )
                   })}
                 </div>
               </div>
-            )}
 
-            {/* Crear Nueva Categoría Personalizada */}
-            <div className="bg-muted/30 p-6 rounded-[25px_10px_25px_10px/10px_25px_10px_25px] border-[3px] border-dashed border-border text-center mb-8 hover:border-primary/50 transition-all">
-              <div className="flex justify-center mb-3">
-                <DoodleIcon icon={Palette} size={40} thick className="animate-[wiggle_2s_ease-in-out_infinite]" uniqueId="create-category" />
+              {/* Categorías Personalizadas */}
+              {Object.keys(customCategories).length > 0 && (
+                <div className="mb-4 overflow-hidden">
+                  <h3 className="text-lg font-title font-bold text-foreground mb-2 flex items-center gap-2">
+                    <DoodleIcon icon={SparklesIcon} size={20} className="stroke-[2.5]" uniqueId="custom-header" />
+                    Tus Categorías
+                  </h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2 px-1">
+                    {Object.entries(customCategories).map(([categoryName, words], index) => {
+                      const isSelected = selectedCategories.includes(categoryName)
+                      return (
+                        <div key={categoryName} className="relative">
+                          <button
+                            onClick={() => toggleCategory(categoryName)}
+                            className={`relative w-full p-2.5 text-left transition-all duration-200 ${
+                              isSelected
+                                ? "rounded-[100px_10px_100px_10px/10px_100px_10px_100px] bg-primary text-primary-foreground border-[3px] border-primary-foreground/30 md:shadow-[4px_4px_0_0_rgba(0,0,0,0.3)] rotate-[-1deg]"
+                                : "rounded-[80px_8px_80px_8px/8px_80px_8px_80px] bg-muted border-[2px] border-border hover:border-primary/50 md:hover:translate-x-[-2px] md:hover:translate-y-[-2px] md:hover:shadow-[3px_3px_0_0_var(--border)]"
+                            }`}
+                            style={{ transform: `rotate(${(index % 3 - 1) * 0.5}deg)` }}
+                          >
+                            <div className="flex flex-col">
+                              <span className="font-bold text-xs flex items-center gap-1">
+                                <DoodleIcon icon={Star} size={12} className="stroke-[2.5]" uniqueId={`custom-cat-${categoryName}-${index}`} />
+                                {categoryName}
+                              </span>
+                              <span className={`text-[10px] mt-0.5 ${isSelected ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
+                                {words.length} palabras
+                              </span>
+                            </div>
+                          </button>
+                          <div className="absolute -top-1.5 -right-1.5 flex gap-1 z-10">
+                            <Button
+                              variant="ghost"
+                              size="icon-sm"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                openEditCustomCategory(categoryName)
+                              }}
+                              className="h-6 w-6 bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-full shadow-md"
+                            >
+                              <Edit className="h-2.5 w-2.5" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon-sm"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                deleteCustomCategory(categoryName)
+                              }}
+                              className="h-6 w-6 bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full shadow-md"
+                            >
+                              <X className="h-2.5 w-2.5" />
+                            </Button>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Crear Nueva Categoría Personalizada */}
+              <div className="bg-muted/30 p-4 rounded-[25px_10px_25px_10px/10px_25px_10px_25px] border-[3px] border-dashed border-border text-center mb-4 hover:border-primary/50 transition-all">
+                <div className="flex justify-center mb-2">
+                  <DoodleIcon icon={Palette} size={32} thick className="animate-[wiggle_2s_ease-in-out_infinite]" uniqueId="create-category" />
+                </div>
+                <h3 className="text-base font-title font-bold text-foreground mb-1">
+                  ¡Crea tu propia categoría!
+                </h3>
+                <p className="text-xs text-muted-foreground mb-3">
+                  Agrega palabras personalizadas o usa la IA
+                </p>
+                <Button onClick={openCreateCustomCategory} className="gap-2" size="sm">
+                  <Plus className="h-4 w-4" />
+                  Crear Categoría
+                </Button>
               </div>
-              <h3 className="text-lg font-title font-bold text-foreground mb-2">
-                ¡Crea tu propia categoría!
-              </h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                Agrega palabras personalizadas o usa la IA
-              </p>
-              <Button onClick={openCreateCustomCategory} className="gap-2">
-                <Plus className="h-5 w-5" />
-                Crear Categoría
+            </div>
+
+            {/* Footer fijo con info y CTA */}
+            <div className="shrink-0 pt-4 border-t border-border/50">
+              <div className="text-center mb-4">
+                <p className={`text-xs py-1.5 px-3 rounded-full flex items-center gap-2 justify-center ${selectedCategories.length === 0 ? 'bg-muted/50' : 'bg-primary/20'}`}>
+                  {selectedCategories.length === 0 ? (
+                    <>
+                      <DoodleIcon icon={Gamepad} size={14} className="stroke-[2.5]" uniqueId="all-categories" />
+                      Se usarán todas las categorías
+                    </>
+                  ) : (
+                    <>
+                      <Check className="h-3 w-3" />
+                      {selectedCategories.length} categoría{selectedCategories.length > 1 ? "s" : ""} seleccionada{selectedCategories.length > 1 ? "s" : ""}
+                    </>
+                  )}
+                </p>
+              </div>
+
+              <Button
+                onClick={() => setGameState("setup")}
+                className="w-full"
+                size="lg"
+              >
+                ¡Continuar! →
               </Button>
             </div>
-
-            <div className="text-center mb-6">
-              <p className={`text-sm py-2 px-4 rounded-full flex items-center gap-2 justify-center ${selectedCategories.length === 0 ? 'bg-muted/50' : 'bg-primary/20 text-primary-foreground'}`}>
-                {selectedCategories.length === 0 ? (
-                  <>
-                    <DoodleIcon icon={Gamepad} size={16} className="stroke-[2.5]" uniqueId="all-categories" />
-                    Se usarán todas las categorías
-                  </>
-                ) : (
-                  <>
-                    <Check className="h-4 w-4" />
-                    {selectedCategories.length} categoría{selectedCategories.length > 1 ? "s" : ""} seleccionada{selectedCategories.length > 1 ? "s" : ""}
-                  </>
-                )}
-              </p>
-            </div>
-
-            <Button
-              onClick={() => setGameState("setup")}
-              className="w-full"
-              size="lg"
-            >
-              ¡Continuar! →
-            </Button>
           </CardContent>
         </Card>
       </div>
@@ -1381,147 +1400,155 @@ export default function ImpostorGame() {
       <div className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden">
         <DoodleStars />
         <DoodleCircles />
-        <Card className="w-full max-w-lg relative z-10">
-          <CardContent className="p-4 md:p-8">
-            <div className="flex justify-end mb-2">
+        <Card className="w-full max-w-lg relative z-10 flex flex-col max-h-[90vh]">
+          <CardContent className="p-4 md:p-6 flex flex-col flex-1 min-h-0">
+            <div className="flex justify-end mb-2 shrink-0">
               <Button variant="ghost" size="sm" onClick={openThemeSettings} className="gap-2">
                 <Palette className="h-4 w-4" />
                 Tema
               </Button>
             </div>
 
-            <div className="text-center mb-8">
-              <div className="flex justify-center mb-4">
-                <DoodleIcon icon={Gamepad} size={56} thick className="animate-[shake_0.5s_ease-in-out_infinite]" uniqueId="setup-title" />
+            <div className="text-center mb-4 shrink-0">
+              <div className="flex justify-center mb-2">
+                <DoodleIcon icon={Drama} size={48} thick className="animate-[shake_0.5s_ease-in-out_infinite]" uniqueId="setup-title" />
               </div>
-              <h1 className="text-4xl font-title font-bold text-primary mb-2">El Impostor</h1>
-              <p className="text-muted-foreground text-lg flex items-center justify-center gap-2">
+              <h1 className="text-3xl md:text-4xl font-title font-bold text-primary mb-1">El Impostor</h1>
+              <p className="text-muted-foreground text-sm md:text-base flex items-center justify-center gap-2">
                 ¡Agrega los jugadores! (mínimo 3)
-                <DoodleIcon icon={Users} size={20} className="stroke-[2.5]" uniqueId="setup-subtitle" />
+                <DoodleIcon icon={Users} size={18} className="stroke-[2.5]" uniqueId="setup-subtitle" />
               </p>
             </div>
 
-            <div className="mb-6 p-4 bg-muted/50 rounded-[20px_8px_20px_8px/8px_20px_8px_20px] border-2 border-border">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <DoodleIcon icon={FolderOpen} size={18} className="stroke-[2.5]" uniqueId="setup-categories" />
-                  Categorías:
-                </span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setGameState("categories")}
-                  className="h-8 px-3 text-xs gap-1"
-                >
-                  <PenTool className="h-3 w-3" />
-                  Cambiar
-                </Button>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {selectedCategories.length === 0 ? (
-                  <span className="text-xs text-muted-foreground italic bg-background/50 px-3 py-1 rounded-full flex items-center gap-1">
-                    <DoodleIcon icon={Gamepad} size={14} className="stroke-[2.5]" uniqueId="setup-all-categories" />
-                    Todas las categorías
+            {/* Contenido scrolleable */}
+            <div className="flex-1 overflow-y-auto overflow-x-hidden pr-2 -mr-2 min-h-0">
+              <div className="mb-4 p-3 bg-muted/50 rounded-[20px_8px_20px_8px/8px_20px_8px_20px] border-2 border-border">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-bold text-foreground flex items-center gap-2">
+                    <DoodleIcon icon={FolderOpen} size={16} className="stroke-[2.5]" uniqueId="setup-categories" />
+                    Categorías:
                   </span>
-                ) : (
-                  selectedCategories.map((cat) => (
-                    <span key={cat} className="text-xs bg-primary/20 text-primary px-3 py-1 rounded-full font-bold">
-                      {cat}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setGameState("categories")}
+                    className="h-7 px-2 text-xs gap-1"
+                  >
+                    <PenTool className="h-3 w-3" />
+                    Cambiar
+                  </Button>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {selectedCategories.length === 0 ? (
+                    <span className="text-xs text-muted-foreground italic bg-background/50 px-2 py-1 rounded-full flex items-center gap-1">
+                      <DoodleIcon icon={Gamepad} size={12} className="stroke-[2.5]" uniqueId="setup-all-categories" />
+                      Todas las categorías
                     </span>
-                  ))
+                  ) : (
+                    selectedCategories.map((cat) => (
+                      <span key={cat} className="text-xs bg-primary/20 text-primary px-2 py-1 rounded-full font-bold">
+                        {cat}
+                      </span>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              <div className="mb-4 p-3 bg-muted/50 rounded-[20px_8px_20px_8px/8px_20px_8px_20px] border-2 border-border">
+                <label className="text-xs font-bold text-foreground block mb-3 flex items-center gap-2">
+                  <DoodleIcon icon={UserSearch} size={16} className="stroke-[2.5]" uniqueId="impostors-label" />
+                  Cantidad de Impostores:
+                </label>
+                <div className="flex items-center gap-3">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setNumImpostors(Math.max(1, numImpostors - 1))}
+                    disabled={numImpostors <= 1}
+                    className="h-10 w-10"
+                  >
+                    <span className="text-xl">−</span>
+                  </Button>
+                  <div className="flex-1 text-center">
+                    <span className="text-4xl font-title font-bold text-primary">{numImpostors}</span>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setNumImpostors(Math.min(maxImpostors, numImpostors + 1))}
+                    disabled={numImpostors >= maxImpostors}
+                    className="h-10 w-10"
+                  >
+                    <span className="text-xl">+</span>
+                  </Button>
+                </div>
+                {players.length >= 3 && (
+                  <p className="text-xs text-center text-muted-foreground mt-2 flex items-center justify-center gap-1">
+                    Máximo: {maxImpostors} impostor{maxImpostors > 1 ? "es" : ""}
+                    <DoodleIcon icon={Gamepad} size={12} className="stroke-[2.5]" uniqueId="impostors-max" />
+                  </p>
                 )}
               </div>
-            </div>
 
-            <div className="mb-6 p-4 bg-muted/50 rounded-[20px_8px_20px_8px/8px_20px_8px_20px] border-2 border-border">
-              <label className="text-sm font-bold text-foreground block mb-4 flex items-center gap-2">
-                <DoodleIcon icon={UserSearch} size={18} className="stroke-[2.5]" uniqueId="impostors-label" />
-                Cantidad de Impostores:
-              </label>
-              <div className="flex items-center gap-4">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setNumImpostors(Math.max(1, numImpostors - 1))}
-                  disabled={numImpostors <= 1}
-                  className="h-12 w-12"
-                >
-                  <span className="text-2xl">−</span>
-                </Button>
-                <div className="flex-1 text-center">
-                  <span className="text-5xl font-title font-bold text-primary">{numImpostors}</span>
+              <div className="flex flex-col sm:flex-row gap-2 mb-4 overflow-hidden px-1 items-center">
+                <div className="flex-1 min-w-0 pt-1">
+                  <Input
+                    placeholder="Nombre del jugador..."
+                    value={newPlayerName}
+                    onChange={(e) => setNewPlayerName(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && addPlayer()}
+                    className="text-sm w-full"
+                  />
                 </div>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setNumImpostors(Math.min(maxImpostors, numImpostors + 1))}
-                  disabled={numImpostors >= maxImpostors}
-                  className="h-12 w-12"
-                >
-                  <span className="text-2xl">+</span>
+                <Button onClick={addPlayer} className="gap-2 px-4 shrink-0" size="sm">
+                  <Plus className="h-4 w-4" />
+                  <span className="sm:hidden">Agregar</span>
                 </Button>
               </div>
-              {players.length >= 3 && (
-                <p className="text-xs text-center text-muted-foreground mt-3 flex items-center justify-center gap-1">
-                  Máximo: {maxImpostors} impostor{maxImpostors > 1 ? "es" : ""}
-                  <DoodleIcon icon={Gamepad} size={14} className="stroke-[2.5]" uniqueId="impostors-max" />
-                </p>
+
+              {players.length > 0 && (
+                <div className="mb-4 space-y-2 max-h-64 overflow-y-auto p-2">
+                  {players.map((player, index) => (
+                    <div 
+                      key={index} 
+                      className="flex items-center justify-between p-2.5 bg-muted rounded-[15px_5px_15px_5px/5px_15px_5px_15px] border-2 border-border group hover:border-primary/50 transition-all"
+                      style={{ transform: `rotate(${(index % 3 - 1) * 0.3}deg)` }}
+                    >
+                      <span className="font-bold text-sm text-foreground flex items-center gap-2">
+                        <DoodleIcon icon={Users} size={16} className="stroke-[2.5]" uniqueId={`player-${index}-${player}`} />
+                        {player}
+                      </span>
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        onClick={() => removePlayer(index)}
+                        className="opacity-50 group-hover:opacity-100 text-muted-foreground hover:text-destructive h-7 w-7"
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-3 mb-6">
-              <Input
-                placeholder="Nombre del jugador..."
-                value={newPlayerName}
-                onChange={(e) => setNewPlayerName(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && addPlayer()}
-              />
-              <Button onClick={addPlayer} className="gap-2 px-6">
-                <Plus className="h-5 w-5" />
-                <span className="sm:hidden">Agregar</span>
+            {/* Footer fijo con CTA */}
+            <div className="shrink-0 pt-4 border-t border-border/50">
+              {players.length < 3 && players.length > 0 && (
+                <p className="text-center text-xs text-destructive mb-3 animate-[shake_0.5s_ease-in-out] flex items-center justify-center gap-1">
+                  Necesitas al menos 3 jugadores
+                </p>
+              )}
+              <Button
+                onClick={startGame}
+                disabled={players.length < 3}
+                className="w-full gap-2"
+                size="lg"
+              >
+                <DoodleIcon icon={Gamepad} size={20} className="stroke-[2.5]" uniqueId="start-game-btn" />
+                ¡Comenzar Juego!
               </Button>
             </div>
-
-            {players.length > 0 && (
-              <div className="mb-6 space-y-2 max-h-48 overflow-y-auto p-2">
-                {players.map((player, index) => (
-                  <div 
-                    key={index} 
-                    className="flex items-center justify-between p-3 bg-muted rounded-[15px_5px_15px_5px/5px_15px_5px_15px] border-2 border-border group hover:border-primary/50 transition-all"
-                    style={{ transform: `rotate(${(index % 3 - 1) * 0.3}deg)` }}
-                  >
-                    <span className="font-bold text-foreground flex items-center gap-2">
-                      <DoodleIcon icon={Users} size={18} className="stroke-[2.5]" uniqueId={`player-${index}-${player}`} />
-                      {player}
-                    </span>
-                    <Button
-                      variant="ghost"
-                      size="icon-sm"
-                      onClick={() => removePlayer(index)}
-                      className="opacity-50 group-hover:opacity-100 text-muted-foreground hover:text-destructive"
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <Button
-              onClick={startGame}
-              disabled={players.length < 3}
-              className="w-full gap-2"
-              size="lg"
-            >
-              <DoodleIcon icon={Gamepad} size={20} className="stroke-[2.5]" uniqueId="start-game-btn" />
-              ¡Comenzar Juego!
-            </Button>
-
-            {players.length < 3 && players.length > 0 && (
-              <p className="text-center text-sm text-destructive mt-3 animate-[shake_0.5s_ease-in-out] flex items-center justify-center gap-1">
-                Necesitas al menos 3 jugadores
-              </p>
-            )}
           </CardContent>
         </Card>
       </div>
