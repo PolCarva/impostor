@@ -123,3 +123,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+body > div:nth-child(3) > div {
+  display: none;
+} 

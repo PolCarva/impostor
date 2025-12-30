@@ -10,23 +10,22 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "El Impostor - Juego de Fiesta",
   description: "Juego social de palabras donde uno es el impostor",
-  generator: "v0.app",
   icons: {
     icon: [
       {
-        url: "/icon-light-32x32.png",
+        url: "https://www.pablocarvalho.dev/img/icon.svg",
         media: "(prefers-color-scheme: light)",
       },
       {
-        url: "/icon-dark-32x32.png",
+        url: "https://www.pablocarvalho.dev/img/icon.svg",
         media: "(prefers-color-scheme: dark)",
       },
       {
-        url: "/icon.svg",
+        url: "https://www.pablocarvalho.dev/img/icon.svg",
         type: "image/svg+xml",
       },
     ],
-    apple: "/apple-icon.png",
+    apple: "https://www.pablocarvalho.dev/img/icon.svg",
   },
 }
 
