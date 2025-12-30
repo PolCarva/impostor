@@ -497,7 +497,7 @@ const COLOR_PALETTES = {
       "card-foreground": "oklch(0.15 0 0)",
       primary: "oklch(0.15 0 0)",
       "primary-foreground": "oklch(0.98 0.002 0)",
-      secondary: "oklch(0.92 0.002 0)",
+      secondary: "oklch(0.55 0.002 0)",
       "secondary-foreground": "oklch(0.15 0 0)",
       muted: "oklch(0.95 0.002 0)",
       "muted-foreground": "oklch(0.40 0 0)",
