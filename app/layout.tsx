@@ -1,25 +1,14 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Nunito, Baloo_2, Grandstander } from "next/font/google"
+import { Pangolin } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 
-// Fuentes juguetones y redondeadas perfectas para la estética doodly
-const nunito = Nunito({ 
+// Fuente Pangolin - perfecta para estética doodly y hand-drawn
+const pangolin = Pangolin({ 
+  weight: "400",
   subsets: ["latin"],
-  variable: "--font-nunito",
-  display: "swap",
-})
-
-const baloo = Baloo_2({ 
-  subsets: ["latin"],
-  variable: "--font-baloo",
-  display: "swap",
-})
-
-const grandstander = Grandstander({ 
-  subsets: ["latin"],
-  variable: "--font-grandstander",
+  variable: "--font-pangolin",
   display: "swap",
 })
 
@@ -52,7 +41,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`${nunito.variable} ${baloo.variable} ${grandstander.variable} ${nunito.className} antialiased`}>
+      <body className={`${pangolin.variable} ${pangolin.className} antialiased`}>
+        {/* SVG filters for doodle effects */}
+        <svg width="0" height="0" style={{ position: 'absolute' }}>
+          <defs>
+            {/* Rough/sketchy filter - hand-drawn effect */}
+            <filter id="doodle-rough" x="-50%" y="-50%" width="200%" height="200%">
+              <feTurbulence baseFrequency="0.06" numOctaves="2" result="noise" seed="2" />
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.8" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+            {/* Hand-drawn wobble filter */}
+            <filter id="doodle-wobble" x="-10%" y="-10%" width="120%" height="120%">
+              <feTurbulence baseFrequency="0.9" numOctaves="4" result="turbulence" />
+              <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="0.8" />
+            </filter>
+          </defs>
+        </svg>
         {children}
         <Analytics />
       </body>

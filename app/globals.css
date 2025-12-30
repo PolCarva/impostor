@@ -76,9 +76,9 @@
 }
 
 @theme inline {
-  --font-playful: var(--font-nunito), "Comic Sans MS", system-ui, sans-serif;
-  --font-title: var(--font-baloo), var(--font-nunito), "Comic Sans MS", sans-serif;
-  --font-accent: var(--font-grandstander), var(--font-nunito), cursive;
+  --font-playful: var(--font-pangolin), "Comic Sans MS", system-ui, sans-serif;
+  --font-title: var(--font-pangolin), "Comic Sans MS", sans-serif;
+  --font-accent: var(--font-pangolin), cursive;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -128,15 +128,15 @@
 
 /* Playful font utility classes */
 .font-playful {
-  font-family: var(--font-nunito), "Comic Sans MS", system-ui, sans-serif;
+  font-family: var(--font-pangolin), "Comic Sans MS", system-ui, sans-serif;
 }
 
 .font-title {
-  font-family: var(--font-baloo), var(--font-nunito), "Comic Sans MS", sans-serif;
+  font-family: var(--font-pangolin), "Comic Sans MS", sans-serif;
 }
 
 .font-accent {
-  font-family: var(--font-grandstander), var(--font-nunito), cursive;
+  font-family: var(--font-pangolin), cursive;
 }
 
 /* Hand-drawn border effect using SVG filters */
@@ -456,4 +456,84 @@
 .emoji-bounce {
   display: inline-block;
   animation: bounce-soft 2s ease-in-out infinite;
+}
+
+/* Doodle icon styles - Hand-drawn effect */
+.doodle-icon {
+  filter: 
+    drop-shadow(1.5px 1.5px 1px rgba(0,0,0,0.15))
+    drop-shadow(-0.5px -0.5px 0.8px rgba(255,255,255,0.25))
+    url(#doodle-rough);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transform-origin: center;
+  animation: doodle-wobble 4s ease-in-out infinite;
+  paint-order: stroke fill;
+  /* Make stroke slightly irregular */
+  stroke-miterlimit: 1;
+  /* Add slight opacity variation for hand-drawn feel */
+  opacity: 0.95;
+  /* Animation delay and duration will be set inline per icon */
+}
+
+/* Subtle wobble animation for doodle feel - more organic and visible */
+@keyframes doodle-wobble {
+  0%, 100% { 
+    transform: rotate(0deg) translate(0, 0) scale(1);
+  }
+  10% { 
+    transform: rotate(0.5deg) translate(0.5px, -0.3px) scale(1.01);
+  }
+  20% { 
+    transform: rotate(-0.4deg) translate(-0.4px, 0.4px) scale(0.99);
+  }
+  30% { 
+    transform: rotate(0.6deg) translate(0.3px, 0.3px) scale(1);
+  }
+  40% { 
+    transform: rotate(-0.5deg) translate(-0.5px, -0.2px) scale(1.01);
+  }
+  50% { 
+    transform: rotate(0deg) translate(0, 0) scale(1);
+  }
+  60% { 
+    transform: rotate(-0.6deg) translate(-0.3px, 0.3px) scale(0.99);
+  }
+  70% { 
+    transform: rotate(0.4deg) translate(0.5px, -0.4px) scale(1);
+  }
+  80% { 
+    transform: rotate(-0.5deg) translate(-0.2px, 0.2px) scale(1.01);
+  }
+  90% { 
+    transform: rotate(0.5deg) translate(0.2px, -0.3px) scale(0.99);
+  }
+}
+
+/* Random rotation for variety - subtle hand-drawn feel */
+/* Note: animation-delay is now set inline per icon for better desynchronization */
+.doodle-icon-random-1 { 
+  transform: rotate(-0.8deg);
+}
+.doodle-icon-random-2 { 
+  transform: rotate(0.6deg);
+}
+.doodle-icon-random-3 { 
+  transform: rotate(-0.5deg);
+}
+.doodle-icon-random-4 { 
+  transform: rotate(0.9deg);
+}
+.doodle-icon-random-5 { 
+  transform: rotate(-0.7deg);
+}
+
+/* Enhanced stroke for more visible doodle effect */
+.doodle-icon-thick {
+  stroke-width: 3.5;
+  filter: 
+    drop-shadow(1.5px 1.5px 1px rgba(0,0,0,0.15))
+    drop-shadow(-0.6px -0.6px 0.8px rgba(255,255,255,0.25))
+    url(#doodle-rough);
+  stroke-miterlimit: 1;
 }

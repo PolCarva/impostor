@@ -5,7 +5,64 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
-import { X, Plus, Check, Palette, Sparkles, Loader2, Edit } from "lucide-react"
+import { 
+  X, Plus, Check, Palette, Sparkles, Loader2, Edit,
+  Heart, Sun, Waves, Grape, Leaf, Circle, Moon,
+  Package, Globe, CircleDot, Gamepad2, PawPrint, Pizza,
+  Star, Film, Wrench, Briefcase, Smartphone, Car, Rainbow,
+  FolderOpen, UserSearch, Users, Target, RefreshCw, Gamepad,
+  Sparkles as SparklesIcon, PenTool, Box, CreditCard, MessageSquare,
+  Mic, Hand, AlertCircle
+} from "lucide-react"
+
+// Helper function to generate a stable hash from string
+const hashString = (str: string): number => {
+  let hash = 0
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i)
+    hash = ((hash << 5) - hash) + char
+    hash = hash & hash // Convert to 32bit integer
+  }
+  return Math.abs(hash)
+}
+
+// Doodle icon wrapper component with hand-drawn effect
+const DoodleIcon = ({ icon: Icon, size = 24, className = "", randomRotate = true, thick = false, uniqueId = "", style = {} }: { icon: any, size?: number, className?: string, randomRotate?: boolean, thick?: boolean, uniqueId?: string, style?: React.CSSProperties }) => {
+  // Generate a unique identifier combining icon name, size, and optional uniqueId
+  const iconName = Icon.name || 'icon'
+  const uniqueKey = `${iconName}-${size}-${uniqueId || ''}`
+  
+  // Create a more robust hash for better distribution
+  const hash = hashString(uniqueKey)
+  
+  // Generate rotation class (0-4)
+  const randomIndex = hash % 5
+  const randomClass = randomRotate ? `doodle-icon-random-${randomIndex + 1}` : ""
+  const thickClass = thick ? 'doodle-icon-thick' : ''
+  
+  // Generate unique animation delay (0-8 seconds) with better distribution
+  const delayHash = hashString(`${uniqueKey}-delay`)
+  const animationDelay = `${(delayHash % 800) / 100}s` // 0.00s to 7.99s
+  
+  // Generate unique animation duration (3-6.5 seconds) with better distribution
+  const durationHash = hashString(`${uniqueKey}-duration`)
+  const animationDuration = `${3 + (durationHash % 350) / 100}s` // 3.00s to 6.49s
+  
+  return (
+    <Icon 
+      className={`doodle-icon ${thickClass} stroke-[2.5] ${randomClass} ${className}`}
+      size={size}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={thick ? 3 : 2.5}
+      style={{
+        ...style,
+        animationDelay: animationDelay,
+        animationDuration: animationDuration,
+      }}
+    />
+  )
+}
 
 // Doodle decorations component
 const DoodleStars = () => (
@@ -409,9 +466,10 @@ const WORD_CATEGORIES = {
 const DEFAULT_CATEGORIES = WORD_CATEGORIES
 
 const COLOR_PALETTES = {
-  // 🍬 Chicle Rosa - Dulce y juguetón
+  // Chicle Rosa - Dulce y juguetón
   bubblegum: {
-    name: "🍬 Chicle Rosa",
+    name: "Chicle Rosa",
+    icon: Heart,
     colors: {
       background: "oklch(0.95 0.03 350)",
       foreground: "oklch(0.25 0.05 350)",
@@ -430,9 +488,10 @@ const COLOR_PALETTES = {
       "accent-foreground": "oklch(0.25 0.05 320)",
     },
   },
-  // 🍋 Limonada - Fresco y alegre
+  // Limonada - Fresco y alegre
   lemonade: {
-    name: "🍋 Limonada",
+    name: "Limonada",
+    icon: Sun,
     colors: {
       background: "oklch(0.97 0.04 95)",
       foreground: "oklch(0.30 0.08 80)",
@@ -451,9 +510,10 @@ const COLOR_PALETTES = {
       "accent-foreground": "oklch(0.25 0.08 50)",
     },
   },
-  // 🌊 Playa Tropical - Refrescante y divertido
+  // Playa Tropical - Refrescante y divertido
   tropical: {
-    name: "🌊 Playa Tropical",
+    name: "Playa Tropical",
+    icon: Waves,
     colors: {
       background: "oklch(0.95 0.04 200)",
       foreground: "oklch(0.25 0.06 200)",
@@ -472,9 +532,10 @@ const COLOR_PALETTES = {
       "accent-foreground": "oklch(0.25 0.06 170)",
     },
   },
-  // 🍇 Uva Mágica - Misterioso pero divertido
+  // Uva Mágica - Misterioso pero divertido
   grape: {
-    name: "🍇 Uva Mágica",
+    name: "Uva Mágica",
+    icon: Grape,
     colors: {
       background: "oklch(0.94 0.04 300)",
       foreground: "oklch(0.28 0.08 300)",
@@ -493,9 +554,10 @@ const COLOR_PALETTES = {
       "accent-foreground": "oklch(0.99 0 0)",
     },
   },
-  // 🌿 Menta Fresca - Relajante y suave
+  // Menta Fresca - Relajante y suave
   mint: {
-    name: "🌿 Menta Fresca",
+    name: "Menta Fresca",
+    icon: Leaf,
     colors: {
       background: "oklch(0.96 0.03 165)",
       foreground: "oklch(0.28 0.06 165)",
@@ -514,9 +576,10 @@ const COLOR_PALETTES = {
       "accent-foreground": "oklch(0.25 0.06 200)",
     },
   },
-  // 🍊 Naranja Dulce - Cálido y energético
+  // Naranja Dulce - Cálido y energético
   tangerine: {
-    name: "🍊 Naranja Dulce",
+    name: "Naranja Dulce",
+    icon: Circle,
     colors: {
       background: "oklch(0.96 0.035 55)",
       foreground: "oklch(0.30 0.08 40)",
@@ -535,9 +598,10 @@ const COLOR_PALETTES = {
       "accent-foreground": "oklch(0.25 0.06 80)",
     },
   },
-  // 🌙 Noche Estrellada - Oscuro pero juguetón
+  // Noche Estrellada - Oscuro pero juguetón
   midnight: {
-    name: "🌙 Noche Estrellada",
+    name: "Noche Estrellada",
+    icon: Moon,
     colors: {
       background: "oklch(0.15 0.03 280)",
       foreground: "oklch(0.95 0.01 280)",
@@ -860,7 +924,7 @@ export default function ImpostorGame() {
           <CardContent className="p-4 md:p-8">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
-                <span className="text-3xl animate-[bounce-soft_2s_ease-in-out_infinite]">🎨</span>
+                <DoodleIcon icon={Palette} size={32} thick className="animate-[bounce-soft_2s_ease-in-out_infinite]" uniqueId="theme-header" />
                 <h1 className="text-2xl md:text-3xl font-title font-bold text-primary">Elige tu estilo</h1>
               </div>
               <Button variant="ghost" size="icon" onClick={() => {
@@ -870,8 +934,8 @@ export default function ImpostorGame() {
               </Button>
             </div>
 
-            <p className="text-center text-muted-foreground mb-8 text-lg">
-              ¡Personaliza los colores de tu juego! ✨
+            <p className="text-center text-muted-foreground mb-8 text-lg flex items-center justify-center gap-2">
+              ¡Personaliza los colores de tu juego!
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
@@ -884,16 +948,27 @@ export default function ImpostorGame() {
                     onClick={() => selectPalette(paletteName)}
                     className={`relative p-5 transition-all duration-200 ${
                       isSelected
-                        ? "rounded-[30px_10px_30px_10px/10px_30px_10px_30px] border-[3px] border-primary shadow-[6px_6px_0_0_var(--primary)] translate-x-[-3px] translate-y-[-3px] rotate-[-1deg]"
-                        : "rounded-[25px_8px_25px_8px/8px_25px_8px_25px] border-[2px] border-border hover:border-primary/50 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[4px_4px_0_0_var(--border)]"
+                        ? "rounded-[30px_10px_30px_10px/10px_30px_10px_30px] border-[3px] border-primary shadow-[6px_6px_0_0_var(--primary)] translate-x-[-3px] translate-y-[-3px] -rotate-1"
+                        : "rounded-[25px_8px_25px_8px/8px_25px_8px_25px] border-2 border-border hover:border-primary/50 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[4px_4px_0_0_var(--border)]"
                     }`}
                     style={{ backgroundColor: palette.colors.card }}
                   >
                     <div className="flex flex-col items-start gap-3">
                       <div className="w-full flex items-center justify-between">
-                        <span className="font-title font-bold text-lg" style={{ color: palette.colors["card-foreground"] }}>
-                          {palette.name}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          {palette.icon && (
+                            <DoodleIcon 
+                              icon={palette.icon} 
+                              size={20} 
+                              className="stroke-[2.5]"
+                              uniqueId={`palette-${paletteName}`}
+                              style={{ stroke: palette.colors["card-foreground"] }}
+                            />
+                          )}
+                          <span className="font-title font-bold text-lg" style={{ color: palette.colors["card-foreground"] }}>
+                            {palette.name}
+                          </span>
+                        </div>
                         {isSelected && (
                           <div className="rounded-full p-1.5 animate-[bounce-soft_1s_ease-in-out_infinite]" style={{ backgroundColor: palette.colors.primary }}>
                             <Check className="h-4 w-4" style={{ color: palette.colors["primary-foreground"] }} />
@@ -936,7 +1011,7 @@ export default function ImpostorGame() {
           <CardContent className="p-4 md:p-8">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                <span className="text-3xl animate-[wiggle_1s_ease-in-out_infinite]">✏️</span>
+                <DoodleIcon icon={PenTool} size={32} thick className="animate-[wiggle_1s_ease-in-out_infinite]" uniqueId="edit-header" />
                 <h1 className="text-2xl md:text-3xl font-title font-bold text-primary">
                   {isEditingExisting ? "Editar Categoría" : "Nueva Categoría"}
                 </h1>
@@ -950,7 +1025,8 @@ export default function ImpostorGame() {
               {/* Nombre de la categoría */}
               <div>
                 <label className="text-lg font-title font-bold text-foreground mb-3 block flex items-center gap-2">
-                  <span>📝</span> Nombre de la categoría:
+                  <DoodleIcon icon={PenTool} size={20} className="stroke-[2.5]" uniqueId="edit-label" />
+                  Nombre de la categoría:
                 </label>
                 <Input
                   placeholder="Ej: Personajes de Anime, Comidas Típicas..."
@@ -1000,7 +1076,8 @@ export default function ImpostorGame() {
               <div>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
                   <h3 className="text-lg font-title font-bold text-foreground flex items-center gap-2">
-                    <span>📚</span> Palabras ({editingCategoryWords.length})
+                    <DoodleIcon icon={Box} size={20} className="stroke-[2.5]" uniqueId="words-header" />
+                    Palabras ({editingCategoryWords.length})
                   </h3>
                   <div className="flex w-full sm:w-auto gap-2">
                     <Input
@@ -1058,7 +1135,9 @@ export default function ImpostorGame() {
 
                 {editingCategoryWords.length === 0 && (
                   <div className="text-center py-12 text-muted-foreground">
-                    <span className="text-5xl block mb-4">📭</span>
+                    <div className="flex justify-center mb-4">
+                      <DoodleIcon icon={Box} size={48} thick className="opacity-50" uniqueId="empty-state" />
+                    </div>
                     <p className="text-lg font-title">No hay palabras aún</p>
                     <p className="text-sm">Usa el asistente mágico o agrega palabras manualmente</p>
                   </div>
@@ -1106,22 +1185,26 @@ export default function ImpostorGame() {
             </div>
 
             <div className="text-center mb-8">
-              <span className="text-5xl md:text-6xl block mb-4 animate-[bounce-soft_2s_ease-in-out_infinite]">🎭</span>
+              <div className="flex justify-center mb-4">
+                <DoodleIcon icon={Gamepad} size={64} thick className="animate-[bounce-soft_2s_ease-in-out_infinite]" uniqueId="categories-title" />
+              </div>
               <h1 className="text-4xl md:text-5xl font-title font-bold text-primary mb-2">El Impostor</h1>
-              <p className="text-muted-foreground text-lg">
-                ¡Elige las categorías para jugar! ✨
+              <p className="text-muted-foreground text-lg flex items-center justify-center gap-2">
+                ¡Elige las categorías para jugar!
               </p>
             </div>
 
             {/* Categorías Default */}
             <div className="mb-8">
               <h3 className="text-xl font-title font-bold text-foreground mb-4 flex items-center gap-2">
-                <span>📦</span> Categorías Predefinidas
+                <DoodleIcon icon={Package} size={24} className="stroke-[2.5]" uniqueId="predefined-header" />
+                Categorías Predefinidas
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {Object.keys(DEFAULT_CATEGORIES).map((category, index) => {
                   const isSelected = selectedCategories.includes(category)
-                  const emojis = ["🌍", "⚽", "🎮", "🐾", "🍕", "⭐", "🎬", "🔧", "👔", "📱", "🚗", "🌈"]
+                  const categoryIcons = [Globe, CircleDot, Gamepad2, PawPrint, Pizza, Star, Film, Wrench, Briefcase, Smartphone, Car, Rainbow]
+                  const CategoryIcon = categoryIcons[index % categoryIcons.length]
                   return (
                     <button
                       key={category}
@@ -1133,7 +1216,7 @@ export default function ImpostorGame() {
                       }`}
                       style={{ transform: isSelected ? `rotate(${-1 + (index % 3) * 0.5}deg) translateX(-2px) translateY(-2px)` : `rotate(${(index % 3 - 1) * 0.3}deg)` }}
                     >
-                      <span className="text-lg mr-2">{emojis[index % emojis.length]}</span>
+                      <DoodleIcon icon={CategoryIcon} size={18} className="inline-block mr-2 stroke-[2.5]" uniqueId={`category-${category}-${index}`} />
                       <span className="font-bold text-sm">{category}</span>
                     </button>
                   )
@@ -1145,7 +1228,8 @@ export default function ImpostorGame() {
             {Object.keys(customCategories).length > 0 && (
               <div className="mb-8">
                 <h3 className="text-xl font-title font-bold text-foreground mb-4 flex items-center gap-2">
-                  <span>✨</span> Tus Categorías
+                  <DoodleIcon icon={SparklesIcon} size={24} className="stroke-[2.5]" uniqueId="custom-header" />
+                  Tus Categorías
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {Object.entries(customCategories).map(([categoryName, words], index) => {
@@ -1162,7 +1246,10 @@ export default function ImpostorGame() {
                           style={{ transform: `rotate(${(index % 3 - 1) * 0.5}deg)` }}
                         >
                           <div className="flex flex-col">
-                            <span className="font-bold text-sm">💫 {categoryName}</span>
+                            <span className="font-bold text-sm flex items-center gap-1">
+                              <DoodleIcon icon={Star} size={14} className="stroke-[2.5]" uniqueId={`custom-cat-${categoryName}-${index}`} />
+                              {categoryName}
+                            </span>
                             <span className={`text-xs mt-1 ${isSelected ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
                               {words.length} palabras
                             </span>
@@ -1201,7 +1288,9 @@ export default function ImpostorGame() {
 
             {/* Crear Nueva Categoría Personalizada */}
             <div className="bg-muted/30 p-6 rounded-[25px_10px_25px_10px/10px_25px_10px_25px] border-[3px] border-dashed border-border text-center mb-8 hover:border-primary/50 transition-all">
-              <span className="text-4xl block mb-3 animate-[wiggle_2s_ease-in-out_infinite]">🎨</span>
+              <div className="flex justify-center mb-3">
+                <DoodleIcon icon={Palette} size={40} thick className="animate-[wiggle_2s_ease-in-out_infinite]" uniqueId="create-category" />
+              </div>
               <h3 className="text-lg font-title font-bold text-foreground mb-2">
                 ¡Crea tu propia categoría!
               </h3>
@@ -1215,10 +1304,18 @@ export default function ImpostorGame() {
             </div>
 
             <div className="text-center mb-6">
-              <p className={`text-sm py-2 px-4 inline-block rounded-full ${selectedCategories.length === 0 ? 'bg-muted/50' : 'bg-primary/20 text-primary'}`}>
-                {selectedCategories.length === 0
-                  ? "🎲 Se usarán todas las categorías"
-                  : `✓ ${selectedCategories.length} categoría${selectedCategories.length > 1 ? "s" : ""} seleccionada${selectedCategories.length > 1 ? "s" : ""}`}
+              <p className={`text-sm py-2 px-4 rounded-full flex items-center gap-2 justify-center ${selectedCategories.length === 0 ? 'bg-muted/50' : 'bg-primary/20 text-primary'}`}>
+                {selectedCategories.length === 0 ? (
+                  <>
+                    <DoodleIcon icon={Gamepad} size={16} className="stroke-[2.5]" uniqueId="all-categories" />
+                    Se usarán todas las categorías
+                  </>
+                ) : (
+                  <>
+                    <Check className="h-4 w-4" />
+                    {selectedCategories.length} categoría{selectedCategories.length > 1 ? "s" : ""} seleccionada{selectedCategories.length > 1 ? "s" : ""}
+                  </>
+                )}
               </p>
             </div>
 
@@ -1252,30 +1349,38 @@ export default function ImpostorGame() {
             </div>
 
             <div className="text-center mb-8">
-              <span className="text-5xl block mb-4 animate-[shake_0.5s_ease-in-out_infinite]">🎭</span>
+              <div className="flex justify-center mb-4">
+                <DoodleIcon icon={Gamepad} size={56} thick className="animate-[shake_0.5s_ease-in-out_infinite]" uniqueId="setup-title" />
+              </div>
               <h1 className="text-4xl font-title font-bold text-primary mb-2">El Impostor</h1>
-              <p className="text-muted-foreground text-lg">
-                ¡Agrega los jugadores! (mínimo 3) 👥
+              <p className="text-muted-foreground text-lg flex items-center justify-center gap-2">
+                ¡Agrega los jugadores! (mínimo 3)
+                <DoodleIcon icon={Users} size={20} className="stroke-[2.5]" uniqueId="setup-subtitle" />
               </p>
             </div>
 
             <div className="mb-6 p-4 bg-muted/50 rounded-[20px_8px_20px_8px/8px_20px_8px_20px] border-2 border-border">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <span>📂</span> Categorías:
+                  <DoodleIcon icon={FolderOpen} size={18} className="stroke-[2.5]" uniqueId="setup-categories" />
+                  Categorías:
                 </span>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setGameState("categories")}
-                  className="h-8 px-3 text-xs"
+                  className="h-8 px-3 text-xs gap-1"
                 >
-                  ✏️ Cambiar
+                  <PenTool className="h-3 w-3" />
+                  Cambiar
                 </Button>
               </div>
               <div className="flex flex-wrap gap-2">
                 {selectedCategories.length === 0 ? (
-                  <span className="text-xs text-muted-foreground italic bg-background/50 px-3 py-1 rounded-full">🎲 Todas las categorías</span>
+                  <span className="text-xs text-muted-foreground italic bg-background/50 px-3 py-1 rounded-full flex items-center gap-1">
+                    <DoodleIcon icon={Gamepad} size={14} className="stroke-[2.5]" uniqueId="setup-all-categories" />
+                    Todas las categorías
+                  </span>
                 ) : (
                   selectedCategories.map((cat) => (
                     <span key={cat} className="text-xs bg-primary/20 text-primary px-3 py-1 rounded-full font-bold">
@@ -1288,7 +1393,8 @@ export default function ImpostorGame() {
 
             <div className="mb-6 p-4 bg-muted/50 rounded-[20px_8px_20px_8px/8px_20px_8px_20px] border-2 border-border">
               <label className="text-sm font-bold text-foreground block mb-4 flex items-center gap-2">
-                <span>🕵️</span> Cantidad de Impostores:
+                <DoodleIcon icon={UserSearch} size={18} className="stroke-[2.5]" uniqueId="impostors-label" />
+                Cantidad de Impostores:
               </label>
               <div className="flex items-center gap-4">
                 <Button
@@ -1314,8 +1420,9 @@ export default function ImpostorGame() {
                 </Button>
               </div>
               {players.length >= 3 && (
-                <p className="text-xs text-center text-muted-foreground mt-3">
-                  Máximo: {maxImpostors} impostor{maxImpostors > 1 ? "es" : ""} 🎭
+                <p className="text-xs text-center text-muted-foreground mt-3 flex items-center justify-center gap-1">
+                  Máximo: {maxImpostors} impostor{maxImpostors > 1 ? "es" : ""}
+                  <DoodleIcon icon={Gamepad} size={14} className="stroke-[2.5]" uniqueId="impostors-max" />
                 </p>
               )}
             </div>
@@ -1342,7 +1449,8 @@ export default function ImpostorGame() {
                     style={{ transform: `rotate(${(index % 3 - 1) * 0.3}deg)` }}
                   >
                     <span className="font-bold text-foreground flex items-center gap-2">
-                      <span className="text-lg">👤</span> {player}
+                      <DoodleIcon icon={Users} size={18} className="stroke-[2.5]" uniqueId={`player-${index}-${player}`} />
+                      {player}
                     </span>
                     <Button
                       variant="ghost"
@@ -1360,15 +1468,16 @@ export default function ImpostorGame() {
             <Button
               onClick={startGame}
               disabled={players.length < 3}
-              className="w-full"
+              className="w-full gap-2"
               size="lg"
             >
-              🚀 ¡Comenzar Juego!
+              <DoodleIcon icon={Gamepad} size={20} className="stroke-[2.5]" uniqueId="start-game-btn" />
+              ¡Comenzar Juego!
             </Button>
 
             {players.length < 3 && players.length > 0 && (
-              <p className="text-center text-sm text-destructive mt-3 animate-[shake_0.5s_ease-in-out]">
-                ⚠️ Necesitas al menos 3 jugadores
+              <p className="text-center text-sm text-destructive mt-3 animate-[shake_0.5s_ease-in-out] flex items-center justify-center gap-1">
+                Necesitas al menos 3 jugadores
               </p>
             )}
           </CardContent>
@@ -1404,10 +1513,13 @@ export default function ImpostorGame() {
               <div className="flip-card-front absolute w-full h-full rounded-[20px] border-[4px] border-foreground/80 bg-card shadow-[8px_8px_0_0_var(--primary)] cursor-pointer hover:shadow-[10px_10px_0_0_var(--primary)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all select-none overflow-hidden">
                 <div className="absolute inset-4 border-2 border-dashed border-muted rounded-xl" />
                 <div className="h-full flex flex-col items-center justify-center p-8 relative">
-                  <span className="text-6xl mb-6 animate-[bounce-soft_2s_ease-in-out_infinite]">🃏</span>
+                  <div className="mb-6 animate-[bounce-soft_2s_ease-in-out_infinite]">
+                    <DoodleIcon icon={CreditCard} size={64} thick uniqueId="card-front" />
+                  </div>
                   <h2 className="text-3xl md:text-4xl font-title font-bold text-primary mb-4 text-center">{players[currentPlayer]}</h2>
-                  <p className="text-muted-foreground text-center text-sm">
-                    👆 Mantén presionado para revelar tu rol
+                  <p className="text-muted-foreground text-center text-sm flex items-center justify-center gap-1">
+                    <Hand className="h-4 w-4" />
+                    Mantén presionado para revelar tu rol
                   </p>
                 </div>
                 {/* Corner decorations */}
@@ -1423,18 +1535,23 @@ export default function ImpostorGame() {
                 <div className="h-full flex flex-col items-center justify-center p-8 relative">
                   {isCurrentPlayerImpostor ? (
                     <>
-                      <span className="text-7xl mb-4 animate-[shake_0.3s_ease-in-out_infinite]">🎭</span>
+                      <div className="mb-4 animate-[shake_0.3s_ease-in-out_infinite]">
+                        <DoodleIcon icon={UserSearch} size={72} thick uniqueId="card-back-impostor" />
+                      </div>
                       <h3 className="text-4xl font-title font-bold text-destructive mb-4">¡IMPOSTOR!</h3>
-                      <p className="text-muted-foreground text-center text-sm">
-                        🤫 Descubre la palabra sin ser descubierto
+                      <p className="text-muted-foreground text-center text-sm flex items-center justify-center gap-1">
+                        Descubre la palabra sin ser descubierto
                       </p>
                     </>
                   ) : (
                     <>
-                      <span className="text-7xl mb-4 animate-[twinkle_2s_ease-in-out_infinite]">🎯</span>
+                      <div className="mb-4 animate-[twinkle_2s_ease-in-out_infinite]">
+                        <DoodleIcon icon={Target} size={72} thick uniqueId="card-back-word" />
+                      </div>
                       <h3 className="text-3xl md:text-4xl font-title font-bold text-secondary mb-4 text-center">{selectedWord}</h3>
-                      <p className="text-muted-foreground text-center text-sm">
-                        💬 Describe la palabra sin decirla
+                      <p className="text-muted-foreground text-center text-sm flex items-center justify-center gap-1">
+                        <MessageSquare className="h-4 w-4" />
+                        Describe la palabra sin decirla
                       </p>
                     </>
                   )}
@@ -1450,10 +1567,20 @@ export default function ImpostorGame() {
 
           <Button
             onClick={nextPlayer}
-            className="w-full max-w-xs sm:max-w-sm"
+            className="w-full max-w-xs sm:max-w-sm gap-2"
             size="lg"
           >
-            {currentPlayer < players.length - 1 ? "→ Siguiente Jugador" : "🏁 Finalizar Ronda"}
+            {currentPlayer < players.length - 1 ? (
+              <>
+                →
+                Siguiente Jugador
+              </>
+            ) : (
+              <>
+                <Check className="h-5 w-5" />
+                Finalizar Ronda
+              </>
+            )}
           </Button>
         </div>
       </div>
@@ -1467,13 +1594,19 @@ export default function ImpostorGame() {
       <DoodleCircles />
       <Card className="w-full max-w-lg relative z-10">
         <CardContent className="p-8 text-center">
-          <span className="text-7xl block mb-6 animate-[bounce-soft_1s_ease-in-out_infinite]">🎮</span>
+          <div className="flex justify-center mb-6 animate-[bounce-soft_1s_ease-in-out_infinite]">
+            <DoodleIcon icon={Gamepad} size={72} thick uniqueId="finished-icon" />
+          </div>
           <h2 className="text-4xl font-title font-bold text-primary mb-6">¡A Jugar!</h2>
-          <p className="text-2xl text-foreground mb-8">
-            Empieza: <span className="font-bold text-secondary inline-block animate-[wiggle_0.5s_ease-in-out_infinite]">🎤 {players[firstPlayerIndex]}</span>
+          <p className="text-2xl text-foreground mb-8 flex items-center justify-center gap-2">
+            Empieza: <span className="font-bold text-secondary inline-flex items-center gap-1 animate-[wiggle_0.5s_ease-in-out_infinite]">
+              <Mic className="h-6 w-6" />
+              {players[firstPlayerIndex]}
+            </span>
           </p>
           <Button onClick={resetGame} size="lg" className="gap-2">
-            🔄 Volver a Jugar
+            <RefreshCw className="h-5 w-5" />
+            Volver a Jugar
           </Button>
         </CardContent>
       </Card>
