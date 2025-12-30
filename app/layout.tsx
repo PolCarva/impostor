@@ -1,11 +1,27 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Nunito, Baloo_2, Grandstander } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 
-const _geist = Geist({ subsets: ["latin"] })
-const _geistMono = Geist_Mono({ subsets: ["latin"] })
+// Fuentes juguetones y redondeadas perfectas para la estética doodly
+const nunito = Nunito({ 
+  subsets: ["latin"],
+  variable: "--font-nunito",
+  display: "swap",
+})
+
+const baloo = Baloo_2({ 
+  subsets: ["latin"],
+  variable: "--font-baloo",
+  display: "swap",
+})
+
+const grandstander = Grandstander({ 
+  subsets: ["latin"],
+  variable: "--font-grandstander",
+  display: "swap",
+})
 
 export const metadata: Metadata = {
   title: "El Impostor - Juego de Fiesta",
@@ -36,7 +52,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`font-sans antialiased`}>
+      <body className={`${nunito.variable} ${baloo.variable} ${grandstander.variable} ${nunito.className} antialiased`}>
         {children}
         <Analytics />
       </body>

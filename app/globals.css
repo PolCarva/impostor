@@ -4,40 +4,40 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Updated theme to match mystery/suspense game aesthetic with deep colors */
-  --background: oklch(0.18 0.02 270);
-  --foreground: oklch(0.98 0 0);
-  --card: oklch(0.25 0.03 280);
-  --card-foreground: oklch(0.98 0 0);
-  --popover: oklch(0.25 0.03 280);
-  --popover-foreground: oklch(0.98 0 0);
-  --primary: oklch(0.75 0.15 340);
-  --primary-foreground: oklch(0.98 0 0);
-  --secondary: oklch(0.65 0.18 50);
-  --secondary-foreground: oklch(0.98 0 0);
-  --muted: oklch(0.35 0.02 270);
-  --muted-foreground: oklch(0.7 0 0);
-  --accent: oklch(0.65 0.2 300);
-  --accent-foreground: oklch(0.98 0 0);
-  --destructive: oklch(0.55 0.22 10);
-  --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.35 0.02 270);
-  --input: oklch(0.35 0.02 270);
-  --ring: oklch(0.75 0.15 340);
-  --chart-1: oklch(0.75 0.15 340);
-  --chart-2: oklch(0.65 0.18 50);
-  --chart-3: oklch(0.65 0.2 300);
-  --chart-4: oklch(0.6 0.2 180);
-  --chart-5: oklch(0.7 0.2 120);
-  --radius: 1rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* 🍬 Chicle Rosa - Default playful palette */
+  --background: oklch(0.95 0.03 350);
+  --foreground: oklch(0.25 0.05 350);
+  --card: oklch(0.99 0.01 350);
+  --card-foreground: oklch(0.25 0.05 350);
+  --popover: oklch(0.99 0.01 350);
+  --popover-foreground: oklch(0.25 0.05 350);
+  --primary: oklch(0.70 0.20 350);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.75 0.15 30);
+  --secondary-foreground: oklch(0.25 0.05 30);
+  --muted: oklch(0.92 0.02 350);
+  --muted-foreground: oklch(0.50 0.03 350);
+  --accent: oklch(0.80 0.18 320);
+  --accent-foreground: oklch(0.25 0.05 320);
+  --destructive: oklch(0.60 0.25 25);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.80 0.10 350);
+  --input: oklch(0.92 0.02 350);
+  --ring: oklch(0.70 0.20 350);
+  --chart-1: oklch(0.70 0.20 350);
+  --chart-2: oklch(0.75 0.15 30);
+  --chart-3: oklch(0.80 0.18 320);
+  --chart-4: oklch(0.72 0.16 165);
+  --chart-5: oklch(0.75 0.18 45);
+  --radius: 1.5rem;
+  --sidebar: oklch(0.99 0.01 350);
+  --sidebar-foreground: oklch(0.25 0.05 350);
+  --sidebar-primary: oklch(0.70 0.20 350);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.92 0.02 350);
+  --sidebar-accent-foreground: oklch(0.25 0.05 350);
+  --sidebar-border: oklch(0.80 0.10 350);
+  --sidebar-ring: oklch(0.70 0.20 350);
 }
 
 .dark {
@@ -76,8 +76,9 @@
 }
 
 @theme inline {
-  --font-sans: "Geist", "Geist Fallback";
-  --font-mono: "Geist Mono", "Geist Mono Fallback";
+  --font-playful: var(--font-nunito), "Comic Sans MS", system-ui, sans-serif;
+  --font-title: var(--font-baloo), var(--font-nunito), "Comic Sans MS", sans-serif;
+  --font-accent: var(--font-grandstander), var(--font-nunito), cursive;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -121,11 +122,203 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-playful;
   }
 }
 
-/* Added 3D flip card animation */
+/* Playful font utility classes */
+.font-playful {
+  font-family: var(--font-nunito), "Comic Sans MS", system-ui, sans-serif;
+}
+
+.font-title {
+  font-family: var(--font-baloo), var(--font-nunito), "Comic Sans MS", sans-serif;
+}
+
+.font-accent {
+  font-family: var(--font-grandstander), var(--font-nunito), cursive;
+}
+
+/* Hand-drawn border effect using SVG filters */
+.hand-drawn-border {
+  position: relative;
+  border: 3px solid currentColor;
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+}
+
+.hand-drawn-border-subtle {
+  border-radius: 30px 5px 30px 5px/5px 30px 5px 30px;
+}
+
+/* Wobbly card effect */
+.wobbly-card {
+  border-radius: 30px 5px 30px 5px/5px 30px 5px 30px;
+  border: 3px solid var(--border);
+  box-shadow: 
+    4px 4px 0 0 var(--primary),
+    8px 8px 0 0 rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+}
+
+.wobbly-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 
+    6px 6px 0 0 var(--primary),
+    12px 12px 0 0 rgba(0,0,0,0.1);
+}
+
+/* Sketch button style */
+.sketch-button {
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+  border: 3px solid currentColor;
+  box-shadow: 4px 4px 0 0 currentColor;
+  transition: all 0.15s ease;
+  transform: rotate(-0.5deg);
+}
+
+.sketch-button:hover {
+  transform: rotate(0.5deg) translate(-2px, -2px);
+  box-shadow: 6px 6px 0 0 currentColor;
+}
+
+.sketch-button:active {
+  transform: rotate(0deg) translate(2px, 2px);
+  box-shadow: 2px 2px 0 0 currentColor;
+}
+
+/* Category pill style */
+.category-pill {
+  border-radius: 100px 10px 100px 10px/10px 100px 10px 100px;
+  border: 2px solid var(--border);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.category-pill:hover {
+  transform: scale(1.05) rotate(1deg);
+}
+
+.category-pill.selected {
+  border-color: var(--primary);
+  box-shadow: 3px 3px 0 0 var(--primary);
+  transform: rotate(-1deg);
+}
+
+/* Doodle decorations */
+.doodle-star {
+  display: inline-block;
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+.doodle-circle {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  animation: pulse-soft 3s ease-in-out infinite;
+}
+
+.doodle-squiggle {
+  position: relative;
+}
+
+.doodle-squiggle::after {
+  content: "~";
+  position: absolute;
+  font-size: 1.5em;
+  color: var(--primary);
+  animation: wiggle 1s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes twinkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(0.9); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@keyframes bounce-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-8px) rotate(2deg); }
+  75% { transform: translateY(8px) rotate(-2deg); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+
+/* Paper texture effect */
+.paper-texture {
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255,255,255,0.02) 2px,
+      rgba(255,255,255,0.02) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(255,255,255,0.02) 2px,
+      rgba(255,255,255,0.02) 4px
+    );
+}
+
+/* Notebook lines effect */
+.notebook-lines {
+  background-image: 
+    repeating-linear-gradient(
+      transparent,
+      transparent 30px,
+      rgba(255,255,255,0.05) 31px
+    );
+}
+
+/* Playing card style */
+.playing-card {
+  position: relative;
+  border-radius: 16px;
+  border: 4px solid var(--card-foreground);
+  box-shadow: 
+    6px 6px 0 0 var(--primary),
+    inset 0 0 0 2px var(--card);
+  background: var(--card);
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease;
+}
+
+.playing-card::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 2px dashed var(--muted);
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.playing-card:hover {
+  transform: translateY(-4px) rotate(1deg);
+}
+
+/* 3D flip card animation - Playful version */
 .flip-card {
   perspective: 1000px;
 }
@@ -134,7 +327,7 @@
   position: relative;
   width: 100%;
   height: 100%;
-  transition: transform 0.6s;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
   transform-style: preserve-3d;
 }
 
@@ -153,4 +346,114 @@
 
 .flip-card-back {
   transform: rotateY(180deg);
+}
+
+/* Scribble underline */
+.scribble-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.scribble-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 8px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10'%3E%3Cpath d='M0,5 Q25,0 50,5 T100,5' stroke='%23e879a9' stroke-width='2' fill='none'/%3E%3C/svg%3E") repeat-x;
+  background-size: 100px 10px;
+}
+
+/* Bouncy input */
+.bouncy-input {
+  border-radius: 100px 15px 100px 15px/15px 100px 15px 100px;
+  border: 3px solid var(--border);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.bouncy-input:focus {
+  border-color: var(--primary);
+  transform: scale(1.02);
+  box-shadow: 4px 4px 0 0 var(--primary);
+}
+
+/* Tag/Badge style */
+.doodle-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 100px 8px 100px 8px/8px 100px 8px 100px;
+  border: 2px solid currentColor;
+  font-size: 0.875rem;
+  transform: rotate(-1deg);
+}
+
+/* Decorative corner */
+.corner-doodle {
+  position: relative;
+}
+
+.corner-doodle::before,
+.corner-doodle::after {
+  content: "✦";
+  position: absolute;
+  font-size: 1.2rem;
+  color: var(--primary);
+  opacity: 0.6;
+}
+
+.corner-doodle::before {
+  top: -10px;
+  left: -10px;
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+.corner-doodle::after {
+  bottom: -10px;
+  right: -10px;
+  animation: twinkle 2s ease-in-out infinite 1s;
+}
+
+/* Sticker effect */
+.sticker {
+  position: relative;
+  display: inline-block;
+  padding: 0.5em 1em;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-radius: 8px;
+  transform: rotate(-2deg);
+  box-shadow: 
+    2px 2px 0 0 rgba(0,0,0,0.2),
+    -1px -1px 0 0 rgba(255,255,255,0.2) inset;
+}
+
+.sticker::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(-80%);
+  width: 30%;
+  height: 12px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 0 0 4px 4px;
+}
+
+/* Confetti decoration */
+.confetti-bg {
+  background-image: 
+    radial-gradient(circle at 10% 20%, var(--primary) 2px, transparent 2px),
+    radial-gradient(circle at 90% 80%, var(--secondary) 2px, transparent 2px),
+    radial-gradient(circle at 30% 70%, var(--accent) 1.5px, transparent 1.5px),
+    radial-gradient(circle at 70% 30%, var(--primary) 1.5px, transparent 1.5px),
+    radial-gradient(circle at 50% 50%, var(--secondary) 1px, transparent 1px);
+  background-size: 100px 100px;
+  animation: float 20s ease-in-out infinite;
+}
+
+/* Emoji bounce */
+.emoji-bounce {
+  display: inline-block;
+  animation: bounce-soft 2s ease-in-out infinite;
 }
