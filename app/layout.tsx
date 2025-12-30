@@ -20,7 +20,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f8e8ef" },
+    { media: "(prefers-color-scheme: light)", color: "#fafafa" },
     { media: "(prefers-color-scheme: dark)", color: "#1a1625" },
   ],
 }
@@ -118,18 +118,11 @@ export const metadata: Metadata = {
     description: "¡Descubre quién es el impostor! Juego de fiesta gratis donde un jugador debe descubrir la palabra secreta sin ser descubierto. Perfecto para grupos de amigos, familia y reuniones. ¡Diversión garantizada para todos!",
     images: [
       {
-        url: `${siteUrl}/og-image.png`,
+        url: `${siteUrl}/og.jpeg`,
         width: 1200,
         height: 630,
         alt: "El Impostor - Juego de Fiesta - Encuentra al impostor entre tus amigos",
-        type: "image/png",
-      },
-      {
-        url: `${siteUrl}/og-image-square.png`,
-        width: 1080,
-        height: 1080,
-        alt: "El Impostor - Juego de Fiesta",
-        type: "image/png",
+        type: "image/jpeg",
       },
     ],
   },
@@ -142,7 +135,7 @@ export const metadata: Metadata = {
     title: "El Impostor - ¡El Mejor Juego de Fiesta Gratis!",
     description: "¡Descubre quién es el impostor! Juego de fiesta gratis perfecto para grupos de amigos y familia. ¿Podrás encontrar al impostor?",
     images: {
-      url: `${siteUrl}/og-image.png`,
+      url: `${siteUrl}/og.jpeg`,
       alt: "El Impostor - Juego de Fiesta - Encuentra al impostor",
     },
   },
@@ -196,7 +189,7 @@ export const metadata: Metadata = {
     "mobile-web-app-capable": "yes",
     "apple-mobile-web-app-capable": "yes",
     "apple-mobile-web-app-status-bar-style": "default",
-    "msapplication-TileColor": "#f8e8ef",
+    "msapplication-TileColor": "#fafafa",
     "msapplication-config": "/browserconfig.xml",
   },
 }
@@ -246,7 +239,7 @@ const jsonLd = {
       alternateName: ["Impostor Game", "Juego del Impostor", "The Impostor"],
       description: "Juego de fiesta donde un jugador es el impostor y debe descubrir la palabra secreta sin ser descubierto. Perfecto para grupos de amigos, familia y fiestas.",
       url: siteUrl,
-      image: `${siteUrl}/og-image.png`,
+      image: `${siteUrl}/og.jpeg`,
       author: {
         "@type": "Person",
         name: "Pablo Carvalho",

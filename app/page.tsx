@@ -12,7 +12,7 @@ import {
   Star, Film, Wrench, Briefcase, Smartphone, Car, Rainbow,
   FolderOpen, UserSearch, Users, Target, RefreshCw, Gamepad, Drama,
   Sparkles as SparklesIcon, PenTool, Box, CreditCard, MessageSquare,
-  Mic, Hand, AlertCircle, Flame
+  Mic, Hand, AlertCircle, Flame, BookOpen
 } from "lucide-react"
 
 // Helper function to generate a stable hash from string
@@ -486,6 +486,28 @@ const WORD_CATEGORIES = {
 const DEFAULT_CATEGORIES = WORD_CATEGORIES
 
 const COLOR_PALETTES = {
+  // 📓 Papel de Cuaderno - Minimalista blanco y negro
+  notebook: {
+    name: "Papel de Cuaderno",
+    icon: BookOpen,
+    colors: {
+      background: "oklch(0.98 0.002 0)",
+      foreground: "oklch(0.15 0 0)",
+      card: "oklch(1 0 0)",
+      "card-foreground": "oklch(0.15 0 0)",
+      primary: "oklch(0.15 0 0)",
+      "primary-foreground": "oklch(0.98 0.002 0)",
+      secondary: "oklch(0.92 0.002 0)",
+      "secondary-foreground": "oklch(0.15 0 0)",
+      muted: "oklch(0.95 0.002 0)",
+      "muted-foreground": "oklch(0.40 0 0)",
+      destructive: "oklch(0.35 0 0)",
+      "destructive-foreground": "oklch(0.98 0.002 0)",
+      border: "oklch(0.85 0.002 0)",
+      accent: "oklch(0.20 0 0)",
+      "accent-foreground": "oklch(0.98 0.002 0)",
+    },
+  },
   // Chicle Rosa - Dulce y juguetón
   bubblegum: {
     name: "Chicle Rosa",
@@ -686,7 +708,7 @@ export default function ImpostorGame() {
         return savedPalette as PaletteName
       }
     }
-    return "bubblegum"
+    return "notebook"
   })
   const [previousGameState, setPreviousGameState] = useState<GameState>("categories")
   const [numImpostors, setNumImpostors] = useState(1)

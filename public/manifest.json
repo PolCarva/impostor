@@ -4,8 +4,8 @@
   "description": "¡El mejor juego de fiesta gratis! Descubre quién es el impostor entre tus amigos. Perfecto para grupos de 3 a 20 jugadores.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f8e8ef",
-  "theme_color": "#f8e8ef",
+  "background_color": "#fafafa",
+  "theme_color": "#fafafa",
   "orientation": "portrait-primary",
   "scope": "/",
   "lang": "es",
@@ -39,9 +39,9 @@
   ],
   "screenshots": [
     {
-      "src": "/og-image.png",
+      "src": "/og.jpeg",
       "sizes": "1200x630",
-      "type": "image/png",
+      "type": "image/jpeg",
       "label": "El Impostor - Pantalla principal del juego"
     }
   ],
