@@ -701,11 +701,11 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-background">
         <Card className="w-full max-w-2xl bg-card border-border">
-          <CardContent className="p-8">
+          <CardContent className="p-2 md:p-6 lg:p-8">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
                 <Palette className="h-6 w-6 text-primary" />
-                <h1 className="text-3xl font-bold text-primary text-balance">Seleccionar Paleta</h1>
+                <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-primary text-balance">Seleccionar Paleta</h1>
               </div>
               <Button variant="ghost" size="icon" onClick={closeThemeSettings} className="hover:bg-muted">
                 <X className="h-5 w-5" />
@@ -819,11 +819,11 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-background">
         <Card className="w-full max-w-4xl bg-card border-border">
-          <CardContent className="p-8">
+          <CardContent className="p-2 md:p-6 lg:p-8">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
                 <Palette className="h-6 w-6 text-primary" />
-                <h1 className="text-3xl font-bold text-primary text-balance">Tema Personalizado</h1>
+                <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-primary text-balance">Tema Personalizado</h1>
               </div>
               <Button variant="ghost" size="icon" onClick={closeCustomTheme} className="hover:bg-muted">
                 <X className="h-5 w-5" />
@@ -834,9 +834,9 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
               Personaliza los colores de tu tema con vista previa en tiempo real
             </p>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               {/* Panel de controles */}
-              <div className="space-y-6">
+              <div className="space-y-4 md:space-y-6">
                 {colorGroups.map((group) => (
                   <div key={group.title} className="space-y-3">
                     <h3 className="text-lg font-semibold text-foreground">{group.title}</h3>
@@ -997,10 +997,9 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-background">
         <Card className="w-full max-w-4xl bg-card border-border">
-          <CardContent className="p-8">
+          <CardContent className="p-2 md:p-6 lg:p-8">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
-                <Sparkles className="h-6 w-6 text-primary" />
                 <h1 className="text-3xl font-bold text-primary text-balance">
                   {isEditingExisting ? "Editar Categoría" : "Crear Nueva Categoría"}
                 </h1>
@@ -1020,7 +1019,7 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
                   placeholder="Ej: Personajes Familiares, Dibujos Animados..."
                   value={editingCategoryName}
                   onChange={(e) => setEditingCategoryName(e.target.value)}
-                  className="bg-background border-border"
+                  className="bg-background border-border text-base"
                 />
               </div>
 
@@ -1073,11 +1072,11 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
                   <h3 className="text-lg font-semibold text-foreground">
                     Palabras ({editingCategoryWords.length})
                   </h3>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <Input
                       id="add-word-input"
                       placeholder="Nueva palabra..."
-                      className="w-40 bg-background border-border"
+                      className="flex-1 bg-background border-border"
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           const input = e.target as HTMLInputElement
@@ -1094,10 +1093,10 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
                           input.value = ''
                         }
                       }}
-                      size="sm"
-                      className="bg-secondary text-secondary-foreground hover:bg-secondary/90"
+                      className="bg-secondary text-secondary-foreground hover:bg-secondary/90 px-4 py-2"
                     >
-                      <Plus className="h-4 w-4" />
+                      <Plus className="h-4 w-4 mr-1 sm:mr-2" />
+                      <span className="hidden sm:inline">Agregar</span>
                     </Button>
                   </div>
                 </div>
@@ -1124,7 +1123,6 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
 
                 {editingCategoryWords.length === 0 && (
                   <div className="text-center py-8 text-muted-foreground">
-                    <Sparkles className="h-12 w-12 mx-auto mb-2 opacity-50" />
                     <p>No hay palabras aún.</p>
                     <p className="text-sm">Usa la IA o agrega palabras manualmente.</p>
                   </div>
@@ -1132,18 +1130,18 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
               </div>
 
               {/* Botones de acción */}
-              <div className="flex gap-3 pt-4">
+              <div className="flex flex-col sm:flex-row gap-3 pt-4">
                 <Button
                   variant="outline"
                   onClick={cancelEditCategory}
-                  className="flex-1 bg-background border-border hover:bg-muted"
+                  className="flex-1 bg-background border-border hover:bg-muted py-3 text-base"
                 >
                   Cancelar
                 </Button>
                 <Button
                   onClick={saveCustomCategory}
                   disabled={!editingCategoryName.trim() || editingCategoryWords.length === 0}
-                  className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
+                  className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 py-3 text-base"
                 >
                   {isEditingExisting ? "Guardar Cambios" : "Crear Categoría"}
                 </Button>
@@ -1159,7 +1157,7 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-background">
         <Card className="w-full max-w-2xl bg-card border-border">
-          <CardContent className="p-8">
+          <CardContent className="p-2 md:p-6 lg:p-8">
             <div className="flex justify-end">
               <Button variant="ghost" size="sm" onClick={openThemeSettings} className="hover:bg-muted">
                 <Palette className="h-4 w-4 mr-2" />
@@ -1167,33 +1165,28 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
               </Button>
             </div>
 
-            <h1 className="text-4xl font-bold text-center mb-2 text-primary text-balance">El Impostor</h1>
-            <p className="text-center text-muted-foreground mb-8 text-pretty">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-2 text-primary text-balance">El Impostor</h1>
+            <p className="text-center text-muted-foreground mb-6 md:mb-8 text-pretty text-sm md:text-base">
               Selecciona una o más categorías para el juego
             </p>
 
             {/* Categorías Default */}
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-foreground mb-3">Categorías Predefinidas</h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
                 {Object.keys(DEFAULT_CATEGORIES).map((category) => {
                   const isSelected = selectedCategories.includes(category)
                   return (
                     <button
                       key={category}
                       onClick={() => toggleCategory(category)}
-                      className={`relative p-4 rounded-lg border-2 transition-all hover:scale-105 ${
+                      className={`relative p-3 md:p-4 rounded-lg border-2 transition-all hover:scale-105 active:scale-95 ${
                         isSelected
                           ? "bg-primary border-primary text-primary-foreground"
                           : "bg-muted border-border text-foreground hover:border-primary/50"
                       }`}
                     >
                       <span className="font-semibold text-sm">{category}</span>
-                      {isSelected && (
-                        <div className="absolute top-2 right-2">
-                          <Check className="h-4 w-4" />
-                        </div>
-                      )}
                     </button>
                   )
                 })}
@@ -1204,7 +1197,7 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
             {Object.keys(customCategories).length > 0 && (
               <div className="mb-6">
                 <h3 className="text-lg font-semibold text-foreground mb-3">Categorías Personalizadas</h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
                   {Object.entries(customCategories).map(([categoryName, words]) => {
                     const isSelected = selectedCategories.includes(categoryName)
                     return (
@@ -1219,16 +1212,10 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
                         >
                           <div className="flex items-center gap-2 justify-center">
                             <span className="font-semibold text-sm">{categoryName}</span>
-                            <Sparkles className="h-4 w-4" />
                           </div>
                           <div className="text-xs text-foreground mt-1">
                             {words.length} palabras
                           </div>
-                          {isSelected && (
-                            <div className="absolute top-2 right-2">
-                              <Check className="h-4 w-4" />
-                            </div>
-                          )}
                         </button>
                          <div className="absolute -top-2 -right-2 flex gap-1">
                            <Button
@@ -1265,7 +1252,6 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
 
              {/* Crear Nueva Categoría Personalizada */}
              <div className="bg-muted/30 p-6 rounded-lg border-2 border-dashed border-border text-center">
-               <Sparkles className="h-12 w-12 mx-auto mb-3 text-primary opacity-70" />
                <h3 className="text-lg font-semibold text-foreground mb-2">
                  Crear Nueva Categoría Personalizada
                </h3>
@@ -1292,8 +1278,7 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
 
             <Button
               onClick={() => setGameState("setup")}
-              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-              size="lg"
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 py-4 text-lg"
             >
               Continuar
             </Button>
@@ -1309,7 +1294,7 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-background">
         <Card className="w-full max-w-lg bg-card border-border">
-          <CardContent className="p-8">
+          <CardContent className="p-2 md:p-6 lg:p-8">
             <div className="flex justify-end">
               <Button variant="ghost" size="sm" onClick={openThemeSettings} className="hover:bg-muted">
                 <Palette className="h-4 w-4 mr-2" />
@@ -1380,20 +1365,20 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
               )}
             </div>
 
-            <div className="flex gap-2 mb-6">
+            <div className="flex flex-col sm:flex-row gap-2 mb-6">
               <Input
                 placeholder="Nombre del jugador"
                 value={newPlayerName}
                 onChange={(e) => setNewPlayerName(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && addPlayer()}
-                className="flex-1 bg-muted border-border text-foreground placeholder:text-muted-foreground"
+                className="flex-1 bg-muted border-border text-foreground placeholder:text-muted-foreground text-base py-3"
               />
               <Button
                 onClick={addPlayer}
-                size="icon"
-                className="bg-primary text-primary-foreground hover:bg-primary/90"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 text-base"
               >
-                <Plus className="h-5 w-5" />
+                <Plus className="h-5 w-5 mr-2" />
+                <span className="hidden sm:inline">Agregar</span>
               </Button>
             </div>
 
@@ -1418,8 +1403,7 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
             <Button
               onClick={startGame}
               disabled={players.length < 3}
-              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
-              size="lg"
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 py-4 text-lg"
             >
               Comenzar Juego
             </Button>
@@ -1446,7 +1430,7 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
           </div>
 
           <div
-            className={`flip-card w-72 aspect-[2.5/3.5] mb-6 ${isFlipped ? "flipped" : ""}`}
+            className={`flip-card w-full max-w-xs sm:max-w-sm md:w-72 aspect-[2.5/3.5] mb-6 ${isFlipped ? "flipped" : ""}`}
             onMouseDown={handleCardPress}
             onMouseUp={handleCardRelease}
             onMouseLeave={handleCardRelease}
@@ -1489,8 +1473,7 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
 
           <Button
             onClick={nextPlayer}
-            className="w-full max-w-72 bg-primary text-primary-foreground hover:bg-primary/90"
-            size="lg"
+            className="w-full max-w-xs sm:max-w-sm md:max-w-72 bg-primary text-primary-foreground hover:bg-primary/90 py-4 text-lg"
           >
             {currentPlayer < players.length - 1 ? "Siguiente Jugador" : "Finalizar Ronda"}
           </Button>
@@ -1503,8 +1486,8 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
     <div className="min-h-screen flex items-center justify-center p-4 bg-background">
       <Card className="w-full max-w-lg bg-card border-border">
         <CardContent className="p-8 text-center">
-          <div className="text-7xl mb-6">🎮</div>
-          <h2 className="text-4xl font-bold text-primary mb-4 text-balance">¡A Jugar!</h2>
+          <div className="text-5xl sm:text-6xl md:text-7xl mb-4 sm:mb-6">🎮</div>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-4 text-balance">¡A Jugar!</h2>
           <p className="text-2xl text-foreground mb-8 text-balance">
             Empieza: <span className="font-bold text-secondary">{players[firstPlayerIndex]}</span>
           </p>
