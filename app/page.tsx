@@ -1694,7 +1694,7 @@ export default function ImpostorGame() {
                         Juego de palabras interactivo para grupos de 3 a 20 jugadores.
                       </p>
                       <p className="text-sm text-foreground">
-                        ¿Buscas más juegos de fiesta? El Impostor es similar a otros juegos de deducción como
+                        ¿Buscas más juegos del creador? El Impostor es similar a otros juegos de deducción como
                         <a href="https://www.roblox.com/games/6284583030/Among-Us" target="_blank" rel="noopener noreferrer" className="text-primary font-bold hover:underline mx-1">Among Us</a>
                         pero con palabras. Si te gusta Wordle, también puedes probar
                         <a href="https://www.wordleinfinito.com" target="_blank" rel="noopener noreferrer" className="text-primary font-bold hover:underline mx-1">Wordle Infinito</a>,
