@@ -1440,7 +1440,7 @@ export default function ImpostorGame() {
             <div className="flex justify-between items-center mb-2 flex-shrink-0 gap-2">
               {/* Botón de instalación PWA */}
               {!isStandalone && (isInstallable || isIOS) ? (
-                <Button onClick={handleInstallClick} size="sm" className="gap-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground shadow-md">
+                <Button onClick={handleInstallClick} size="sm" className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground shadow-[3px_3px_0_0_var(--border)] border-2 border-foreground/20">
                   <DoodleIcon icon={Download} size={18} className="stroke-[2.5]" uniqueId="download-btn" />
                   Descargar App
                 </Button>
