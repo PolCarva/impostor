@@ -1,4 +1,7 @@
-# robots.txt para El Impostor - Juego de Fiesta
+import { NextResponse } from 'next/server'
+
+export async function GET() {
+  const robotsTxt = `# robots.txt para El Impostor - El Juego del Verano 2026
 # https://impostor.pablocarvalho.dev
 
 # Permitir todos los crawlers
@@ -43,6 +46,12 @@ Disallow: /_next/image
 
 # Host preferido
 Host: https://impostor.pablocarvalho.dev
+`
 
-
-
+  return new NextResponse(robotsTxt, {
+    headers: {
+      'Content-Type': 'text/plain',
+      'Cache-Control': 'public, max-age=86400', // Cache por 24 horas
+    },
+  })
+}

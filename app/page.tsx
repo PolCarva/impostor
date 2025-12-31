@@ -1270,7 +1270,7 @@ export default function ImpostorGame() {
               </div>
               <Button variant="ghost" size="icon" onClick={() => {
                 setGameState(previousGameState)
-              }}>
+              }} aria-label="Cerrar selector de temas">
                 <X className="h-5 w-5" />
               </Button>
             </div>
@@ -1367,7 +1367,7 @@ export default function ImpostorGame() {
                     )}
                     {customAlert.title}
                   </h3>
-                  <Button variant="ghost" size="icon" onClick={hideAlert}>
+                  <Button variant="ghost" size="icon" onClick={hideAlert} aria-label="Cerrar alerta">
                     <X className="h-5 w-5" />
                   </Button>
                 </div>
@@ -1394,7 +1394,7 @@ export default function ImpostorGame() {
                   {isEditingExisting ? "Editar Categoría" : "Nueva Categoría"}
                 </h2>
               </div>
-              <Button variant="ghost" size="icon" onClick={cancelEditCategory}>
+              <Button variant="ghost" size="icon" onClick={cancelEditCategory} aria-label="Cancelar edición">
                 <X className="h-5 w-5" />
               </Button>
             </div>
@@ -1516,6 +1516,7 @@ export default function ImpostorGame() {
                         size="icon-sm"
                         onClick={() => removeWordFromCategory(index)}
                         className="opacity-50 group-hover:opacity-100 text-muted-foreground hover:text-destructive h-7 w-7"
+                        aria-label="Eliminar palabra"
                       >
                         <X className="h-3 w-3" />
                       </Button>
@@ -1583,7 +1584,7 @@ export default function ImpostorGame() {
                     )}
                     {customAlert.title}
                   </h3>
-                  <Button variant="ghost" size="icon" onClick={hideAlert}>
+                  <Button variant="ghost" size="icon" onClick={hideAlert} aria-label="Cerrar alerta">
                     <X className="h-5 w-5" />
                   </Button>
                 </div>
@@ -1611,7 +1612,7 @@ export default function ImpostorGame() {
                     <DoodleIcon icon={Smartphone} size={24} thick uniqueId="ios-modal" />
                     Instalar en iPhone/iPad
                   </h3>
-                  <Button variant="ghost" size="icon" onClick={() => setShowIOSInstructions(false)}>
+                  <Button variant="ghost" size="icon" onClick={() => setShowIOSInstructions(false)} aria-label="Cerrar instrucciones de instalación">
                     <X className="h-5 w-5" />
                   </Button>
                 </div>
@@ -1647,7 +1648,7 @@ export default function ImpostorGame() {
                     <DoodleIcon icon={HelpCircle} size={28} thick className="animate-[bounce-soft_2s_ease-in-out_infinite]" uniqueId="info-popup-header" />
                     Sobre El Impostor
                   </h3>
-                  <Button variant="ghost" size="icon" onClick={() => setShowInfoPopup(false)}>
+                  <Button variant="ghost" size="icon" onClick={() => setShowInfoPopup(false)} aria-label="Cerrar información del juego">
                     <X className="h-5 w-5" />
                   </Button>
                 </div>
@@ -1682,9 +1683,11 @@ export default function ImpostorGame() {
                         Juego de palabras interactivo para grupos de 3 a 20 jugadores.
                       </p>
                       <p className="text-sm text-foreground">
-                        ¿Buscas más juegos de fiesta? El Impostor es similar a otros juegos de deducción como 
+                        ¿Buscas más juegos de fiesta? El Impostor es similar a otros juegos de deducción como
                         <a href="https://www.roblox.com/games/6284583030/Among-Us" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline mx-1">Among Us</a>
-                        pero con palabras. Esta web fue creada con ♥ por:
+                        pero con palabras. Si te gusta Wordle, también puedes probar
+                        <a href="https://www.wordleinfinito.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline mx-1">Wordle Infinito</a>,
+                        otro de mis juegos. Esta web fue creada con ♥ por:
                         <a href="https://pablocarvalho.dev" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline ml-1">Pablo Carvalho</a>.
                       </p>
                     </div>
@@ -1733,7 +1736,7 @@ export default function ImpostorGame() {
               <div className="flex justify-center mb-2">
                 <ImpostorIcon size={48} className="animate-[bounce-soft_2s_ease-in-out_infinite]" uniqueId="categories-title" />
               </div>
-              <h1 className="text-3xl md:text-4xl font-title font-bold text-primary mb-2">El Impostor <span className="sr-only">- Juego de Fiesta Gratis</span></h1>
+              <h2 className="text-3xl md:text-4xl font-title font-bold text-primary mb-2">El Impostor <span className="sr-only">- Juego de Fiesta Gratis</span></h2>
               <p className="text-muted-foreground text-sm md:text-base flex items-center justify-center gap-2 mb-3">
                 ¡Elige las categorías para jugar!
               </p>
@@ -1811,6 +1814,7 @@ export default function ImpostorGame() {
                                 openEditCustomCategory(categoryName)
                               }}
                               className="h-6 w-6 bg-secondary text-destructive-foreground hover:bg-secondary/90 rounded-full shadow-md"
+                              aria-label={`Editar categoría ${categoryName}`}
                             >
                               <Edit className="h-2.5 w-2.5" />
                             </Button>
@@ -1822,6 +1826,7 @@ export default function ImpostorGame() {
                                 deleteCustomCategory(categoryName)
                               }}
                               className="h-6 w-6 bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full shadow-md"
+                              aria-label={`Eliminar categoría ${categoryName}`}
                             >
                               <X className="h-2.5 w-2.5" />
                             </Button>
@@ -2015,6 +2020,7 @@ export default function ImpostorGame() {
                     }}
                     disabled={numImpostors <= 1}
                     className="h-8 w-8"
+                    aria-label="Disminuir número de impostores"
                   >
                     <span className="text-lg">−</span>
                   </Button>
@@ -2031,6 +2037,7 @@ export default function ImpostorGame() {
                     }}
                     disabled={numImpostors >= maxImpostors}
                     className="h-8 w-8"
+                    aria-label="Aumentar número de impostores"
                   >
                     <span className="text-lg">+</span>
                   </Button>
@@ -2191,6 +2198,134 @@ export default function ImpostorGame() {
           </Button>
         </CardContent>
       </Card>
+
+      {/* SEO Content - Hidden from users but visible to search engines */}
+      <div className="sr-only">
+        <article>
+          <h1>El Impostor - El Juego del Verano 2026</h1>
+
+          <section>
+            <h2>¿Qué es El Impostor?</h2>
+            <p>
+              El Impostor es el juego del verano 2026, un divertido juego de fiesta gratuito que combina elementos de deducción social con juegos de palabras.
+              Inspirado en juegos populares como Among Us, El Impostor lleva la experiencia de encontrar al traidor a un formato completamente verbal,
+              perfecto para reuniones familiares, fiestas de cumpleaños y encuentros con amigos.
+            </p>
+
+            <h3>Juego de Deducción Social para Grupos</h3>
+            <p>
+              Diseñado específicamente para grupos de 3 a 20 jugadores, El Impostor crea momentos inolvidables donde la comunicación y la observación
+              son las claves para ganar. Un jugador es seleccionado aleatoriamente como el impostor, mientras que todos los demás comparten
+              una palabra secreta común. El objetivo del impostor es descubrir cuál es esa palabra sin delatarse, mientras que los demás
+              jugadores deben identificar quién es el impostor entre ellos.
+            </p>
+          </section>
+
+          <section>
+            <h2>¿Cómo Jugar al Impostor?</h2>
+            <p>
+              El juego del verano 2026 sigue reglas simples pero efectivas. Primero, todos los jugadores seleccionan las categorías de palabras
+              que quieren usar. El juego incluye categorías predefinidas como geografía, deportes, comida, profesiones, películas, videojuegos
+              y muchas más. También puedes crear tus propias categorías personalizadas con la ayuda de inteligencia artificial integrada.
+            </p>
+
+            <h3>Preparación del Juego</h3>
+            <p>
+              Una vez seleccionadas las categorías, el sistema elige aleatoriamente una palabra secreta de entre todas las disponibles.
+              Todos los jugadores, excepto el impostor, ven esta palabra en sus dispositivos. El impostor ve únicamente que es el impostor,
+              sin conocer la palabra secreta. El juego determina automáticamente cuántos impostores participan (1 por defecto, hasta 3
+              en grupos grandes).
+            </p>
+
+            <h3>Rondas de Deducción</h3>
+            <p>
+              Por turnos, cada jugador da pistas sobre la palabra secreta sin decirla directamente. Los jugadores honestos dan pistas
+              que ayuden a los demás a entender la palabra, mientras que el impostor debe dar pistas falsas o confusas para despistar
+              al grupo. Después de que todos hayan hablado, se realiza una votación para eliminar al sospechoso de ser el impostor.
+              Si el impostor es identificado correctamente, ganan los jugadores honestos. Si no, el impostor gana la ronda.
+            </p>
+          </section>
+
+          <section>
+            <h2>Características Principales</h2>
+
+            <h3>Juego Completamente Gratuito</h3>
+            <p>
+              El Impostor es totalmente gratuito, sin compras dentro de la aplicación ni limitaciones. Juega tantas partidas como quieras,
+              crea categorías personalizadas ilimitadas y disfruta de todas las funciones sin costo alguno. Solo necesitas un navegador web moderno.
+            </p>
+
+            <h3>Sin Descargas Necesarias</h3>
+            <p>
+              Accede al juego directamente desde tu navegador web. Compatible con ordenadores, tablets y teléfonos móviles.
+              También disponible como aplicación web progresiva (PWA) que se puede instalar en dispositivos móviles para una experiencia nativa.
+            </p>
+
+            <h3>Categorías Personalizables</h3>
+            <p>
+              Más de 10 categorías predefinidas con cientos de palabras cada una, desde geografía y deportes hasta películas y profesiones.
+              Crea tus propias categorías personalizadas con palabras específicas para tu grupo de amigos o temática de evento.
+              La inteligencia artificial integrada te ayuda a generar palabras automáticamente para cualquier tema que imagines.
+            </p>
+
+            <h3>Juego Multijugador Local</h3>
+            <p>
+              Diseñado para jugar en el mismo espacio físico, El Impostor fomenta la interacción real entre jugadores. Perfecto para
+              reuniones familiares, fiestas de oficina, cumpleaños y cualquier ocasión donde quieras conectar con las personas
+              que te rodean de manera divertida y memorable.
+            </p>
+          </section>
+
+          <section>
+            <h2>Consejos para Jugar Mejor</h2>
+
+            <h3>Para Jugadores Honestos</h3>
+            <p>
+              Da pistas claras pero no directas sobre la palabra. Por ejemplo, si la palabra es "elefante", podrías decir "es un animal grande
+              con trompa" en lugar de decir directamente características obvias. Observa atentamente las pistas de los demás jugadores
+              y busca inconsistencias que delaten al impostor.
+            </p>
+
+            <h3>Para el Impostor</h3>
+            <p>
+              El impostor debe dar pistas que suenen plausibles pero que no ayuden realmente al grupo. Imita el estilo de los demás jugadores
+              y evita dar pistas demasiado vagas o demasiado específicas. Tu objetivo es confundir sin parecer sospechoso.
+            </p>
+
+            <h3>Estrategias Generales</h3>
+            <p>
+              Juega con grupos de 5-8 jugadores para el mejor equilibrio. En grupos más pequeños es más fácil identificar al impostor,
+              mientras que en grupos muy grandes puede ser difícil seguir todas las pistas. Experimenta con diferentes categorías
+              para mantener el juego fresco e interesante.
+            </p>
+          </section>
+
+          <section>
+            <h2>¿Por qué El Impostor es el Juego del Verano 2026?</h2>
+            <p>
+              En un mundo cada vez más digital, El Impostor trae de vuelta la alegría de los juegos de mesa tradicionales combinados
+              con la innovación tecnológica. Es perfecto para el verano 2026 porque une a las personas en momentos de diversión compartida,
+              fomenta la comunicación y crea recuerdos inolvidables. Ya sea en una reunión familiar, una fiesta con amigos o un encuentro
+              casual, El Impostor garantiza risas y conexión real entre los participantes.
+            </p>
+
+            <p>
+              Más allá de ser solo un juego, El Impostor es una herramienta para fortalecer vínculos sociales en la era digital.
+              Mientras otros juegos nos mantienen aislados frente a pantallas, este juego nos reúne alrededor de una experiencia compartida,
+              recordándonos la importancia de la interacción humana genuina.
+            </p>
+          </section>
+
+          <section>
+            <h2>Juegos Similares y Alternativas</h2>
+            <p>
+              Si te gusta El Impostor, también disfrutarás de juegos como Among Us, Mafia, Werewolf, o juegos de mesa como
+              Coup, The Resistance o Deception: Murder in Hong Kong. Para juegos de palabras, también puedes probar
+              Wordle Infinito, otro juego creado por el mismo desarrollador.
+            </p>
+          </section>
+        </article>
+      </div>
     </div>
   )
 }

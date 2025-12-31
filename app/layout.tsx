@@ -364,13 +364,22 @@ export default function RootLayout({
   return (
     <html lang="es" dir="ltr">
       <head>
-        {/* Preconnect para optimización */}
+        {/* Meta Description - Asegurar que Lighthouse la detecte */}
+        <meta name="description" content="¡El juego del verano 2026! Juega gratis al Impostor, el mejor juego de fiesta donde un jugador es el impostor y debe descubrir la palabra secreta sin ser descubierto. Perfecto para grupos de amigos y familia." />
+
+        {/* Viewport optimizado */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes" />
+
+        {/* Preconnect y preload para optimización */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
+        <link rel="preload" href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap" as="style" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap" />
+
         {/* DNS Prefetch */}
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
-        
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+
         {/* JSON-LD Structured Data */}
         <script
           type="application/ld+json"
@@ -380,7 +389,11 @@ export default function RootLayout({
         {/* Geo Tags para SEO local */}
         <meta name="geo.region" content="UY" />
         <meta name="geo.placename" content="Uruguay" />
-        
+
+        {/* Seguridad adicional */}
+        <meta httpEquiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com;" />
+        <meta httpEquiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains" />
+
         {/* Dublin Core Metadata */}
         <meta name="DC.title" content="El Impostor - El Juego del Verano 2026" />
         <meta name="DC.creator" content="Pablo Carvalho" />
@@ -388,12 +401,12 @@ export default function RootLayout({
         <meta name="DC.description" content="El juego del verano 2026. Juego de fiesta gratis donde un jugador es el impostor" />
         <meta name="DC.language" content="es" />
         <meta name="DC.type" content="InteractiveResource" />
-        
+
         {/* Favicon con soporte para temas claro/oscuro - SVG se adapta automáticamente */}
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
         <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
         <link rel="apple-touch-icon" href="/apple-icon.png" />
-        
+
         {/* Nota: El SVG usa currentColor con media queries CSS internas para adaptarse al tema */}
       </head>
       <body className={`${pangolin.variable} ${pangolin.className} antialiased`}>
@@ -419,7 +432,7 @@ export default function RootLayout({
         </main>
         
         {/* SEO content for crawlers - visible but styled minimally */}
-        <div className="sr-only" aria-hidden="true">
+        <div className="sr-only">
           <h1>El Impostor - El Juego del Verano 2026 | Encuentra al Impostor</h1>
           <p>
             El Impostor es el juego del verano 2026. El mejor juego de fiesta gratis online. Juega con tus amigos y familia
