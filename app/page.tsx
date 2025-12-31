@@ -10,7 +10,7 @@ import {
   Heart, Sun, Waves, Grape, Leaf, Circle, Moon,
   Package, Globe, CircleDot, Gamepad2, PawPrint, Pizza,
   Star, Film, Wrench, Briefcase, Smartphone, Car, Rainbow,
-  FolderOpen, UserSearch, Users, Target, RefreshCw, Gamepad, Drama,
+  FolderOpen, UserSearch, Users, Target, RefreshCw, Gamepad,
   Sparkles as SparklesIcon, PenTool, Box, CreditCard, MessageSquare,
   Mic, Hand, AlertCircle, Flame, BookOpen, Download, Share, HelpCircle
 } from "lucide-react"
@@ -30,6 +30,59 @@ const hashString = (str: string): number => {
     hash = hash & hash // Convert to 32bit integer
   }
   return Math.abs(hash)
+}
+
+// Impostor Icon Component - renders app/icon.svg with currentColor and DoodleIcon styles
+const ImpostorIcon = ({ size = 48, className = "", uniqueId = "", randomRotate = true, thick = false, style = {} }: { size?: number, className?: string, uniqueId?: string, randomRotate?: boolean, thick?: boolean, style?: React.CSSProperties }) => {
+  // Generate a unique identifier for consistent styling
+  const uniqueKey = `impostor-icon-${size}-${uniqueId || ''}`
+  
+  // Create a more robust hash for better distribution
+  const hash = hashString(uniqueKey)
+  
+  // Generate rotation class (0-4)
+  const randomIndex = hash % 5
+  const randomClass = randomRotate ? `doodle-icon-random-${randomIndex + 1}` : ""
+  const thickClass = thick ? 'doodle-icon-thick' : ''
+  
+  // Generate unique animation delay (0-8 seconds) with better distribution
+  const delayHash = hashString(`${uniqueKey}-delay`)
+  const animationDelay = `${(delayHash % 800) / 100}s` // 0.00s to 7.99s
+  
+  // Generate unique animation duration (3-6.5 seconds) with better distribution
+  const durationHash = hashString(`${uniqueKey}-duration`)
+  const animationDuration = `${3 + (durationHash % 350) / 100}s` // 3.00s to 6.49s
+  
+  return (
+    <div
+      className={`doodle-icon ${thickClass} ${randomClass} ${className}`}
+      style={{
+        width: size,
+        height: size,
+        display: 'inline-block',
+        color: 'currentColor',
+        ...style,
+        animationDelay: animationDelay,
+        animationDuration: animationDuration,
+      }}
+    >
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'currentColor',
+          WebkitMaskImage: 'url(/icon.svg)',
+          WebkitMaskRepeat: 'no-repeat',
+          WebkitMaskPosition: 'center',
+          WebkitMaskSize: 'contain',
+          maskImage: 'url(/icon.svg)',
+          maskRepeat: 'no-repeat',
+          maskPosition: 'center',
+          maskSize: 'contain',
+        }}
+      />
+    </div>
+  )
 }
 
 // Doodle icon wrapper component with hand-drawn effect
@@ -724,6 +777,7 @@ export default function ImpostorGame() {
   const [aiPrompt, setAiPrompt] = useState("")
   const [isGenerating, setIsGenerating] = useState(false)
   const [isEditingExisting, setIsEditingExisting] = useState(false)
+  const [originalCategoryName, setOriginalCategoryName] = useState("")
   
   // PWA Install States
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
@@ -942,6 +996,7 @@ export default function ImpostorGame() {
 
   const openCreateCustomCategory = () => {
     setEditingCategoryName("")
+    setOriginalCategoryName("") // Limpiar el nombre original al crear nueva
     setEditingCategoryWords([])
     setAiPrompt("")
     setIsEditingExisting(false)
@@ -951,6 +1006,7 @@ export default function ImpostorGame() {
   const openEditCustomCategory = (categoryName: string) => {
     const words = customCategories[categoryName] || []
     setEditingCategoryName(categoryName)
+    setOriginalCategoryName(categoryName) // Guardar el nombre original
     setEditingCategoryWords([...words])
     setAiPrompt("")
     setIsEditingExisting(true)
@@ -959,15 +1015,30 @@ export default function ImpostorGame() {
 
   const saveCustomCategory = () => {
     if (editingCategoryName.trim() && editingCategoryWords.length > 0) {
-      setCustomCategories(prev => ({
-        ...prev,
-        [editingCategoryName.trim()]: [...editingCategoryWords]
-      }))
+      const newName = editingCategoryName.trim()
+      
+      setCustomCategories(prev => {
+        const updated = { ...prev }
+        
+        // Si estamos editando una categoría existente y el nombre cambió, eliminar la anterior
+        if (isEditingExisting && originalCategoryName && originalCategoryName !== newName) {
+          delete updated[originalCategoryName]
+        }
+        
+        // Agregar o actualizar la categoría con el nuevo nombre
+        updated[newName] = [...editingCategoryWords]
+        
+        return updated
+      })
+      
+      // Limpiar el nombre original después de guardar
+      setOriginalCategoryName("")
       setGameState("categories")
     }
   }
 
   const cancelEditCategory = () => {
+    setOriginalCategoryName("") // Limpiar el nombre original al cancelar
     setGameState("categories")
   }
 
@@ -1209,7 +1280,7 @@ export default function ImpostorGame() {
             <div className="space-y-4">
               {/* Nombre de la categoría */}
               <div>
-                <label className="text-sm font-title font-bold text-foreground mb-2 block flex items-center gap-2">
+                <label className="text-sm font-title font-bold text-foreground mb-2 flex items-center gap-2">
                   <DoodleIcon icon={PenTool} size={18} className="stroke-[2.5]" uniqueId="edit-label" />
                   Nombre de la categoría:
                 </label>
@@ -1489,8 +1560,8 @@ export default function ImpostorGame() {
                       <p className="text-sm text-foreground">
                         ¿Buscas más juegos de fiesta? El Impostor es similar a otros juegos de deducción como 
                         <a href="https://www.roblox.com/games/6284583030/Among-Us" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline mx-1">Among Us</a>
-                        pero con palabras. También puedes encontrar más información sobre juegos de fiesta en 
-                        <a href="https://pablocarvalho.dev" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline mx-1">pablocarvalho.dev</a>.
+                        pero con palabras. Esta web fue creada con ♥ por:
+                        <a href="https://pablocarvalho.dev" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline ml-1">Pablo Carvalho</a>.
                       </p>
                     </div>
                   </div>
@@ -1533,7 +1604,7 @@ export default function ImpostorGame() {
                 <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-primary" />
               </Button>
               <div className="flex justify-center mb-2">
-                <DoodleIcon icon={Drama} size={48} thick className="animate-[bounce-soft_2s_ease-in-out_infinite]" uniqueId="categories-title" />
+                <ImpostorIcon size={48} className="animate-[bounce-soft_2s_ease-in-out_infinite]" uniqueId="categories-title" />
               </div>
               <h1 className="text-3xl md:text-4xl font-title font-bold text-primary mb-2">El Impostor <span className="sr-only">- Juego de Fiesta Gratis</span></h1>
               <p className="text-muted-foreground text-sm md:text-base flex items-center justify-center gap-2 mb-3">
@@ -1612,7 +1683,7 @@ export default function ImpostorGame() {
                                 e.stopPropagation()
                                 openEditCustomCategory(categoryName)
                               }}
-                              className="h-6 w-6 bg-secondary text-primary hover:bg-secondary/90 rounded-full shadow-md"
+                              className="h-6 w-6 bg-secondary text-destructive-foreground hover:bg-secondary/90 rounded-full shadow-md"
                             >
                               <Edit className="h-2.5 w-2.5" />
                             </Button>
@@ -1703,7 +1774,7 @@ export default function ImpostorGame() {
 
             <div className="text-center mb-4 shrink-0">
               <div className="flex justify-center mb-2">
-                <DoodleIcon icon={Drama} size={48} thick className="animate-[shake_0.5s_ease-in-out_infinite]" uniqueId="setup-title" />
+                <ImpostorIcon size={48} className="animate-[shake_0.5s_ease-in-out_infinite]" uniqueId="setup-title" />
               </div>
               <h2 className="text-3xl md:text-4xl font-title font-bold text-primary mb-1">El Impostor</h2>
               <p className="text-muted-foreground text-sm md:text-base flex items-center justify-center gap-2">
