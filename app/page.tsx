@@ -731,6 +731,22 @@ export default function ImpostorGame() {
   const [isIOS, setIsIOS] = useState(false)
   const [isStandalone, setIsStandalone] = useState(false)
   const [showIOSInstructions, setShowIOSInstructions] = useState(false)
+  
+  // Custom Alert State
+  const [customAlert, setCustomAlert] = useState<{
+    show: boolean
+    type: 'success' | 'error'
+    title: string
+    message: string
+  }>({ show: false, type: 'success', title: '', message: '' })
+
+  const showAlert = (type: 'success' | 'error', title: string, message: string) => {
+    setCustomAlert({ show: true, type, title, message })
+  }
+
+  const hideAlert = () => {
+    setCustomAlert(prev => ({ ...prev, show: false }))
+  }
 
   // Cargar categorías personalizadas al iniciar
   useEffect(() => {
@@ -1013,7 +1029,8 @@ export default function ImpostorGame() {
       })
 
       console.log(`✅ ¡Éxito! Se generaron ${data.words.length} elementos usando ${data.model}`)
-      alert(`✅ ¡Éxito! Se generaron ${data.words.length} elementos para "${prompt}" usando ${data.model}`)
+      showAlert('success', '¡Palabras generadas!', `Se generaron ${data.words.length} elementos para "${prompt}"`)
+
 
     } catch (error) {
       console.error('❌ Error llamando a la API:', error)
@@ -1034,7 +1051,7 @@ export default function ImpostorGame() {
         return combined.slice(0, 20)
       })
 
-      alert('🚫 Error conectando con el servidor de IA\n\nSe agregaron palabras de ejemplo en su lugar.\n\nVerifica que:\n• El servidor esté funcionando\n• La API key de Gemini esté configurada en el servidor\n• Tu conexión a internet funcione')
+      showAlert('error', 'Error de conexión', 'No se pudo conectar con el servidor de IA. Se agregaron palabras de ejemplo en su lugar.')
     }
 
     setIsGenerating(false)
@@ -1139,6 +1156,39 @@ export default function ImpostorGame() {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden">
         <DoodleStars />
+        
+        {/* Modal de alerta custom */}
+        {customAlert.show && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+            <Card className={`w-full max-w-sm border-[3px] ${customAlert.type === 'success' ? 'border-secondary' : 'border-destructive'}`}>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-title font-bold text-foreground flex items-center gap-2">
+                    {customAlert.type === 'success' ? (
+                      <DoodleIcon icon={Check} size={24} thick className="text-secondary" uniqueId="alert-success-edit" />
+                    ) : (
+                      <DoodleIcon icon={AlertCircle} size={24} thick className="text-destructive" uniqueId="alert-error-edit" />
+                    )}
+                    {customAlert.title}
+                  </h3>
+                  <Button variant="ghost" size="icon" onClick={hideAlert}>
+                    <X className="h-5 w-5" />
+                  </Button>
+                </div>
+                <p className="text-sm text-muted-foreground mb-6">
+                  {customAlert.message}
+                </p>
+                <Button 
+                  onClick={hideAlert} 
+                  className={`w-full ${customAlert.type === 'success' ? 'bg-secondary hover:bg-secondary/90' : 'bg-destructive hover:bg-destructive/90'}`}
+                >
+                  ¡Entendido!
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+        
         <Card className="w-full max-w-4xl relative z-10 flex flex-col max-h-[90vh]">
           <CardContent className="p-4 md:p-6 flex flex-col flex-1 min-h-0">
             <div className="flex items-center justify-between mb-4 shrink-0">
@@ -1317,6 +1367,38 @@ export default function ImpostorGame() {
         <DoodleStars />
         <DoodleCircles />
         
+        {/* Modal de alerta custom */}
+        {customAlert.show && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+            <Card className={`w-full max-w-sm border-[3px] ${customAlert.type === 'success' ? 'border-secondary' : 'border-destructive'}`}>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-title font-bold text-foreground flex items-center gap-2">
+                    {customAlert.type === 'success' ? (
+                      <DoodleIcon icon={Check} size={24} thick className="text-secondary" uniqueId="alert-success" />
+                    ) : (
+                      <DoodleIcon icon={AlertCircle} size={24} thick className="text-destructive" uniqueId="alert-error" />
+                    )}
+                    {customAlert.title}
+                  </h3>
+                  <Button variant="ghost" size="icon" onClick={hideAlert}>
+                    <X className="h-5 w-5" />
+                  </Button>
+                </div>
+                <p className="text-sm text-muted-foreground mb-6">
+                  {customAlert.message}
+                </p>
+                <Button 
+                  onClick={hideAlert} 
+                  className={`w-full ${customAlert.type === 'success' ? 'bg-secondary hover:bg-secondary/90' : 'bg-destructive hover:bg-destructive/90'}`}
+                >
+                  ¡Entendido!
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {/* Modal de instrucciones para iOS */}
         {showIOSInstructions && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
@@ -1355,14 +1437,14 @@ export default function ImpostorGame() {
         
         <Card className="w-full max-w-2xl relative z-10 flex flex-col max-h-[90vh]">
           <CardContent className="p-4 md:p-6 flex flex-col flex-1 min-h-0">
-            <div className="flex justify-end mb-2 flex-shrink-0 gap-2">
+            <div className="flex justify-between items-center mb-2 flex-shrink-0 gap-2">
               {/* Botón de instalación PWA */}
-              {!isStandalone && (isInstallable || isIOS) && (
-                <Button variant="ghost" size="sm" onClick={handleInstallClick} className="gap-2">
-                  <Download className="h-4 w-4" />
-                  <span className="hidden sm:inline">Instalar App</span>
+              {!isStandalone && (isInstallable || isIOS) ? (
+                <Button onClick={handleInstallClick} size="sm" className="gap-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground shadow-md">
+                  <DoodleIcon icon={Download} size={18} className="stroke-[2.5]" uniqueId="download-btn" />
+                  Descargar App
                 </Button>
-              )}
+              ) : <div />}
               <Button variant="ghost" size="sm" onClick={openThemeSettings} className="gap-2">
                 <Palette className="h-4 w-4" />
                 Tema
@@ -1584,82 +1666,90 @@ export default function ImpostorGame() {
                 </div>
               </div>
 
-              <div className="mb-4 p-3 bg-muted/50 rounded-[20px_8px_20px_8px/8px_20px_8px_20px] border-2 border-border">
-                <label className="text-xs font-bold text-foreground block mb-3 flex items-center gap-2">
-                  <DoodleIcon icon={UserSearch} size={16} className="stroke-[2.5]" uniqueId="impostors-label" />
-                  Cantidad de Impostores:
+              {/* Sección principal: Agregar Jugadores */}
+              <div className="mb-4 p-4 bg-primary/10 rounded-[25px_10px_25px_10px/10px_25px_10px_25px] border-[3px] border-primary/30">
+                <label className="text-base font-title font-bold text-foreground block mb-3 flex items-center gap-2">
+                  <DoodleIcon icon={Users} size={20} thick className="stroke-[2.5]" uniqueId="players-label" />
+                  Agregar Jugadores
                 </label>
-                <div className="flex items-center gap-3">
+                
+                <div className="flex flex-col sm:flex-row gap-2 mb-3 overflow-hidden px-1 items-center">
+                  <div className="flex-1 min-w-0">
+                    <Input
+                      placeholder="Nombre del jugador..."
+                      value={newPlayerName}
+                      onChange={(e) => setNewPlayerName(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && addPlayer()}
+                      className="text-base w-full h-11"
+                    />
+                  </div>
+                  <Button onClick={addPlayer} className="gap-2 px-6 shrink-0" size="lg">
+                    <Plus className="h-5 w-5" />
+                    Agregar
+                  </Button>
+                </div>
+
+                {players.length > 0 && (
+                  <div className="space-y-2 max-h-64 overflow-y-auto p-2">
+                    {players.map((player, index) => (
+                      <div 
+                        key={index} 
+                        className="flex items-center justify-between p-3 bg-muted rounded-[15px_5px_15px_5px/5px_15px_5px_15px] border-2 border-border group hover:border-primary/50 transition-all"
+                        style={{ transform: `rotate(${(index % 3 - 1) * 0.3}deg)` }}
+                      >
+                        <span className="font-bold text-base text-foreground flex items-center gap-2">
+                          <DoodleIcon icon={Users} size={18} className="stroke-[2.5]" uniqueId={`player-${index}-${player}`} />
+                          {player}
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          onClick={() => removePlayer(index)}
+                          className="opacity-50 group-hover:opacity-100 text-muted-foreground hover:text-destructive h-8 w-8"
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Sección secundaria: Configurar Impostores (más pequeña) */}
+              <div className="mb-4 p-2.5 bg-muted/30 rounded-[15px_5px_15px_5px/5px_15px_5px_15px] border-2 border-border/50">
+                <label className="text-xs font-bold text-muted-foreground flex items-center gap-1.5 mb-2">
+                  <DoodleIcon icon={UserSearch} size={14} className="stroke-[2.5]" uniqueId="impostors-label" />
+                  Impostores:
+                </label>
+                <div className="flex items-center gap-2">
                   <Button
                     variant="outline"
                     size="icon"
                     onClick={() => setNumImpostors(Math.max(1, numImpostors - 1))}
                     disabled={numImpostors <= 1}
-                    className="h-10 w-10"
+                    className="h-8 w-8"
                   >
-                    <span className="text-xl">−</span>
+                    <span className="text-lg">−</span>
                   </Button>
                   <div className="flex-1 text-center">
-                    <span className="text-4xl font-title font-bold text-primary">{numImpostors}</span>
+                    <span className="text-2xl font-title font-bold text-primary">{numImpostors}</span>
                   </div>
                   <Button
                     variant="outline"
                     size="icon"
                     onClick={() => setNumImpostors(Math.min(maxImpostors, numImpostors + 1))}
                     disabled={numImpostors >= maxImpostors}
-                    className="h-10 w-10"
+                    className="h-8 w-8"
                   >
-                    <span className="text-xl">+</span>
+                    <span className="text-lg">+</span>
                   </Button>
                 </div>
                 {players.length >= 3 && (
-                  <p className="text-xs text-center text-muted-foreground mt-2 flex items-center justify-center gap-1">
-                    Máximo: {maxImpostors} impostor{maxImpostors > 1 ? "es" : ""}
-                    <DoodleIcon icon={Gamepad} size={12} className="stroke-[2.5]" uniqueId="impostors-max" />
+                  <p className="text-[10px] text-center text-muted-foreground mt-1.5 flex items-center justify-center gap-1">
+                    Máx: {maxImpostors} impostor{maxImpostors > 1 ? "es" : ""}
                   </p>
                 )}
               </div>
-
-              <div className="flex flex-col sm:flex-row gap-2 mb-4 overflow-hidden px-1 items-center">
-                <div className="flex-1 min-w-0 pt-1">
-                  <Input
-                    placeholder="Nombre del jugador..."
-                    value={newPlayerName}
-                    onChange={(e) => setNewPlayerName(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && addPlayer()}
-                    className="text-sm w-full"
-                  />
-                </div>
-                <Button onClick={addPlayer} className="gap-2 px-4 shrink-0" size="sm">
-                  <Plus className="h-4 w-4" />
-                  <span className="sm:hidden">Agregar</span>
-                </Button>
-              </div>
-
-              {players.length > 0 && (
-                <div className="mb-4 space-y-2 max-h-64 overflow-y-auto p-2">
-                  {players.map((player, index) => (
-                    <div 
-                      key={index} 
-                      className="flex items-center justify-between p-2.5 bg-muted rounded-[15px_5px_15px_5px/5px_15px_5px_15px] border-2 border-border group hover:border-primary/50 transition-all"
-                      style={{ transform: `rotate(${(index % 3 - 1) * 0.3}deg)` }}
-                    >
-                      <span className="font-bold text-sm text-foreground flex items-center gap-2">
-                        <DoodleIcon icon={Users} size={16} className="stroke-[2.5]" uniqueId={`player-${index}-${player}`} />
-                        {player}
-                      </span>
-                      <Button
-                        variant="ghost"
-                        size="icon-sm"
-                        onClick={() => removePlayer(index)}
-                        className="opacity-50 group-hover:opacity-100 text-muted-foreground hover:text-destructive h-7 w-7"
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
 
             {/* Footer fijo con CTA */}
@@ -1692,9 +1782,10 @@ export default function ImpostorGame() {
         <DoodleCircles />
         <div className="w-full max-w-md flex flex-col items-center relative z-10">
           <div className="text-center mb-8">
-            <div className="inline-block bg-muted px-5 py-2 rounded-full border-2 border-border mb-4">
+            <div className="inline-flex items-center gap-2 bg-muted px-5 py-2 rounded-full border-2 border-border mb-4">
+              <DoodleIcon icon={Users} size={20} className="stroke-[2.5] text-muted-foreground" uniqueId={`player-indicator-${currentPlayer}`} />
               <span className="text-muted-foreground font-bold">
-                👤 Jugador {currentPlayer + 1} de {players.length}
+                Jugador {currentPlayer + 1} de {players.length}
               </span>
             </div>
           </div>
