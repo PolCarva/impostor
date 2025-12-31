@@ -1695,11 +1695,11 @@ export default function ImpostorGame() {
                       </p>
                       <p className="text-sm text-foreground">
                         ¿Buscas más juegos de fiesta? El Impostor es similar a otros juegos de deducción como
-                        <a href="https://www.roblox.com/games/6284583030/Among-Us" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline mx-1">Among Us</a>
+                        <a href="https://www.roblox.com/games/6284583030/Among-Us" target="_blank" rel="noopener noreferrer" className="text-primary font-bold hover:underline mx-1">Among Us</a>
                         pero con palabras. Si te gusta Wordle, también puedes probar
-                        <a href="https://www.wordleinfinito.com" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline mx-1">Wordle Infinito</a>,
+                        <a href="https://www.wordleinfinito.com" target="_blank" rel="noopener noreferrer" className="text-primary font-bold hover:underline mx-1">Wordle Infinito</a>,
                         otro de mis juegos. Esta web fue creada con ♥ por:
-                        <a href="https://pablocarvalho.dev" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline ml-1">Pablo Carvalho</a>.
+                        <a href="https://pablocarvalho.dev" target="_blank" rel="noopener noreferrer" className="text-primary font-bold hover:underline ml-1">Pablo Carvalho</a>.
                       </p>
                     </div>
                   </div>
