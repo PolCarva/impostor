@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     default: "El Impostor - El Juego del Verano 2026 | Encuentra al Impostor",
     template: "%s | El Impostor - El Juego del Verano 2026",
   },
-  description: "¡El juego del verano 2026! Juega gratis al Impostor, el mejor juego de fiesta donde un jugador es el impostor y debe descubrir la palabra secreta sin ser descubierto. Perfecto para grupos de amigos y familia.",
+  description: "¡El juego del verano 2026! Juego de fiesta gratis donde un impostor debe descubrir la palabra secreta. Perfecto para amigos y familia.",
   
   // Keywords para SEO
   keywords: [
@@ -430,7 +430,6 @@ export default function RootLayout({
           `
         }} />
         {/* Meta Description - Asegurar que Lighthouse la detecte */}
-        <meta name="description" content="¡El juego del verano 2026! Juega gratis al Impostor, el mejor juego de fiesta donde un jugador es el impostor y debe descubrir la palabra secreta sin ser descubierto. Perfecto para grupos de amigos y familia." />
 
         {/* Viewport optimizado */}
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes" />
