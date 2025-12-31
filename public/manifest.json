@@ -1,7 +1,7 @@
 {
-  "name": "El Impostor - Juego de Fiesta",
+  "name": "El Impostor - El Juego del Verano 2026",
   "short_name": "El Impostor",
-  "description": "¡El mejor juego de fiesta gratis! Descubre quién es el impostor entre tus amigos. Perfecto para grupos de 3 a 20 jugadores.",
+  "description": "¡El juego del verano 2026! El mejor juego de fiesta gratis. Descubre quién es el impostor entre tus amigos. Perfecto para grupos de 3 a 20 jugadores.",
   "start_url": "/",
   "id": "/",
   "display": "standalone",
@@ -56,7 +56,7 @@
       "src": "/og.jpeg",
       "sizes": "1200x630",
       "type": "image/jpeg",
-      "label": "El Impostor - Pantalla principal del juego",
+      "label": "El Impostor - El Juego del Verano 2026 - Pantalla principal del juego",
       "form_factor": "wide"
     }
   ],
@@ -64,7 +64,7 @@
     {
       "name": "Jugar Ahora",
       "short_name": "Jugar",
-      "description": "Comienza una nueva partida del Impostor",
+      "description": "Comienza una nueva partida del juego del verano 2026",
       "url": "/",
       "icons": [
         {

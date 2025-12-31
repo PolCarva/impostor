@@ -29,14 +29,18 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   // Metadatos básicos
   title: {
-    default: "El Impostor - Juego de Fiesta Gratis | Encuentra al Impostor",
-    template: "%s | El Impostor - Juego de Fiesta",
+    default: "El Impostor - El Juego del Verano 2026 | Encuentra al Impostor",
+    template: "%s | El Impostor - El Juego del Verano 2026",
   },
-  description: "¡Juega gratis al Impostor! Juego de fiesta donde un jugador es el impostor y debe descubrir la palabra secreta sin ser descubierto. Perfecto para grupos de amigos y familia.",
+  description: "¡El juego del verano 2026! Juega gratis al Impostor, el mejor juego de fiesta donde un jugador es el impostor y debe descubrir la palabra secreta sin ser descubierto. Perfecto para grupos de amigos y familia.",
   
   // Keywords para SEO
   keywords: [
-    // Principales
+    // Principales - Juego del verano 2026
+    "juego del verano 2026",
+    "el juego del verano 2026",
+    "verano 2026",
+    "juego verano 2026",
     "impostor",
     "juego del impostor",
     "el impostor",
@@ -48,7 +52,7 @@ export const metadata: Metadata = {
     "impostor juego de palabras",
     "impostor juego de mesa",
     "impostor party game",
-    // Relacionados
+    // Relacionados - manteniendo algunos de juego de fiesta
     "juego de fiesta",
     "juego para grupos",
     "juego de palabras",
@@ -59,6 +63,7 @@ export const metadata: Metadata = {
     "juego de adivinanzas",
     // Long tail
     "juego del impostor para fiestas",
+    "juego del verano 2026 impostor",
     "juego tipo among us con palabras",
     "juego para jugar en grupo",
     "juego de preguntas impostor",
@@ -114,15 +119,15 @@ export const metadata: Metadata = {
     locale: "es_ES",
     alternateLocale: ["es_AR", "es_MX", "es_CO", "es_CL", "es_UY"],
     url: siteUrl,
-    siteName: "El Impostor - Juego de Fiesta",
-    title: "El Impostor - ¡El Mejor Juego de Fiesta Gratis!",
-    description: "¡Descubre quién es el impostor! Juego de fiesta gratis donde un jugador debe descubrir la palabra secreta sin ser descubierto. Perfecto para grupos de amigos, familia y reuniones. ¡Diversión garantizada para todos!",
+    siteName: "El Impostor - El Juego del Verano 2026",
+    title: "El Impostor - ¡El Juego del Verano 2026!",
+    description: "¡El juego del verano 2026! Descubre quién es el impostor en este juego de fiesta gratis donde un jugador debe descubrir la palabra secreta sin ser descubierto. Perfecto para grupos de amigos, familia y reuniones. ¡Diversión garantizada para todos!",
     images: [
       {
         url: `${siteUrl}/og.jpeg`,
         width: 1200,
         height: 630,
-        alt: "El Impostor - Juego de Fiesta - Encuentra al impostor entre tus amigos",
+        alt: "El Impostor - El Juego del Verano 2026 - Encuentra al impostor entre tus amigos",
         type: "image/jpeg",
       },
     ],
@@ -133,11 +138,11 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@pablocarvalho",
     creator: "@pablocarvalho",
-    title: "El Impostor - ¡El Mejor Juego de Fiesta Gratis!",
-    description: "¡Descubre quién es el impostor! Juego de fiesta gratis perfecto para grupos de amigos y familia. ¿Podrás encontrar al impostor?",
+    title: "El Impostor - ¡El Juego del Verano 2026!",
+    description: "¡El juego del verano 2026! Descubre quién es el impostor en este juego de fiesta gratis perfecto para grupos de amigos y familia. ¿Podrás encontrar al impostor?",
     images: {
       url: `${siteUrl}/og.jpeg`,
-      alt: "El Impostor - Juego de Fiesta - Encuentra al impostor",
+      alt: "El Impostor - El Juego del Verano 2026 - Encuentra al impostor",
     },
   },
 
@@ -205,8 +210,8 @@ const jsonLd = {
       "@type": "WebSite",
       "@id": `${siteUrl}/#website`,
       url: siteUrl,
-      name: "El Impostor - Juego de Fiesta",
-      description: "El mejor juego de fiesta gratis. Encuentra al impostor entre tus amigos.",
+      name: "El Impostor - El Juego del Verano 2026",
+      description: "El juego del verano 2026. El mejor juego de fiesta gratis. Encuentra al impostor entre tus amigos.",
       publisher: {
         "@id": `${siteUrl}/#organization`,
       },
@@ -239,7 +244,7 @@ const jsonLd = {
       "@id": `${siteUrl}/#game`,
       name: "El Impostor",
       alternateName: ["Impostor Game", "Juego del Impostor", "The Impostor"],
-      description: "Juego de fiesta donde un jugador es el impostor y debe descubrir la palabra secreta sin ser descubierto. Perfecto para grupos de amigos, familia y fiestas.",
+      description: "El juego del verano 2026. Juego de fiesta donde un jugador es el impostor y debe descubrir la palabra secreta sin ser descubierto. Perfecto para grupos de amigos, familia y fiestas.",
       url: siteUrl,
       image: `${siteUrl}/og.jpeg`,
       author: {
@@ -282,8 +287,8 @@ const jsonLd = {
       "@type": "WebPage",
       "@id": `${siteUrl}/#webpage`,
       url: siteUrl,
-      name: "El Impostor - Juego de Fiesta Gratis | Encuentra al Impostor",
-      description: "¡Juega gratis al Impostor! El mejor juego de fiesta y reuniones. Un jugador es el impostor y debe descubrir la palabra secreta sin ser descubierto.",
+      name: "El Impostor - El Juego del Verano 2026 | Encuentra al Impostor",
+      description: "¡El juego del verano 2026! Juega gratis al Impostor, el mejor juego de fiesta y reuniones. Un jugador es el impostor y debe descubrir la palabra secreta sin ser descubierto.",
       isPartOf: {
         "@id": `${siteUrl}/#website`,
       },
@@ -377,10 +382,10 @@ export default function RootLayout({
         <meta name="geo.placename" content="Uruguay" />
         
         {/* Dublin Core Metadata */}
-        <meta name="DC.title" content="El Impostor - Juego de Fiesta Gratis" />
+        <meta name="DC.title" content="El Impostor - El Juego del Verano 2026" />
         <meta name="DC.creator" content="Pablo Carvalho" />
-        <meta name="DC.subject" content="Juego de fiesta, juego de palabras, impostor, party game" />
-        <meta name="DC.description" content="Juego de fiesta gratis donde un jugador es el impostor" />
+        <meta name="DC.subject" content="Juego del verano 2026, juego de fiesta, juego de palabras, impostor, party game" />
+        <meta name="DC.description" content="El juego del verano 2026. Juego de fiesta gratis donde un jugador es el impostor" />
         <meta name="DC.language" content="es" />
         <meta name="DC.type" content="InteractiveResource" />
         
@@ -415,18 +420,18 @@ export default function RootLayout({
         
         {/* SEO content for crawlers - visible but styled minimally */}
         <div className="sr-only" aria-hidden="true">
-          <h1>El Impostor - Juego de Fiesta Gratis | Encuentra al Impostor</h1>
+          <h1>El Impostor - El Juego del Verano 2026 | Encuentra al Impostor</h1>
           <p>
-            El Impostor es el mejor juego de fiesta gratis online. Juega con tus amigos y familia 
-            a encontrar al impostor. Un jugador es el impostor y debe descubrir la palabra secreta 
-            sin ser descubierto. Perfecto para reuniones, fiestas de cumpleaños, y momentos con amigos. 
+            El Impostor es el juego del verano 2026. El mejor juego de fiesta gratis online. Juega con tus amigos y familia
+            a encontrar al impostor. Un jugador es el impostor y debe descubrir la palabra secreta
+            sin ser descubierto. Perfecto para reuniones, fiestas de cumpleaños, y momentos con amigos.
             Similar a Among Us pero con palabras. Disponible gratis, sin descargas, directamente en tu navegador.
-            Juego de deducción social para grupos de 3 a 20 jugadores. El juego del impostor es perfecto 
-            para jugar en grupo, ideal para fiestas y reuniones familiares. Descubre quién es el impostor 
+            Juego de deducción social para grupos de 3 a 20 jugadores. El juego del verano 2026 es perfecto
+            para jugar en grupo, ideal para fiestas y reuniones familiares. Descubre quién es el impostor
             mientras intentas adivinar la palabra secreta. Juego de palabras interactivo y divertido.
           </p>
           <nav>
-            <a href="/">Inicio - El Impostor</a>
+            <a href="/">Inicio - El Impostor - El Juego del Verano 2026</a>
           </nav>
         </div>
         
