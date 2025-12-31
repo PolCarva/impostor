@@ -584,7 +584,7 @@ const COLOR_PALETTES = {
       destructive: "oklch(0.35 0 0)",
       "destructive-foreground": "oklch(0.98 0.002 0)",
       border: "oklch(0.85 0.002 0)",
-      accent: "oklch(0.20 0 0)",
+      accent: "oklch(0.5 0.2 240)",
       "accent-foreground": "oklch(0.98 0.002 0)",
     },
   },
@@ -1697,9 +1697,9 @@ export default function ImpostorGame() {
                         ¿Buscas más juegos de fiesta? El Impostor es similar a otros juegos de deducción como
                         <a href="https://www.roblox.com/games/6284583030/Among-Us" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline mx-1">Among Us</a>
                         pero con palabras. Si te gusta Wordle, también puedes probar
-                        <a href="https://www.wordleinfinito.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline mx-1">Wordle Infinito</a>,
+                        <a href="https://www.wordleinfinito.com" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline mx-1">Wordle Infinito</a>,
                         otro de mis juegos. Esta web fue creada con ♥ por:
-                        <a href="https://pablocarvalho.dev" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline ml-1">Pablo Carvalho</a>.
+                        <a href="https://pablocarvalho.dev" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline ml-1">Pablo Carvalho</a>.
                       </p>
                     </div>
                   </div>
