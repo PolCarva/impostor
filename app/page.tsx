@@ -1700,14 +1700,36 @@ export default function ImpostorGame() {
                         El Impostor es completamente gratuito. Si quieres apoyar el desarrollo y mantenerlo vivo,
                         ¡tu contribución es bienvenida!
                       </p>
-                      <Button
-                        variant="outline"
-                        className="w-full gap-2 bg-orange-100 hover:bg-orange-200 border-orange-300 text-orange-800 hover:text-orange-900 dark:bg-orange-900/30 dark:hover:bg-orange-900/50 dark:border-orange-700 dark:text-orange-200 dark:hover:text-orange-100"
-                        onClick={() => window.open('https://buymeacoffee.com/pablocarvalho', '_blank')}
-                      >
-                        <Coffee className="h-4 w-4" />
-                        ¡Apoyame con un café!
-                      </Button>
+
+                      {/* Opciones de donación */}
+                      <div className="space-y-2 mb-3">
+                        <p className="text-xs font-bold text-muted-foreground mb-2">Opciones de apoyo:</p>
+
+                        {/* MercadoPago - Uruguay */}
+                        <Button
+                          variant="outline"
+                          className="w-full gap-2 bg-blue-50 hover:bg-blue-100 border-blue-300 text-blue-700 hover:text-blue-800 dark:bg-blue-950/30 dark:hover:bg-blue-950/50 dark:border-blue-700 dark:text-blue-300 dark:hover:text-blue-200"
+                          onClick={() => window.open('https://link.mercadopago.com.uy/pablocarvalhogimenez', '_blank')}
+                        >
+                          <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center mr-1">
+                            <span className="text-white text-[10px] font-bold">MP</span>
+                          </div>
+                          <CreditCard className="h-4 w-4" />
+                          Donar con MercadoPago
+                        </Button>
+
+                        {/* Buy Me a Coffee - Internacional */}
+                        <div className="pt-2 border-t border-border/50">
+                          <Button
+                            variant="outline"
+                            className="w-full gap-2 bg-orange-100 hover:bg-orange-200 border-orange-300 text-orange-800 hover:text-orange-900 dark:bg-orange-900/30 dark:hover:bg-orange-900/50 dark:border-orange-700 dark:text-orange-200 dark:hover:text-orange-100"
+                            onClick={() => window.open('https://buymeacoffee.com/pablocarvalho', '_blank')}
+                          >
+                            <Coffee className="h-4 w-4" />
+                            ¡Apóyame con un café! (Internacional)
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                     
                     <div>
