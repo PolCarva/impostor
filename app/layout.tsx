@@ -124,11 +124,11 @@ export const metadata: Metadata = {
     description: "¡El juego del verano 2026! Descubre quién es el impostor en este juego de fiesta gratis donde un jugador debe descubrir la palabra secreta sin ser descubierto. Perfecto para grupos de amigos, familia y reuniones. ¡Diversión garantizada para todos!",
     images: [
       {
-        url: `${siteUrl}/og.jpeg`,
+        url: `${siteUrl}/og.png`,
         width: 1200,
         height: 630,
         alt: "El Impostor - El Juego del Verano 2026 - Encuentra al impostor entre tus amigos",
-        type: "image/jpeg",
+        type: "image/png",
       },
     ],
   },
@@ -141,7 +141,7 @@ export const metadata: Metadata = {
     title: "El Impostor - ¡El Juego del Verano 2026!",
     description: "¡El juego del verano 2026! Descubre quién es el impostor en este juego de fiesta gratis perfecto para grupos de amigos y familia. ¿Podrás encontrar al impostor?",
     images: {
-      url: `${siteUrl}/og.jpeg`,
+      url: `${siteUrl}/og.png`,
       alt: "El Impostor - El Juego del Verano 2026 - Encuentra al impostor",
     },
   },
@@ -246,7 +246,7 @@ const jsonLd = {
       alternateName: ["Impostor Game", "Juego del Impostor", "The Impostor"],
       description: "El juego del verano 2026. Juego de fiesta donde un jugador es el impostor y debe descubrir la palabra secreta sin ser descubierto. Perfecto para grupos de amigos, familia y fiestas.",
       url: siteUrl,
-      image: `${siteUrl}/og.jpeg`,
+      image: `${siteUrl}/og.png`,
       author: {
         "@type": "Person",
         name: "Pablo Carvalho",

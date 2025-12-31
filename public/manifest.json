@@ -53,9 +53,9 @@
   ],
   "screenshots": [
     {
-      "src": "/og.jpeg",
+      "src": "/og.png",
       "sizes": "1200x630",
-      "type": "image/jpeg",
+      "type": "image/png",
       "label": "El Impostor - El Juego del Verano 2026 - Pantalla principal del juego",
       "form_factor": "wide"
     }
