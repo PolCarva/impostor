@@ -1,17 +1,54 @@
 "use client"
 
-import { GoogleAnalytics as GA, sendGAEvent as sendEvent } from "@next/third-parties/google"
+import { useEffect } from 'react'
 
-const GA_MEASUREMENT_ID = "G-6KWCZZKQMJ"
-
-// Componente de Google Analytics usando @next/third-parties
+// Lazy load Google Analytics para no bloquear el render inicial
 export function GoogleAnalytics() {
-  return <GA gaId={GA_MEASUREMENT_ID} />
+  useEffect(() => {
+    // Cargar GTM después de la hidratación para no bloquear LCP
+    const loadGTM = () => {
+      // Configurar gtag global
+      window.dataLayer = window.dataLayer || [];
+      function gtag(...args: any[]) {
+        window.dataLayer.push(args);
+      }
+
+      // Configurar GTM
+      gtag('js', new Date());
+      gtag('config', 'G-6KWCZZKQMJ', {
+        page_title: document.title,
+        page_location: window.location.href,
+      });
+
+      // Cargar el script de GTM
+      const script = document.createElement('script');
+      script.src = 'https://www.googletagmanager.com/gtag/js?id=G-6KWCZZKQMJ';
+      script.async = true;
+      document.head.appendChild(script);
+    };
+
+    // Cargar GTM después de un pequeño delay para priorizar el contenido
+    const timer = setTimeout(loadGTM, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  return null; // No renderizar nada, solo configurar
 }
 
-// Re-exportar sendGAEvent de la librería para uso directo
+// Extender window para TypeScript
+declare global {
+  interface Window {
+    dataLayer: any[];
+    gtag: (...args: any[]) => void;
+  }
+}
+
+// Función personalizada de GA que usa gtag directamente
 export function sendGAEvent(eventName: string, parameters?: Record<string, any>) {
-  sendEvent("event", eventName, parameters || {})
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', eventName, parameters || {});
+  }
 }
 
 // ==========================================

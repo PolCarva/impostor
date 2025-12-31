@@ -1,11 +1,13 @@
 "use client"
 
+"use client"
+
 import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
-import { 
+import {
   X, Plus, Check, Palette, Sparkles, Loader2, Edit,
   Heart, Sun, Waves, Grape, Leaf, Circle, Moon,
   Package, Globe, CircleDot, Gamepad2, PawPrint, Pizza,
@@ -1258,7 +1260,10 @@ export default function ImpostorGame() {
 
   if (gameState === "theme") {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden">
+      <div
+        className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden"
+        style={{ contain: 'layout style paint' }}
+      >
         <DoodleStars />
         <DoodleCircles />
         <Card className="w-full max-w-2xl relative z-10 flex flex-col max-h-[90vh]">
@@ -1350,7 +1355,10 @@ export default function ImpostorGame() {
 
   if (gameState === "edit-custom-category") {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden">
+      <div
+        className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden"
+        style={{ contain: 'layout style paint' }}
+      >
         <DoodleStars />
         
         {/* Modal de alerta custom */}
@@ -1566,7 +1574,10 @@ export default function ImpostorGame() {
 
   if (gameState === "categories") {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden">
+      <div
+        className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden"
+        style={{ contain: 'layout style paint' }}
+      >
         <DoodleStars />
         <DoodleCircles />
         
@@ -1895,7 +1906,10 @@ export default function ImpostorGame() {
     const maxImpostors = Math.max(1, players.length - 1)
 
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden">
+      <div
+        className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden"
+        style={{ contain: 'layout style paint' }}
+      >
         <DoodleStars />
         <DoodleCircles />
         <Card className="w-full max-w-lg relative z-10 flex flex-col max-h-[90vh]">
@@ -2075,7 +2089,10 @@ export default function ImpostorGame() {
 
   if (gameState === "playing") {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden">
+      <div
+        className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden"
+        style={{ contain: 'layout style paint' }}
+      >
         <DoodleStars />
         <DoodleCircles />
         <div className="w-full max-w-md flex flex-col items-center relative z-10">
@@ -2177,7 +2194,10 @@ export default function ImpostorGame() {
 
   // Finished state
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden">
+    <div
+      className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden"
+      style={{ contain: 'layout style paint' }}
+    >
       <DoodleStars />
       <DoodleCircles />
       <Card className="w-full max-w-lg relative z-10">

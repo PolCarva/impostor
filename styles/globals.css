@@ -3,6 +3,67 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* CSS crítico para mejorar LCP y reducir CLS */
+html {
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  color: oklch(0.145 0 0);
+  background: oklch(0.98 0.002 0);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Optimizar font loading para reducir layout shift */
+.font-pangolin {
+  font-family: 'Pangolin', system-ui, -apple-system, sans-serif;
+}
+
+/* Reducir CLS con tamaños fijos para elementos dinámicos */
+.game-card {
+  aspect-ratio: 2.5 / 3.5;
+  width: 100%;
+  max-width: 20rem;
+}
+
+@media (max-width: 640px) {
+  .game-card {
+    max-width: 18rem;
+  }
+}
+
+/* Prevenir layout shift con tamaños fijos */
+.flip-card {
+  width: 100%;
+  max-width: 20rem;
+  aspect-ratio: 2.5 / 3.5;
+  perspective: 1000px;
+}
+
+/* Optimizar animaciones */
+.doodle-icon {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Reducir repaints */
+* {
+  box-sizing: border-box;
+}
+
+/* Optimizaciones para mobile */
+@media (max-width: 640px) {
+  .flip-card {
+    max-width: 18rem;
+  }
+}
+
 /* Optimizaciones de rendimiento */
 * {
   box-sizing: border-box;

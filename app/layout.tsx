@@ -356,29 +356,128 @@ const jsonLd = {
   ],
 }
 
+// Loading component optimizado con CSS crítico
+function Loading() {
+  return (
+    <div
+      className="min-h-screen flex items-center justify-center"
+      style={{
+        backgroundColor: 'oklch(0.98 0.002 0)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh'
+      }}
+    >
+      <div className="animate-pulse">
+        <div
+          className="w-16 h-16 rounded-full mx-auto mb-4"
+          style={{
+            width: '4rem',
+            height: '4rem',
+            backgroundColor: 'oklch(0.205 0 0)',
+            borderRadius: '50%',
+            margin: '0 auto 1rem auto'
+          }}
+        ></div>
+        <div
+          className="h-4 rounded mx-auto"
+          style={{
+            height: '1rem',
+            backgroundColor: 'oklch(0.97 0 0)',
+            borderRadius: '0.25rem',
+            width: '8rem',
+            margin: '0 auto'
+          }}
+        ></div>
+      </div>
+    </div>
+  )
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" dir="ltr">
+    <html lang="es" dir="ltr" suppressHydrationWarning>
       <head>
+        {/* CSS crítico inline para mejor FCP */}
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            html { line-height: 1.15; -webkit-text-size-adjust: 100%; }
+            body {
+              margin: 0;
+              font-family: system-ui, -apple-system, sans-serif;
+              line-height: 1.6;
+              -webkit-font-smoothing: antialiased;
+              -moz-osx-font-smoothing: grayscale;
+            }
+            .min-h-screen { min-height: 100vh; }
+            .flex { display: flex; }
+            .items-center { align-items: center; }
+            .justify-center { justify-content: center; }
+            .bg-background { background-color: oklch(0.98 0.002 0); }
+            .p-4 { padding: 1rem; }
+            .animate-pulse {
+              animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            }
+            @keyframes pulse {
+              0%, 100% { opacity: 1; }
+              50% { opacity: .5; }
+            }
+          `
+        }} />
         {/* Meta Description - Asegurar que Lighthouse la detecte */}
         <meta name="description" content="¡El juego del verano 2026! Juega gratis al Impostor, el mejor juego de fiesta donde un jugador es el impostor y debe descubrir la palabra secreta sin ser descubierto. Perfecto para grupos de amigos y familia." />
 
         {/* Viewport optimizado */}
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes" />
 
-        {/* Preconnect y preload para optimización */}
+        {/* Preconnect y preload para optimización crítica */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+
+        {/* Preload font crítica para mejor LCP */}
         <link rel="preload" href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap" as="style" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap" />
 
-        {/* DNS Prefetch */}
+        {/* DNS Prefetch para recursos externos */}
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+
+        {/* Cargar CSS de forma no bloqueante usando script */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                var link = document.createElement('link');
+                link.rel = 'preload';
+                link.href = '/_next/static/css/app/layout.css';
+                link.as = 'style';
+                link.onload = function() {
+                  this.rel = 'stylesheet';
+                };
+                document.head.appendChild(link);
+              })();
+            `
+          }}
+        />
+
+        {/* Preload recursos críticos para mejor LCP */}
+        <link rel="preload" href="/icon.svg" as="image" type="image/svg+xml" />
+        <link rel="preload" href="/og.jpeg" as="image" type="image/jpeg" />
+
+        {/* Preload chunks críticos de Next.js */}
+        <link rel="modulepreload" href="/_next/static/chunks/webpack.js" />
+        <link rel="modulepreload" href="/_next/static/chunks/main.js" />
+
+        {/* Resource hints para optimizar conexiones */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link rel="preconnect" href="https://www.google-analytics.com" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
 
         {/* JSON-LD Structured Data */}
         <script
