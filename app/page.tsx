@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -14,6 +14,25 @@ import {
   Sparkles as SparklesIcon, PenTool, Box, CreditCard, MessageSquare,
   Mic, Hand, AlertCircle, Flame, BookOpen, Download, Share, HelpCircle
 } from "lucide-react"
+import {
+  trackGameStart,
+  trackGameComplete,
+  trackGameRestart,
+  trackCategoryToggle,
+  trackCustomCategoryCreate,
+  trackCustomCategoryEdit,
+  trackCustomCategoryDelete,
+  trackAIGeneration,
+  trackThemeChange,
+  trackPWAInstallAccepted,
+  trackPWAInstallDismissed,
+  trackIOSInstructionsShown,
+  trackInfoPopupView,
+  trackScreenView,
+  trackPlayerAdd,
+  trackImpostorCountChange,
+  trackCardView,
+} from "@/components/google-analytics"
 
 // Interfaz para el evento de instalación PWA
 interface BeforeInstallPromptEvent extends Event {
@@ -787,6 +806,9 @@ export default function ImpostorGame() {
   const [showIOSInstructions, setShowIOSInstructions] = useState(false)
   const [showInfoPopup, setShowInfoPopup] = useState(false)
   
+  // Tracking: si se usó IA para generar palabras en la categoría actual
+  const usedAIForCurrentCategory = useRef(false)
+  
   // Custom Alert State
   const [customAlert, setCustomAlert] = useState<{
     show: boolean
@@ -813,6 +835,9 @@ export default function ImpostorGame() {
         console.error('Error loading custom categories:', error)
       }
     }
+    
+    // Track initial screen view
+    trackScreenView('categories')
   }, [])
 
   // PWA Install Detection
@@ -870,7 +895,17 @@ export default function ImpostorGame() {
   }, [currentPalette])
 
   const toggleCategory = (category: string) => {
-    if (selectedCategories.includes(category)) {
+    const isCurrentlySelected = selectedCategories.includes(category)
+    const isCustom = category in customCategories
+    
+    // Track category toggle
+    trackCategoryToggle({
+      categoryName: category,
+      isSelected: !isCurrentlySelected,
+      isCustom: isCustom,
+    })
+    
+    if (isCurrentlySelected) {
       setSelectedCategories(selectedCategories.filter((c) => c !== category))
     } else {
       setSelectedCategories([...selectedCategories, category])
@@ -896,8 +931,12 @@ export default function ImpostorGame() {
 
   const addPlayer = () => {
     if (newPlayerName.trim() && players.length < 20) {
-      setPlayers([...players, newPlayerName.trim()])
+      const newPlayers = [...players, newPlayerName.trim()]
+      setPlayers(newPlayers)
       setNewPlayerName("")
+      
+      // Track player added
+      trackPlayerAdd(newPlayers.length)
     }
   }
 
@@ -922,10 +961,33 @@ export default function ImpostorGame() {
     setCurrentPlayer(0)
     setIsFlipped(false)
     setGameState("playing")
+    
+    // Track game start
+    const categoriesToUse = selectedCategories.length === 0 
+      ? [...Object.keys(DEFAULT_CATEGORIES), ...Object.keys(customCategories)]
+      : selectedCategories
+    
+    const hasCustomCategory = categoriesToUse.some(cat => cat in customCategories)
+    
+    trackGameStart({
+      playerCount: players.length,
+      impostorCount: numImpostors,
+      categoriesCount: categoriesToUse.length,
+      categories: categoriesToUse,
+      isCustomCategoryUsed: hasCustomCategory,
+    })
+    
+    trackScreenView('playing')
   }
 
   const handleCardPress = () => {
     setIsFlipped(true)
+    
+    // Track card view
+    trackCardView({
+      playerIndex: currentPlayer,
+      isImpostor: impostorIndices.includes(currentPlayer),
+    })
   }
 
   const handleCardRelease = () => {
@@ -938,6 +1000,15 @@ export default function ImpostorGame() {
       setIsFlipped(false)
     } else {
       setGameState("finished")
+      
+      // Track game complete
+      trackGameComplete({
+        playerCount: players.length,
+        impostorCount: impostorIndices.length,
+        selectedWord: selectedWord,
+      })
+      
+      trackScreenView('finished')
     }
   }
 
@@ -947,6 +1018,10 @@ export default function ImpostorGame() {
     setSelectedWord("")
     setImpostorIndices([])
     setGameState("setup")
+    
+    // Track game restart
+    trackGameRestart()
+    trackScreenView('setup')
   }
 
   const isCurrentPlayerImpostor = impostorIndices.includes(currentPlayer)
@@ -961,7 +1036,16 @@ export default function ImpostorGame() {
   }
 
   const selectPalette = (paletteName: PaletteName) => {
+    const previousPalette = currentPalette
     setCurrentPalette(paletteName)
+    
+    // Track theme change
+    if (previousPalette !== paletteName) {
+      trackThemeChange({
+        themeName: paletteName,
+        previousTheme: previousPalette,
+      })
+    }
   }
 
   // Función para instalar PWA
@@ -969,6 +1053,7 @@ export default function ImpostorGame() {
     if (isIOS) {
       // En iOS mostramos las instrucciones
       setShowIOSInstructions(true)
+      trackIOSInstructionsShown()
       return
     }
 
@@ -980,11 +1065,17 @@ export default function ImpostorGame() {
     
     if (outcome === 'accepted') {
       setIsInstallable(false)
+      trackPWAInstallAccepted()
+    } else {
+      trackPWAInstallDismissed()
     }
     setDeferredPrompt(null)
   }
 
   const deleteCustomCategory = (categoryName: string) => {
+    // Track delete before removing
+    trackCustomCategoryDelete(categoryName)
+    
     setCustomCategories(prev => {
       const newCategories = { ...prev }
       delete newCategories[categoryName]
@@ -1000,7 +1091,9 @@ export default function ImpostorGame() {
     setEditingCategoryWords([])
     setAiPrompt("")
     setIsEditingExisting(false)
+    usedAIForCurrentCategory.current = false
     setGameState("edit-custom-category")
+    trackScreenView('create_custom_category')
   }
 
   const openEditCustomCategory = (categoryName: string) => {
@@ -1010,12 +1103,28 @@ export default function ImpostorGame() {
     setEditingCategoryWords([...words])
     setAiPrompt("")
     setIsEditingExisting(true)
+    usedAIForCurrentCategory.current = false
     setGameState("edit-custom-category")
+    trackScreenView('edit_custom_category')
   }
 
   const saveCustomCategory = () => {
     if (editingCategoryName.trim() && editingCategoryWords.length > 0) {
       const newName = editingCategoryName.trim()
+      
+      // Track create/edit
+      if (isEditingExisting) {
+        trackCustomCategoryEdit({
+          categoryName: newName,
+          wordCount: editingCategoryWords.length,
+        })
+      } else {
+        trackCustomCategoryCreate({
+          categoryName: newName,
+          wordCount: editingCategoryWords.length,
+          usedAI: usedAIForCurrentCategory.current,
+        })
+      }
       
       setCustomCategories(prev => {
         const updated = { ...prev }
@@ -1034,6 +1143,7 @@ export default function ImpostorGame() {
       // Limpiar el nombre original después de guardar
       setOriginalCategoryName("")
       setGameState("categories")
+      trackScreenView('categories')
     }
   }
 
@@ -1102,7 +1212,14 @@ export default function ImpostorGame() {
 
       console.log(`✅ ¡Éxito! Se generaron ${data.words.length} elementos usando ${data.model}`)
       showAlert('success', '¡Palabras generadas!', `Se generaron ${data.words.length} elementos para "${prompt}"`)
-
+      
+      // Track AI generation success
+      usedAIForCurrentCategory.current = true
+      trackAIGeneration({
+        prompt: prompt,
+        wordCount: data.words.length,
+        success: true,
+      })
 
     } catch (error) {
       console.error('❌ Error llamando a la API:', error)
@@ -1124,6 +1241,13 @@ export default function ImpostorGame() {
       })
 
       showAlert('error', 'Error de conexión', 'No se pudo conectar con el servidor de IA. Se agregaron palabras de ejemplo en su lugar.')
+      
+      // Track AI generation failure
+      trackAIGeneration({
+        prompt: prompt,
+        wordCount: 0,
+        success: false,
+      })
     }
 
     setIsGenerating(false)
@@ -1597,7 +1721,10 @@ export default function ImpostorGame() {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setShowInfoPopup(true)}
+                onClick={() => {
+                  setShowInfoPopup(true)
+                  trackInfoPopupView()
+                }}
                 className="absolute top-0 right-0 h-8 w-8 rounded-full bg-muted hover:bg-primary/20 border-2 border-border hover:border-primary/50 transition-all shadow-md"
                 aria-label="Información sobre el juego"
               >
@@ -1743,7 +1870,10 @@ export default function ImpostorGame() {
               </div>
 
               <Button
-                onClick={() => setGameState("setup")}
+                onClick={() => {
+                  setGameState("setup")
+                  trackScreenView('setup')
+                }}
                 className="w-full"
                 size="lg"
               >
@@ -1878,7 +2008,11 @@ export default function ImpostorGame() {
                   <Button
                     variant="outline"
                     size="icon"
-                    onClick={() => setNumImpostors(Math.max(1, numImpostors - 1))}
+                    onClick={() => {
+                      const newCount = Math.max(1, numImpostors - 1)
+                      setNumImpostors(newCount)
+                      trackImpostorCountChange({ newCount, playerCount: players.length })
+                    }}
                     disabled={numImpostors <= 1}
                     className="h-8 w-8"
                   >
@@ -1890,7 +2024,11 @@ export default function ImpostorGame() {
                   <Button
                     variant="outline"
                     size="icon"
-                    onClick={() => setNumImpostors(Math.min(maxImpostors, numImpostors + 1))}
+                    onClick={() => {
+                      const newCount = Math.min(maxImpostors, numImpostors + 1)
+                      setNumImpostors(newCount)
+                      trackImpostorCountChange({ newCount, playerCount: players.length })
+                    }}
                     disabled={numImpostors >= maxImpostors}
                     className="h-8 w-8"
                   >

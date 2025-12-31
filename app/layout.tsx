@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata, Viewport } from "next"
 import { Pangolin } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import { GoogleAnalytics } from "@/components/google-analytics"
 import "./globals.css"
 
 // Fuente Pangolin - perfecta para estética doodly y hand-drawn
@@ -430,6 +431,7 @@ export default function RootLayout({
         </div>
         
         <Analytics />
+        <GoogleAnalytics />
       </body>
     </html>
   )
