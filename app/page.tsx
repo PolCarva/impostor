@@ -1712,10 +1712,20 @@ export default function ImpostorGame() {
                           onClick={() => window.open('https://link.mercadopago.com.uy/pablocarvalhogimenez', '_blank')}
                         >
                           <CreditCard className="h-4 w-4" />
-                          Donar con <b>MercadoPago</b>
+                          Donar con <b>MercadoPago</b> (UYU)
                         </Button>
 
-                        
+                        {/* Buy Me a Coffee - Internacional */}
+                        <div className="pt-2 border-t border-border/50">
+                          <Button
+                            variant="outline"
+                            className="w-full gap-2 bg-orange-100 hover:bg-orange-200 border-orange-300 text-orange-800 hover:text-orange-900 dark:bg-orange-900/30 dark:hover:bg-orange-900/50 dark:border-orange-700 dark:text-orange-200 dark:hover:text-orange-100"
+                            onClick={() => window.open('https://buymeacoffee.com/pablocarvalho', '_blank')}
+                          >
+                            <Coffee className="h-4 w-4" />
+                            ¡Apóyame con un café!
+                          </Button>
+                        </div>
                       </div>
                     </div>
                     
