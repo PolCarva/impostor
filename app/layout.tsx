@@ -29,7 +29,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   // Metadatos básicos
   title: {
-    default: "El Impostor - El Juego del Verano 2026 | Encuentra al Impostor",
+    default: "El Impostor - El Juego del Verano 2026",
     template: "%s | El Impostor - El Juego del Verano 2026",
   },
   description: "¡El juego del verano 2026! Juego de fiesta gratis donde un impostor debe descubrir la palabra secreta. Perfecto para amigos y familia.",
@@ -287,7 +287,7 @@ const jsonLd = {
       "@type": "WebPage",
       "@id": `${siteUrl}/#webpage`,
       url: siteUrl,
-      name: "El Impostor - El Juego del Verano 2026 | Encuentra al Impostor",
+      name: "El Impostor - Juego del Verano 2026 | Encuentra al Impostor",
       description: "¡El juego del verano 2026! Juega gratis al Impostor, el mejor juego de fiesta y reuniones. Un jugador es el impostor y debe descubrir la palabra secreta sin ser descubierto.",
       isPartOf: {
         "@id": `${siteUrl}/#website`,
@@ -531,7 +531,7 @@ export default function RootLayout({
         
         {/* SEO content for crawlers - visible but styled minimally */}
         <div className="sr-only">
-          <h1>El Impostor - El Juego del Verano 2026 | Encuentra al Impostor</h1>
+          <h1>El Impostor - Juego del Verano 2026 | Encuentra al Impostor</h1>
           <p>
             El Impostor es el juego del verano 2026. El mejor juego de fiesta gratis online. Juega con tus amigos y familia
             a encontrar al impostor. Un jugador es el impostor y debe descubrir la palabra secreta
