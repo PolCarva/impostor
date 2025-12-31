@@ -14,7 +14,8 @@ import {
   Star, Film, Wrench, Briefcase, Smartphone, Car, Rainbow,
   FolderOpen, UserSearch, Users, Target, RefreshCw, Gamepad,
   Sparkles as SparklesIcon, PenTool, Box, CreditCard, MessageSquare,
-  Mic, Hand, AlertCircle, Flame, BookOpen, Download, Share, HelpCircle
+  Mic, Hand, AlertCircle, Flame, BookOpen, Download, Share, HelpCircle,
+  Coffee
 } from "lucide-react"
 import {
   trackGameStart,
@@ -1669,10 +1670,30 @@ export default function ImpostorGame() {
                     <div>
                       <h2 className="text-lg font-title font-bold text-foreground mb-2">¿Qué es el juego del Impostor?</h2>
                       <p className="text-sm text-foreground mb-3">
-                        El Impostor es un juego de fiesta gratis donde todos los jugadores reciben una palabra secreta, excepto uno: el impostor. 
-                        El impostor debe descubrir cuál es la palabra sin ser descubierto, mientras los demás intentan identificarlo. 
+                        El Impostor es un juego de fiesta gratis donde todos los jugadores reciben una palabra secreta, excepto uno: el impostor.
+                        El impostor debe descubrir cuál es la palabra sin ser descubierto, mientras los demás intentan identificarlo.
                         Es similar a Among Us pero con palabras, perfecto para grupos de amigos, familia y reuniones.
                       </p>
+                    </div>
+
+                    {/* Sección de apoyo/donación */}
+                    <div className="bg-orange-50 dark:bg-orange-950/20 p-4 rounded-[20px_8px_20px_8px/8px_20px_8px_20px] border-2 border-orange-200 dark:border-orange-800/50">
+                      <h3 className="text-lg font-title font-bold text-foreground mb-2 flex items-center gap-2">
+                        <Heart className="h-5 w-5 text-red-500" />
+                        ¿Te gusta el juego?
+                      </h3>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        El Impostor es completamente gratuito. Si quieres apoyar el desarrollo y mantenerlo vivo,
+                        ¡tu contribución es bienvenida!
+                      </p>
+                      <Button
+                        variant="outline"
+                        className="w-full gap-2 bg-orange-100 hover:bg-orange-200 border-orange-300 text-orange-800 hover:text-orange-900 dark:bg-orange-900/30 dark:hover:bg-orange-900/50 dark:border-orange-700 dark:text-orange-200 dark:hover:text-orange-100"
+                        onClick={() => window.open('https://buymeacoffee.com/pablocarvalho', '_blank')}
+                      >
+                        <Coffee className="h-4 w-4" />
+                        ¡Apoyame con un café!
+                      </Button>
                     </div>
                     
                     <div>
