@@ -140,7 +140,7 @@ export const metadata: Metadata = {
     },
   },
 
-  // Íconos y favicons
+  // Íconos y favicons - el SVG usa currentColor y se adapta al tema automáticamente
   icons: {
     icon: [
       { url: "/icon.svg", type: "image/svg+xml" },
@@ -382,6 +382,13 @@ export default function RootLayout({
         <meta name="DC.description" content="Juego de fiesta gratis donde un jugador es el impostor" />
         <meta name="DC.language" content="es" />
         <meta name="DC.type" content="InteractiveResource" />
+        
+        {/* Favicon con soporte para temas claro/oscuro - SVG se adapta automáticamente */}
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+        <link rel="apple-touch-icon" href="/apple-icon.png" />
+        
+        {/* Nota: El SVG usa currentColor con media queries CSS internas para adaptarse al tema */}
       </head>
       <body className={`${pangolin.variable} ${pangolin.className} antialiased`}>
         {/* SVG filters for doodle effects */}
