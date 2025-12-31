@@ -1723,7 +1723,7 @@ export default function ImpostorGame() {
                             onClick={() => window.open('https://buymeacoffee.com/pablocarvalho', '_blank')}
                           >
                             <Coffee className="h-4 w-4" />
-                            ¡Apóyame con un café! (Internacional)
+                            ¡Apóyame con un café!
                           </Button>
                         </div>
                       </div>
