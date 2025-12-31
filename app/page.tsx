@@ -12,7 +12,7 @@ import {
   Star, Film, Wrench, Briefcase, Smartphone, Car, Rainbow,
   FolderOpen, UserSearch, Users, Target, RefreshCw, Gamepad, Drama,
   Sparkles as SparklesIcon, PenTool, Box, CreditCard, MessageSquare,
-  Mic, Hand, AlertCircle, Flame, BookOpen, Download, Share
+  Mic, Hand, AlertCircle, Flame, BookOpen, Download, Share, HelpCircle
 } from "lucide-react"
 
 // Interfaz para el evento de instalación PWA
@@ -731,6 +731,7 @@ export default function ImpostorGame() {
   const [isIOS, setIsIOS] = useState(false)
   const [isStandalone, setIsStandalone] = useState(false)
   const [showIOSInstructions, setShowIOSInstructions] = useState(false)
+  const [showInfoPopup, setShowInfoPopup] = useState(false)
   
   // Custom Alert State
   const [customAlert, setCustomAlert] = useState<{
@@ -1070,7 +1071,7 @@ export default function ImpostorGame() {
             <div className="flex items-center justify-between mb-4 shrink-0">
               <div className="flex items-center gap-2">
                 <DoodleIcon icon={Palette} size={28} thick className="animate-[bounce-soft_2s_ease-in-out_infinite]" uniqueId="theme-header" />
-                <h1 className="text-xl md:text-2xl font-title font-bold text-primary">Elige tu estilo</h1>
+                <h2 className="text-xl md:text-2xl font-title font-bold text-primary">Elige tu estilo</h2>
               </div>
               <Button variant="ghost" size="icon" onClick={() => {
                 setGameState(previousGameState)
@@ -1194,9 +1195,9 @@ export default function ImpostorGame() {
             <div className="flex items-center justify-between mb-4 shrink-0">
               <div className="flex items-center gap-2">
                 <DoodleIcon icon={PenTool} size={28} thick className="animate-[wiggle_1s_ease-in-out_infinite]" uniqueId="edit-header" />
-                <h1 className="text-xl md:text-2xl font-title font-bold text-primary">
+                <h2 className="text-xl md:text-2xl font-title font-bold text-primary">
                   {isEditingExisting ? "Editar Categoría" : "Nueva Categoría"}
-                </h1>
+                </h2>
               </div>
               <Button variant="ghost" size="icon" onClick={cancelEditCategory}>
                 <X className="h-5 w-5" />
@@ -1213,6 +1214,8 @@ export default function ImpostorGame() {
                   Nombre de la categoría:
                 </label>
                 <Input
+                  id="category-name-input"
+                  name="category-name"
                   placeholder="Ej: Personajes de Anime, Comidas Típicas..."
                   value={editingCategoryName}
                   onChange={(e) => setEditingCategoryName(e.target.value)}
@@ -1232,6 +1235,8 @@ export default function ImpostorGame() {
 
                 <div className="flex flex-col gap-2">
                   <Textarea
+                    id="ai-prompt-textarea"
+                    name="ai-prompt"
                     placeholder="Describe el tema para generar palabras...&#10;&#10;Ejemplos:&#10;'personajes de Naruto'&#10;'tipos de verduras'&#10;'marcas de autos deportivos'"
                     value={aiPrompt}
                     onChange={(e) => setAiPrompt(e.target.value.slice(0, 200))}
@@ -1305,6 +1310,8 @@ export default function ImpostorGame() {
                       style={{ transform: `rotate(${(index % 3 - 1) * 0.5}deg)` }}
                     >
                       <Input
+                        id={`word-input-${index}`}
+                        name={`word-${index}`}
                         value={word}
                         onChange={(e) => updateWordInCategory(index, e.target.value)}
                         className="flex-1 h-8 text-xs border-0 bg-transparent p-1 focus:bg-background/50"
@@ -1415,15 +1422,15 @@ export default function ImpostorGame() {
                 </div>
                 <div className="space-y-4 text-sm text-muted-foreground">
                   <div className="flex items-start gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">1</span>
+                    <span className="shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">1</span>
                     <p>Toca el botón <Share className="inline h-4 w-4 mx-1" /> <strong>Compartir</strong> en la barra de Safari</p>
                   </div>
                   <div className="flex items-start gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">2</span>
+                    <span className="shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">2</span>
                     <p>Desliza hacia abajo y toca <strong>"Agregar a pantalla de inicio"</strong></p>
                   </div>
                   <div className="flex items-start gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">3</span>
+                    <span className="shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">3</span>
                     <p>Toca <strong>"Agregar"</strong> y ¡listo!</p>
                   </div>
                 </div>
@@ -1434,10 +1441,74 @@ export default function ImpostorGame() {
             </Card>
           </div>
         )}
+
+        {/* Modal de información sobre el juego */}
+        {showInfoPopup && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+            <Card className="w-full max-w-2xl max-h-[90vh] flex flex-col">
+              <CardContent className="p-4 md:p-6 flex flex-col flex-1 min-h-0 overflow-hidden">
+                <div className="flex items-center justify-between mb-4 shrink-0">
+                  <h3 className="text-xl md:text-2xl font-title font-bold text-foreground flex items-center gap-2">
+                    <DoodleIcon icon={HelpCircle} size={28} thick className="animate-[bounce-soft_2s_ease-in-out_infinite]" uniqueId="info-popup-header" />
+                    Sobre El Impostor
+                  </h3>
+                  <Button variant="ghost" size="icon" onClick={() => setShowInfoPopup(false)}>
+                    <X className="h-5 w-5" />
+                  </Button>
+                </div>
+                
+                <div className="flex-1 overflow-y-auto pr-2 -mr-2 min-h-0">
+                  <div className="space-y-4 text-left">
+                    <div>
+                      <h2 className="text-lg font-title font-bold text-foreground mb-2">¿Qué es el juego del Impostor?</h2>
+                      <p className="text-sm text-foreground mb-3">
+                        El Impostor es un juego de fiesta gratis donde todos los jugadores reciben una palabra secreta, excepto uno: el impostor. 
+                        El impostor debe descubrir cuál es la palabra sin ser descubierto, mientras los demás intentan identificarlo. 
+                        Es similar a Among Us pero con palabras, perfecto para grupos de amigos, familia y reuniones.
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <h2 className="text-lg font-title font-bold text-foreground mb-2">¿Cómo se juega al Impostor?</h2>
+                      <p className="text-sm text-foreground mb-3">
+                        Cada jugador mira su carta en secreto. Todos excepto el impostor ven la palabra secreta. 
+                        Por turnos, cada jugador da una pista sobre la palabra sin decirla directamente. 
+                        Después de las rondas, todos votan para descubrir quién es el impostor. 
+                        Se necesitan mínimo 3 jugadores y es más divertido con grupos de 5 a 10 personas.
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <h2 className="text-lg font-title font-bold text-foreground mb-2">Características del juego</h2>
+                      <p className="text-sm text-foreground mb-3">
+                        Juego de deducción social completamente gratis, sin descargas necesarias. 
+                        Disponible directamente en tu navegador, perfecto para fiestas de cumpleaños, reuniones familiares y momentos con amigos. 
+                        Puedes crear tus propias categorías personalizadas o usar las predefinidas. 
+                        Juego de palabras interactivo para grupos de 3 a 20 jugadores.
+                      </p>
+                      <p className="text-sm text-foreground">
+                        ¿Buscas más juegos de fiesta? El Impostor es similar a otros juegos de deducción como 
+                        <a href="https://www.roblox.com/games/6284583030/Among-Us" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline mx-1">Among Us</a>
+                        pero con palabras. También puedes encontrar más información sobre juegos de fiesta en 
+                        <a href="https://pablocarvalho.dev" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline mx-1">pablocarvalho.dev</a>.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="shrink-0 pt-4 border-t border-border/50 mt-4">
+                  <Button onClick={() => setShowInfoPopup(false)} className="w-full" size="lg">
+                    ¡Entendido!
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
         
         <Card className="w-full max-w-2xl relative z-10 flex flex-col max-h-[90vh]">
           <CardContent className="p-4 md:p-6 flex flex-col flex-1 min-h-0">
-            <div className="flex justify-between items-center mb-2 flex-shrink-0 gap-2">
+            <div className="flex justify-between items-center mb-2 shrink-0 gap-2">
               {/* Botón de instalación PWA */}
               {!isStandalone && (isInstallable || isIOS) ? (
                 <Button onClick={handleInstallClick} size="sm" className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground shadow-[3px_3px_0_0_var(--border)] border-2 border-foreground/20">
@@ -1451,12 +1522,21 @@ export default function ImpostorGame() {
               </Button>
             </div>
 
-            <div className="text-center mb-4 flex-shrink-0">
+            <div className="text-center mb-4 shrink-0 relative">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowInfoPopup(true)}
+                className="absolute top-0 right-0 h-8 w-8 rounded-full bg-muted hover:bg-primary/20 border-2 border-border hover:border-primary/50 transition-all shadow-md"
+                aria-label="Información sobre el juego"
+              >
+                <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-primary" />
+              </Button>
               <div className="flex justify-center mb-2">
                 <DoodleIcon icon={Drama} size={48} thick className="animate-[bounce-soft_2s_ease-in-out_infinite]" uniqueId="categories-title" />
               </div>
-              <h1 className="text-3xl md:text-4xl font-title font-bold text-primary mb-1">El Impostor</h1>
-              <p className="text-muted-foreground text-sm md:text-base flex items-center justify-center gap-2">
+              <h1 className="text-3xl md:text-4xl font-title font-bold text-primary mb-2">El Impostor <span className="sr-only">- Juego de Fiesta Gratis</span></h1>
+              <p className="text-muted-foreground text-sm md:text-base flex items-center justify-center gap-2 mb-3">
                 ¡Elige las categorías para jugar!
               </p>
             </div>
@@ -1532,7 +1612,7 @@ export default function ImpostorGame() {
                                 e.stopPropagation()
                                 openEditCustomCategory(categoryName)
                               }}
-                              className="h-6 w-6 bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-full shadow-md"
+                              className="h-6 w-6 bg-secondary text-primary hover:bg-secondary/90 rounded-full shadow-md"
                             >
                               <Edit className="h-2.5 w-2.5" />
                             </Button>
@@ -1625,7 +1705,7 @@ export default function ImpostorGame() {
               <div className="flex justify-center mb-2">
                 <DoodleIcon icon={Drama} size={48} thick className="animate-[shake_0.5s_ease-in-out_infinite]" uniqueId="setup-title" />
               </div>
-              <h1 className="text-3xl md:text-4xl font-title font-bold text-primary mb-1">El Impostor</h1>
+              <h2 className="text-3xl md:text-4xl font-title font-bold text-primary mb-1">El Impostor</h2>
               <p className="text-muted-foreground text-sm md:text-base flex items-center justify-center gap-2">
                 ¡Agrega los jugadores! (mínimo 3)
                 <DoodleIcon icon={Users} size={18} className="stroke-[2.5]" uniqueId="setup-subtitle" />
@@ -1676,6 +1756,8 @@ export default function ImpostorGame() {
                 <div className="flex flex-col sm:flex-row gap-2 mb-3 overflow-hidden px-1 items-center">
                   <div className="flex-1 min-w-0">
                     <Input
+                      id="player-name-input"
+                      name="player-name"
                       placeholder="Nombre del jugador..."
                       value={newPlayerName}
                       onChange={(e) => setNewPlayerName(e.target.value)}

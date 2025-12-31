@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     default: "El Impostor - Juego de Fiesta Gratis | Encuentra al Impostor",
     template: "%s | El Impostor - Juego de Fiesta",
   },
-  description: "¡Juega gratis al Impostor! El mejor juego de fiesta y reuniones. Un jugador es el impostor y debe descubrir la palabra secreta sin ser descubierto. Perfecto para grupos de amigos, familia y fiestas. Similar a Among Us pero con palabras. ¡Diversión garantizada!",
+  description: "¡Juega gratis al Impostor! Juego de fiesta donde un jugador es el impostor y debe descubrir la palabra secreta sin ser descubierto. Perfecto para grupos de amigos y familia.",
   
   // Keywords para SEO
   keywords: [
@@ -405,16 +405,21 @@ export default function RootLayout({
           {children}
         </main>
         
-        {/* Hidden SEO content for crawlers */}
+        {/* SEO content for crawlers - visible but styled minimally */}
         <div className="sr-only" aria-hidden="true">
-          <h1>El Impostor - Juego de Fiesta Gratis</h1>
+          <h1>El Impostor - Juego de Fiesta Gratis | Encuentra al Impostor</h1>
           <p>
             El Impostor es el mejor juego de fiesta gratis online. Juega con tus amigos y familia 
             a encontrar al impostor. Un jugador es el impostor y debe descubrir la palabra secreta 
             sin ser descubierto. Perfecto para reuniones, fiestas de cumpleaños, y momentos con amigos. 
             Similar a Among Us pero con palabras. Disponible gratis, sin descargas, directamente en tu navegador.
-            Juego de deducción social para grupos de 3 a 20 jugadores.
+            Juego de deducción social para grupos de 3 a 20 jugadores. El juego del impostor es perfecto 
+            para jugar en grupo, ideal para fiestas y reuniones familiares. Descubre quién es el impostor 
+            mientras intentas adivinar la palabra secreta. Juego de palabras interactivo y divertido.
           </p>
+          <nav>
+            <a href="/">Inicio - El Impostor</a>
+          </nav>
         </div>
         
         <Analytics />
