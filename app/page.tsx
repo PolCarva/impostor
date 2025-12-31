@@ -1711,11 +1711,8 @@ export default function ImpostorGame() {
                           className="w-full gap-2 bg-blue-50 hover:bg-blue-100 border-blue-300 text-blue-700 hover:text-blue-800 dark:bg-blue-950/30 dark:hover:bg-blue-950/50 dark:border-blue-700 dark:text-blue-300 dark:hover:text-blue-200"
                           onClick={() => window.open('https://link.mercadopago.com.uy/pablocarvalhogimenez', '_blank')}
                         >
-                          <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center mr-1">
-                            <span className="text-white text-[10px] font-bold">MP</span>
-                          </div>
                           <CreditCard className="h-4 w-4" />
-                          Donar con MercadoPago
+                          Donar con <b>MercadoPago</b>
                         </Button>
 
                         {/* Buy Me a Coffee - Internacional */}
