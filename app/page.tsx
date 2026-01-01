@@ -15,7 +15,7 @@ import {
   FolderOpen, UserSearch, Users, Target, RefreshCw, Gamepad,
   Sparkles as SparklesIcon, PenTool, Box, CreditCard, MessageSquare,
   Mic, Hand, AlertCircle, Flame, BookOpen, Download, Share, HelpCircle,
-  Coffee, Compass, Crown, Lightbulb, ChevronLeft, ChevronRight
+  Coffee, Compass, Crown, Lightbulb, ChevronLeft, ChevronRight, ChevronUp, ChevronDown
 } from "lucide-react"
 import {
   trackGameStart,
@@ -995,6 +995,22 @@ export default function ImpostorGame() {
 
   const removePlayer = (index: number) => {
     setPlayers(players.filter((_, i) => i !== index))
+  }
+
+  const movePlayerUp = (index: number) => {
+    if (index > 0) {
+      const newPlayers = [...players]
+      ;[newPlayers[index], newPlayers[index - 1]] = [newPlayers[index - 1], newPlayers[index]]
+      setPlayers(newPlayers)
+    }
+  }
+
+  const movePlayerDown = (index: number) => {
+    if (index < players.length - 1) {
+      const newPlayers = [...players]
+      ;[newPlayers[index], newPlayers[index + 1]] = [newPlayers[index + 1], newPlayers[index]]
+      setPlayers(newPlayers)
+    }
   }
 
   const startGame = () => {
@@ -2312,22 +2328,50 @@ export default function ImpostorGame() {
                 {players.length > 0 && (
                   <div className="space-y-2 max-h-64 overflow-y-auto p-2">
                     {players.map((player, index) => (
-                      <div 
-                        key={index} 
-                        className="flex items-center justify-between p-3 bg-muted rounded-[15px_5px_15px_5px/5px_15px_5px_15px] border-2 border-border group hover:border-primary/50 transition-all"
-                        style={{ transform: `rotate(${(index % 3 - 1) * 0.3}deg)` }}
+                      <div
+                        key={`${player}-${index}`}
+                        className="flex items-center justify-between p-3 bg-muted rounded-[15px_5px_15px_5px/5px_15px_5px_15px] border-2 border-border group hover:border-primary/50 transition-all duration-300 ease-in-out"
+                        style={{
+                          transform: `rotate(${(index % 3 - 1) * 0.3}deg)`,
+                          animation: 'slideIn 0.3s ease-out'
+                        }}
                       >
-                        <span className="font-bold text-base text-foreground flex items-center gap-2">
-                          <DoodleIcon icon={Users} size={18} className="stroke-[2.5]" uniqueId={`player-${index}-${player}`} />
-                          {player}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <div className="flex flex-col gap-0.5">
+                            <Button
+                              variant="ghost"
+                              size="icon-sm"
+                              onClick={() => movePlayerUp(index)}
+                              disabled={index === 0}
+                              className="opacity-50 group-hover:opacity-100 text-muted-foreground hover:text-primary h-6 w-6 transition-all duration-200 disabled:opacity-25 p-0"
+                              aria-label="Mover arriba"
+                            >
+                              <ChevronUp className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon-sm"
+                              onClick={() => movePlayerDown(index)}
+                              disabled={index === players.length - 1}
+                              className="opacity-50 group-hover:opacity-100 text-muted-foreground hover:text-primary h-6 w-6 transition-all duration-200 disabled:opacity-25 p-0"
+                              aria-label="Mover abajo"
+                            >
+                              <ChevronDown className="h-3 w-3" />
+                            </Button>
+                          </div>
+                          <span className="font-bold text-base text-foreground flex items-center gap-2">
+                            <DoodleIcon icon={Users} size={18} className="stroke-[2.5]" uniqueId={`player-${index}-${player}`} />
+                            {player}
+                          </span>
+                        </div>
                         <Button
                           variant="ghost"
                           size="icon-sm"
                           onClick={() => removePlayer(index)}
-                          className="opacity-50 group-hover:opacity-100 text-muted-foreground hover:text-destructive h-8 w-8"
+                          className="opacity-50 group-hover:opacity-100 text-muted-foreground hover:text-destructive h-7 w-7 transition-all duration-200"
+                          aria-label="Eliminar jugador"
                         >
-                          <X className="h-4 w-4" />
+                          <X className="h-3 w-3" />
                         </Button>
                       </div>
                     ))}
