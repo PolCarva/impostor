@@ -1296,8 +1296,8 @@ export default function ImpostorGame() {
   }
 
   const updateWordInCategory = (index: number, newWord: string) => {
-    if (newWord.trim() && !editingCategoryWords.some((word, i) => i !== index && word === newWord.trim())) {
-      setEditingCategoryWords(prev => prev.map((word, i) => i === index ? newWord.trim() : word))
+    if (newWord.trim() && !editingCategoryWords.some((word, i) => i !== index && word.trim() === newWord.trim())) {
+      setEditingCategoryWords(prev => prev.map((word, i) => i === index ? newWord : word))
     }
   }
 
