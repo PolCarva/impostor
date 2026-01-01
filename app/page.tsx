@@ -15,7 +15,7 @@ import {
   FolderOpen, UserSearch, Users, Target, RefreshCw, Gamepad,
   Sparkles as SparklesIcon, PenTool, Box, CreditCard, MessageSquare,
   Mic, Hand, AlertCircle, Flame, BookOpen, Download, Share, HelpCircle,
-  Coffee
+  Coffee, Compass, Crown, Lightbulb, ChevronLeft, ChevronRight
 } from "lucide-react"
 import {
   trackGameStart,
@@ -580,6 +580,27 @@ const WORD_CATEGORIES = {
 
 const DEFAULT_CATEGORIES = WORD_CATEGORIES
 
+const GAME_MODES: Record<GameMode, GameModeConfig> = {
+  classic: {
+    name: "Clásico",
+    description: "El modo original: un impostor debe descubrir la palabra secreta",
+    icon: UserSearch,
+    minPlayers: 3,
+  },
+  lost: {
+    name: "El Perdido",
+    description: "Un jugador tiene una palabra diferente y no lo sabe",
+    icon: Compass,
+    minPlayers: 4,
+  },
+  jester: {
+    name: "Bufón",
+    description: "Un jugador gana si es eliminado por el grupo",
+    icon: Crown,
+    minPlayers: 4,
+  },
+}
+
 const COLOR_PALETTES = {
   // 📓 Papel de Cuaderno - Minimalista blanco y negro
   notebook: {
@@ -784,6 +805,15 @@ const COLOR_PALETTES = {
 type GameState = "categories" | "setup" | "playing" | "finished" | "theme" | "edit-custom-category"
 type PaletteName = keyof typeof COLOR_PALETTES
 
+type GameMode = "classic" | "lost" | "jester"
+
+interface GameModeConfig {
+  name: string
+  description: string
+  icon: any
+  minPlayers: number
+}
+
 
 export default function ImpostorGame() {
   const [gameState, setGameState] = useState<GameState>("categories")
@@ -791,6 +821,7 @@ export default function ImpostorGame() {
   const [players, setPlayers] = useState<string[]>([])
   const [currentPlayer, setCurrentPlayer] = useState(0)
   const [isFlipped, setIsFlipped] = useState(false)
+  const [playersSeenCard, setPlayersSeenCard] = useState<boolean[]>([])
   const [newPlayerName, setNewPlayerName] = useState("")
   const [selectedWord, setSelectedWord] = useState("")
   const [impostorIndices, setImpostorIndices] = useState<number[]>([])
@@ -808,6 +839,10 @@ export default function ImpostorGame() {
   const [previousGameState, setPreviousGameState] = useState<GameState>("categories")
   const [numImpostors, setNumImpostors] = useState(1)
   const [customCategories, setCustomCategories] = useState<Record<string, string[]>>({})
+  const [selectedGameMode, setSelectedGameMode] = useState<GameMode>("classic")
+  const [lostPlayerIndex, setLostPlayerIndex] = useState<number>(-1)
+  const [lostPlayerWord, setLostPlayerWord] = useState("")
+  const [jesterPlayerIndex, setJesterPlayerIndex] = useState<number>(-1)
   const [editingCategoryName, setEditingCategoryName] = useState("")
   const [editingCategoryWords, setEditingCategoryWords] = useState<string[]>([])
   const [aiPrompt, setAiPrompt] = useState("")
@@ -822,7 +857,8 @@ export default function ImpostorGame() {
   const [isStandalone, setIsStandalone] = useState(false)
   const [showIOSInstructions, setShowIOSInstructions] = useState(false)
   const [showInfoPopup, setShowInfoPopup] = useState(false)
-  
+  const [showGameModesInfo, setShowGameModesInfo] = useState(false)
+
   // Tracking: si se usó IA para generar palabras en la categoría actual
   const usedAIForCurrentCategory = useRef(false)
   
@@ -962,30 +998,79 @@ export default function ImpostorGame() {
   }
 
   const startGame = () => {
-    if (players.length < 3) return
+    if (players.length < GAME_MODES[selectedGameMode].minPlayers) return
 
+    // Get available words based on selected categories
     const availableWords = getAvailableWords()
-    const randomWord = availableWords[Math.floor(Math.random() * availableWords.length)]
+    const categoriesToUse = selectedCategories.length === 0
+      ? [...Object.keys(DEFAULT_CATEGORIES), ...Object.keys(customCategories)]
+      : selectedCategories
+
+    // Select a random category from the available ones
+    const selectedCategory = categoriesToUse[Math.floor(Math.random() * categoriesToUse.length)]
+
+    // Get words from the selected category
+    let categoryWords
+    if (DEFAULT_CATEGORIES[selectedCategory as keyof typeof DEFAULT_CATEGORIES]) {
+      categoryWords = DEFAULT_CATEGORIES[selectedCategory as keyof typeof DEFAULT_CATEGORIES] || []
+    } else {
+      categoryWords = customCategories[selectedCategory] || []
+    }
+
+    // If category is empty, fallback to all available words
+    if (categoryWords.length === 0) {
+      categoryWords = availableWords
+    }
+
+    // Select the main word from this category
+    const randomWord = categoryWords[Math.floor(Math.random() * categoryWords.length)]
 
     const shuffledIndices = [...Array(players.length).keys()].sort(() => Math.random() - 0.5)
     const selectedImpostors = shuffledIndices.slice(0, numImpostors)
 
     const randomFirstPlayer = Math.floor(Math.random() * players.length)
 
+    // Reset special roles
+    setLostPlayerIndex(-1)
+    setLostPlayerWord("")
+    setJesterPlayerIndex(-1)
+
+    // Assign special roles based on game mode
+    if (selectedGameMode === "lost") {
+      // Select a player who gets a different word (not an impostor)
+      const nonImpostorIndices = shuffledIndices.filter(i => !selectedImpostors.includes(i))
+      const lostIndex = nonImpostorIndices[Math.floor(Math.random() * nonImpostorIndices.length)]
+      setLostPlayerIndex(lostIndex)
+
+      // Get a different word from the SAME category
+      let differentWord
+      const availableDifferentWords = categoryWords.filter(word => word !== randomWord)
+      if (availableDifferentWords.length > 0) {
+        differentWord = availableDifferentWords[Math.floor(Math.random() * availableDifferentWords.length)]
+      } else {
+        // Fallback: if only one word in category, use any other word from available words (but try to avoid the main word)
+        const fallbackWords = availableWords.filter(word => word !== randomWord)
+        differentWord = fallbackWords[Math.floor(Math.random() * fallbackWords.length)]
+      }
+      setLostPlayerWord(differentWord)
+    } else if (selectedGameMode === "jester") {
+      // Select a jester (not an impostor)
+      const nonImpostorIndices = shuffledIndices.filter(i => !selectedImpostors.includes(i))
+      const jesterIndex = nonImpostorIndices[Math.floor(Math.random() * nonImpostorIndices.length)]
+      setJesterPlayerIndex(jesterIndex)
+    }
+
     setSelectedWord(randomWord)
     setImpostorIndices(selectedImpostors)
     setFirstPlayerIndex(randomFirstPlayer)
     setCurrentPlayer(0)
     setIsFlipped(false)
+    setPlayersSeenCard(new Array(players.length).fill(false)) // Inicializar array para trackear qué jugadores vieron sus cartas
     setGameState("playing")
-    
+
     // Track game start
-    const categoriesToUse = selectedCategories.length === 0 
-      ? [...Object.keys(DEFAULT_CATEGORIES), ...Object.keys(customCategories)]
-      : selectedCategories
-    
     const hasCustomCategory = categoriesToUse.some(cat => cat in customCategories)
-    
+
     trackGameStart({
       playerCount: players.length,
       impostorCount: numImpostors,
@@ -993,13 +1078,18 @@ export default function ImpostorGame() {
       categories: categoriesToUse,
       isCustomCategoryUsed: hasCustomCategory,
     })
-    
+
     trackScreenView('playing')
   }
 
   const handleCardPress = () => {
     setIsFlipped(true)
-    
+    setPlayersSeenCard(prev => {
+      const newSeen = [...prev]
+      newSeen[currentPlayer] = true // Marcar que este jugador ya vio su carta
+      return newSeen
+    })
+
     // Track card view
     trackCardView({
       playerIndex: currentPlayer,
@@ -1015,33 +1105,58 @@ export default function ImpostorGame() {
     if (currentPlayer < players.length - 1) {
       setCurrentPlayer(currentPlayer + 1)
       setIsFlipped(false)
+      // No necesitamos resetear playersSeenCard aquí, mantenemos el historial
     } else {
       setGameState("finished")
-      
+
       // Track game complete
       trackGameComplete({
         playerCount: players.length,
         impostorCount: impostorIndices.length,
         selectedWord: selectedWord,
       })
-      
+
       trackScreenView('finished')
+    }
+  }
+
+  const previousPlayer = () => {
+    if (currentPlayer > 0) {
+      setCurrentPlayer(currentPlayer - 1)
+      // Cuando vas hacia atrás, la carta debe estar en su estado original
+      // para evitar mostrar la respuesta accidentalmente
+      setIsFlipped(false)
+      // playersSeenCard se mantiene, así que si el jugador ya vio su carta antes,
+      // podrá continuar sin tener que darla vuelta nuevamente
     }
   }
 
   const resetGame = () => {
     setCurrentPlayer(0)
     setIsFlipped(false)
+    setPlayersSeenCard([])
     setSelectedWord("")
     setImpostorIndices([])
     setGameState("setup")
-    
+
     // Track game restart
     trackGameRestart()
     trackScreenView('setup')
   }
 
   const isCurrentPlayerImpostor = impostorIndices.includes(currentPlayer)
+
+  const getCurrentPlayerRole = () => {
+    if (impostorIndices.includes(currentPlayer)) return "impostor"
+    if (currentPlayer === lostPlayerIndex) return "lost"
+    if (currentPlayer === jesterPlayerIndex) return "jester"
+    return "normal"
+  }
+
+  const getCurrentPlayerWord = () => {
+    if (currentPlayer === lostPlayerIndex) return lostPlayerWord
+    return selectedWord
+  }
 
   const openThemeSettings = () => {
     setPreviousGameState(gameState)
@@ -1628,6 +1743,106 @@ export default function ImpostorGame() {
           </div>
         )}
 
+        {/* Modal de información de modos de juego */}
+        {showGameModesInfo && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+            <Card className="w-full max-w-2xl max-h-[90vh] flex flex-col">
+              <CardContent className="p-4 md:p-6 flex flex-col flex-1 min-h-0 overflow-hidden">
+                <div className="flex items-center justify-between mb-4 shrink-0">
+                  <h3 className="text-xl md:text-2xl font-title font-bold text-foreground flex items-center gap-2">
+                    <DoodleIcon icon={Gamepad2} size={28} thick className="animate-[bounce-soft_2s_ease-in-out_infinite]" uniqueId="modes-info-header" />
+                    Modos de Juego
+                  </h3>
+                  <Button variant="ghost" size="icon" onClick={() => setShowGameModesInfo(false)} aria-label="Cerrar información de modos">
+                    <X className="h-5 w-5" />
+                  </Button>
+                </div>
+
+                <div className="flex-1 overflow-y-auto pr-2 -mr-2 min-h-0">
+                  <div className="space-y-4 text-left">
+                    {(Object.entries(GAME_MODES) as [GameMode, GameModeConfig][]).map(([modeKey, modeConfig]) => (
+                      <div key={modeKey} className="bg-muted/30 p-4 rounded-[20px_8px_20px_8px/8px_20px_8px_20px] border-2 border-border">
+                        <div className="flex items-start gap-3 mb-3">
+                          <DoodleIcon
+                            icon={modeConfig.icon}
+                            size={24}
+                            className="stroke-[2.5] mt-1 flex-shrink-0"
+                            uniqueId={`mode-info-${modeKey}`}
+                          />
+                          <div className="flex-1">
+                            <h4 className="text-lg font-title font-bold text-foreground mb-1">{modeConfig.name}</h4>
+                            <p className="text-sm text-muted-foreground mb-2">{modeConfig.description}</p>
+                            <p className="text-xs text-muted-foreground font-medium">Mínimo {modeConfig.minPlayers} jugadores</p>
+                          </div>
+                        </div>
+
+                        <div className="text-sm text-foreground space-y-2">
+                          {modeKey === "classic" && (
+                            <>
+                              <p className="flex items-start gap-2">
+                                <DoodleIcon icon={Users} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`classic-how-${modeKey}`} />
+                                <span><strong>Cómo se juega:</strong> Todos los jugadores comparten una palabra secreta, excepto el impostor que debe descubrirla sin ser descubierto.</span>
+                              </p>
+                              <p className="flex items-start gap-2">
+                                <DoodleIcon icon={Target} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`classic-win-${modeKey}`} />
+                                <span><strong>Cómo ganar:</strong> Los jugadores honestos ganan si identifican al impostor. El impostor gana si adivina la palabra sin ser descubierto.</span>
+                              </p>
+                              <p className="flex items-start gap-2">
+                                <DoodleIcon icon={Lightbulb} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`classic-strategy-${modeKey}`} />
+                                <span><strong>Estrategia:</strong> Da pistas claras pero no directas sobre la palabra. Observa inconsistencias en las pistas de los demás.</span>
+                              </p>
+                            </>
+                          )}
+
+                          {modeKey === "lost" && (
+                            <>
+                              <p className="flex items-start gap-2">
+                                <DoodleIcon icon={Compass} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`lost-how-${modeKey}`} />
+                                <span><strong>Cómo se juega:</strong> Un jugador (El Perdido) tiene una palabra completamente diferente pero no lo sabe. Los impostores deben descubrir la palabra común del grupo.</span>
+                              </p>
+                              <p className="flex items-start gap-2">
+                                <DoodleIcon icon={Target} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`lost-win-${modeKey}`} />
+                                <span><strong>Cómo ganar:</strong> Los jugadores honestos (incluyendo El Perdido) ganan si identifican correctamente a los impostores.</span>
+                              </p>
+                              <p className="flex items-start gap-2">
+                                <DoodleIcon icon={Lightbulb} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`lost-strategy-${modeKey}`} />
+                                <span><strong>Estrategia:</strong> El Perdido dará pistas confusas sin saber por qué. Los demás deben observar quién parece perdido o da pistas incoherentes.</span>
+                              </p>
+                            </>
+                          )}
+
+                          {modeKey === "jester" && (
+                            <>
+                              <p className="flex items-start gap-2">
+                                <DoodleIcon icon={Crown} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`jester-how-${modeKey}`} />
+                                <span><strong>Cómo se juega:</strong> Un jugador (El Bufón) conoce la palabra pero tiene un objetivo secreto: convencer al grupo de que lo elimine.</span>
+                              </p>
+                              <p className="flex items-start gap-2">
+                                <DoodleIcon icon={Target} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`jester-win-${modeKey}`} />
+                                <span><strong>Cómo ganar:</strong> El Bufón gana si es votado para ser eliminado. Los demás ganan si identifican correctamente al impostor.</span>
+                              </p>
+                              <p className="flex items-start gap-2">
+                                <DoodleIcon icon={Lightbulb} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`jester-strategy-${modeKey}`} />
+                                <span><strong>Estrategia:</strong> El Bufón debe dar pistas plausibles pero sospechosas. Los demás deben identificar quién parece estar jugando para ser eliminado.</span>
+                              </p>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="shrink-0 pt-4 border-t border-border/50 mt-4">
+                  <Button onClick={() => setShowGameModesInfo(false)} className="w-full" size="lg">
+                    ¡Entendido!
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {/* Modal de instrucciones para iOS */}
         {showIOSInstructions && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
@@ -1802,7 +2017,55 @@ export default function ImpostorGame() {
                 <ImpostorIcon size={48} className="animate-[bounce-soft_2s_ease-in-out_infinite]" uniqueId="categories-title" />
               </div>
               <h2 className="text-3xl md:text-4xl font-title font-bold text-primary mb-2">El Impostor <span className="sr-only">- Juego de Fiesta Gratis</span></h2>
-              <p className="text-muted-foreground text-sm md:text-base flex items-center justify-center gap-2 mb-3">
+
+              {/* Selector de Modo Compacto */}
+              <div className="mb-3">
+                <div className="flex items-center justify-center gap-1 mb-2">
+                  <span className="text-xs text-muted-foreground font-medium">Modo de Juego</span>
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    onClick={() => setShowGameModesInfo(true)}
+                    className="h-4 w-4 rounded-full bg-muted/50 hover:bg-primary/20"
+                    aria-label="Información sobre modos de juego"
+                  >
+                    <HelpCircle className="h-3 w-3 text-muted-foreground hover:text-primary" />
+                  </Button>
+                </div>
+                <div className="flex justify-center overflow-x-auto scrollbar-hide">
+                  <div className="flex gap-1 px-2 min-w-max">
+                    {(Object.entries(GAME_MODES) as [GameMode, GameModeConfig][]).map(([modeKey, modeConfig]) => {
+                      const isSelected = selectedGameMode === modeKey
+                      return (
+                        <button
+                          key={modeKey}
+                          onClick={() => setSelectedGameMode(modeKey)}
+                          className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs transition-all duration-200 border whitespace-nowrap ${
+                            isSelected
+                              ? "bg-primary text-primary-foreground border-primary-foreground/30"
+                              : "bg-muted text-muted-foreground border-border hover:border-primary/50 hover:text-primary"
+                          }`}
+                        >
+                          <DoodleIcon
+                            icon={modeConfig.icon}
+                            size={12}
+                            className={`stroke-[2.5] ${isSelected ? 'text-primary-foreground' : 'text-muted-foreground'}`}
+                            uniqueId={`mode-compact-${modeKey}`}
+                          />
+                          <span className="font-medium">{modeConfig.name}</span>
+                          {isSelected && (
+                            <div className="rounded-full p-0.5 animate-[bounce-soft_1s_ease-in-out_infinite]">
+                              <Check className="h-2 w-2 text-primary-foreground" />
+                            </div>
+                          )}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-muted-foreground text-sm md:text-base flex items-center justify-center gap-2">
                 ¡Elige las categorías para jugar!
               </p>
             </div>
@@ -1939,6 +2202,7 @@ export default function ImpostorGame() {
                 </p>
               </div>
 
+
               <Button
                 onClick={() => {
                   setGameState("setup")
@@ -1957,7 +2221,7 @@ export default function ImpostorGame() {
   }
 
   if (gameState === "setup") {
-    const maxImpostors = Math.max(1, players.length - 1)
+    const maxImpostors = Math.max(1, players.length - (selectedGameMode === "lost" || selectedGameMode === "jester" ? 2 : 1))
 
     return (
       <div
@@ -2071,6 +2335,30 @@ export default function ImpostorGame() {
                 )}
               </div>
 
+              {/* Sección de Modo Seleccionado */}
+              <div className="mb-4 p-3 bg-primary/10 rounded-[20px_8px_20px_8px/8px_20px_8px_20px] border-[3px] border-primary/30">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <DoodleIcon icon={GAME_MODES[selectedGameMode].icon} size={20} thick className="stroke-[2.5]" uniqueId="setup-mode-icon" />
+                    <span className="text-sm font-title font-bold text-foreground">
+                      Modo: {GAME_MODES[selectedGameMode].name}
+                    </span>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setGameState("categories")}
+                    className="h-7 px-2 text-xs gap-1"
+                  >
+                    <PenTool className="h-3 w-3" />
+                    Cambiar
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  {GAME_MODES[selectedGameMode].description}
+                </p>
+              </div>
+
               {/* Sección secundaria: Configurar Impostores (más pequeña) */}
               <div className="mb-4 p-2.5 bg-muted/30 rounded-[15px_5px_15px_5px/5px_15px_5px_15px] border-2 border-border/50">
                 <label className="text-xs font-bold text-muted-foreground flex items-center gap-1.5 mb-2">
@@ -2120,14 +2408,14 @@ export default function ImpostorGame() {
 
             {/* Footer fijo con CTA */}
             <div className="shrink-0 pt-4 border-t border-border/50">
-              {players.length < 3 && players.length > 0 && (
+              {players.length < GAME_MODES[selectedGameMode].minPlayers && players.length > 0 && (
                 <p className="text-center text-xs text-destructive mb-3 animate-[shake_0.5s_ease-in-out] flex items-center justify-center gap-1">
-                  Necesitas al menos 3 jugadores
+                  Necesitas al menos {GAME_MODES[selectedGameMode].minPlayers} jugadores para este modo
                 </p>
               )}
               <Button
                 onClick={startGame}
-                disabled={players.length < 3}
+                disabled={players.length < GAME_MODES[selectedGameMode].minPlayers}
                 className="w-full gap-2"
                 size="lg"
               >
@@ -2192,28 +2480,75 @@ export default function ImpostorGame() {
               <div className="flip-card-back absolute w-full h-full rounded-[20px] border-[4px] border-foreground/80 bg-card shadow-[8px_8px_0_0_var(--primary)] select-none overflow-hidden">
                 <div className="absolute inset-4 border-2 border-dashed border-muted rounded-xl" />
                 <div className="h-full flex flex-col items-center justify-center p-8 relative">
-                  {isCurrentPlayerImpostor ? (
-                    <>
-                      <div className="mb-4 animate-[shake_0.3s_ease-in-out_infinite]">
-                        <DoodleIcon icon={UserSearch} size={72} thick uniqueId="card-back-impostor" />
-                      </div>
-                      <h3 className="text-4xl font-title font-bold text-destructive mb-4">¡IMPOSTOR!</h3>
-                      <p className="text-muted-foreground text-center text-sm flex items-center justify-center gap-1">
-                        Descubre la palabra sin ser descubierto
-                      </p>
-                    </>
-                  ) : (
-                    <>
-                      <div className="mb-4 animate-[twinkle_2s_ease-in-out_infinite]">
-                        <DoodleIcon icon={Target} size={72} thick uniqueId="card-back-word" />
-                      </div>
-                      <h3 className="text-3xl md:text-4xl font-title font-bold text-secondary mb-4 text-center">{selectedWord}</h3>
-                      <p className="text-muted-foreground text-center text-sm flex items-center justify-center gap-1">
-                        <MessageSquare className="h-4 w-4" />
-                        Describe la palabra sin decirla
-                      </p>
-                    </>
-                  )}
+                  {(() => {
+                    const playerRole = getCurrentPlayerRole()
+                    const playerWord = getCurrentPlayerWord()
+
+                    if (playerRole === "impostor") {
+                      return (
+                        <>
+                          <div className="mb-4 animate-[shake_0.3s_ease-in-out_infinite]">
+                            <DoodleIcon icon={UserSearch} size={72} thick uniqueId="card-back-impostor" />
+                          </div>
+                          <h3 className="text-4xl font-title font-bold text-destructive mb-4">¡IMPOSTOR!</h3>
+                          <p className="text-muted-foreground text-center text-sm flex items-center justify-center gap-1">
+                            Descubre la palabra sin ser descubierto
+                          </p>
+                        </>
+                      )
+                    } else if (playerRole === "lost") {
+                      return (
+                        <>
+                          <div className="mb-4 animate-[twinkle_2s_ease-in-out_infinite]">
+                            <DoodleIcon icon={Target} size={72} thick uniqueId="card-back-lost" />
+                          </div>
+                          <h3 className="text-3xl md:text-4xl font-title font-bold text-secondary mb-4 text-center">{playerWord}</h3>
+                          <p className="text-muted-foreground text-center text-sm flex items-center justify-center gap-1">
+                            <MessageSquare className="h-4 w-4" />
+                            Describe la palabra sin decirla
+                          </p>
+                        </>
+                      )
+                    } else if (playerRole === "jester") {
+                      return (
+                        <>
+                          <div className="mb-4 animate-[twinkle_2s_ease-in-out_infinite]">
+                            <DoodleIcon icon={Crown} size={72} thick uniqueId="card-back-jester" />
+                          </div>
+                          <h3 className="text-4xl font-title font-bold text-purple-500 mb-2 text-center">¡ERES EL BUFÓN!</h3>
+                          <h4 className="text-3xl md:text-4xl font-title font-bold text-secondary mb-4 text-center">{selectedWord}</h4>
+                          <div className="text-center">
+                            <p className="text-muted-foreground text-center text-sm font-bold mb-1">
+                              TU OBJETIVO SECRETO:
+                            </p>
+                            <p className="text-destructive text-center text-base font-bold mb-2">
+                              ¡GANAS SI TE ELIMINAN!
+                            </p>
+                            <p className="text-muted-foreground text-center text-xs">
+                              Convence al grupo de que te vote
+                            </p>
+                          </div>
+                          <p className="text-muted-foreground text-center text-sm flex items-center justify-center gap-1 mt-4">
+                            <MessageSquare className="h-4 w-4" />
+                            Describe la palabra sin decirla
+                          </p>
+                        </>
+                      )
+                    } else {
+                      return (
+                        <>
+                          <div className="mb-4 animate-[twinkle_2s_ease-in-out_infinite]">
+                            <DoodleIcon icon={Target} size={72} thick uniqueId="card-back-word" />
+                          </div>
+                          <h3 className="text-3xl md:text-4xl font-title font-bold text-secondary mb-4 text-center">{selectedWord}</h3>
+                          <p className="text-muted-foreground text-center text-sm flex items-center justify-center gap-1">
+                            <MessageSquare className="h-4 w-4" />
+                            Describe la palabra sin decirla
+                          </p>
+                        </>
+                      )
+                    }
+                  })()}
                 </div>
                 {/* Corner decorations */}
                 <span className="absolute top-3 left-3 text-2xl opacity-50">★</span>
@@ -2224,23 +2559,43 @@ export default function ImpostorGame() {
             </div>
           </div>
 
-          <Button
-            onClick={nextPlayer}
-            className="w-full max-w-xs sm:max-w-sm gap-2"
-            size="lg"
-          >
-            {currentPlayer < players.length - 1 ? (
-              <>
-                →
-                Siguiente Jugador
-              </>
-            ) : (
-              <>
-                <Check className="h-5 w-5" />
-                Finalizar Ronda
-              </>
-            )}
-          </Button>
+          <div className="flex items-center gap-3 w-full max-w-xs sm:max-w-sm">
+            <Button
+              onClick={previousPlayer}
+              disabled={currentPlayer === 0}
+              variant="outline"
+              size="icon"
+              className="shrink-0"
+              aria-label="Jugador anterior"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+
+            <Button
+              onClick={nextPlayer}
+              disabled={!playersSeenCard[currentPlayer] && currentPlayer < players.length - 1}
+              className="flex-1 gap-2"
+              size="lg"
+            >
+              {currentPlayer < players.length - 1 ? (
+                <>
+                  Continuar
+                  <ChevronRight className="h-4 w-4" />
+                </>
+              ) : (
+                <>
+                  <Check className="h-4 w-4" />
+                  Finalizar
+                </>
+              )}
+            </Button>
+          </div>
+
+          {!playersSeenCard[currentPlayer] && currentPlayer < players.length - 1 && (
+            <p className="text-center text-xs text-muted-foreground mt-2">
+              Debes dar vuelta la carta primero
+            </p>
+          )}
         </div>
       </div>
     )
@@ -2259,7 +2614,62 @@ export default function ImpostorGame() {
           <div className="flex justify-center mb-6 animate-[bounce-soft_1s_ease-in-out_infinite]">
             <DoodleIcon icon={Gamepad} size={72} thick uniqueId="finished-icon" />
           </div>
-          <h2 className="text-4xl font-title font-bold text-primary mb-6">¡A Jugar!</h2>
+          <h2 className="text-4xl font-title font-bold text-primary mb-4">¡A Jugar!</h2>
+
+          {/* Información específica del modo de juego */}
+          <div className="mb-6 p-4 bg-muted/50 rounded-[20px_8px_20px_8px/8px_20px_8px_20px] border-2 border-border">
+            <div className="text-center mb-4">
+              <h3 className="text-lg font-title font-bold text-foreground flex items-center justify-center gap-2">
+                <DoodleIcon icon={GAME_MODES[selectedGameMode].icon} size={20} className="stroke-[2.5]" uniqueId="mode-finished" />
+                Modo: {GAME_MODES[selectedGameMode].name}
+              </h3>
+            </div>
+
+            {selectedGameMode === "classic" && (
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <p className="flex justify-center gap-2">
+                  <DoodleIcon icon={UserSearch} size={16} className="stroke-[2.5] text-destructive" uniqueId="classic-impostor" />
+                  <strong className="text-destructive">{impostorIndices.length} Impostor{impostorIndices.length > 1 ? "es" : ""}</strong>
+                  debe{impostorIndices.length > 1 ? "n" : ""} descubrir la palabra
+                </p>
+                <p>• Los demás jugadores comparten la palabra secreta</p>
+                <p>• ¡Gana el equipo que identifique correctamente!</p>
+              </div>
+            )}
+
+            {selectedGameMode === "lost" && (
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <p className="flex justify-center gap-2">
+                  <DoodleIcon icon={Compass} size={16} className="stroke-[2.5] text-orange-500" uniqueId="lost-player" />
+                  <strong className="text-orange-500">Uno de los jugadores tiene una palabra diferente</strong>
+                </p>
+                <p className="flex justify-center gap-2">
+                  <DoodleIcon icon={UserSearch} size={16} className="stroke-[2.5] text-destructive" uniqueId="lost-impostor" />
+                  <strong className="text-destructive">{impostorIndices.length} Impostor{impostorIndices.length > 1 ? "es" : ""}</strong>
+                  debe{impostorIndices.length > 1 ? "n" : ""} descubrir la palabra
+                </p>
+                <p>• ¡El Perdido no sabe que tiene palabra diferente!</p>
+                <p>• ¡Gana el equipo que identifique correctamente!</p>
+              </div>
+            )}
+
+            {selectedGameMode === "jester" && (
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <p className="flex justify-center gap-2">
+                  <DoodleIcon icon={Crown} size={16} className="stroke-[2.5] text-purple-500" uniqueId="jester-player" />
+                  <strong className="text-purple-500">Uno de los jugadores es el Bufón</strong>
+                </p>
+                <p className="flex justify-center gap-2">
+                  <DoodleIcon icon={UserSearch} size={16} className="stroke-[2.5] text-destructive" uniqueId="jester-impostor" />
+                  <strong className="text-destructive">{impostorIndices.length} Impostor{impostorIndices.length > 1 ? "es" : ""}</strong>
+                  debe{impostorIndices.length > 1 ? "n" : ""} descubrir la palabra
+                </p>
+                <p>• ¡El Bufón gana si es eliminado por el grupo!</p>
+                <p>• Los demás deben identificar correctamente al impostor</p>
+              </div>
+            )}
+          </div>
+
           <p className="text-2xl text-foreground mb-8 flex items-center justify-center gap-2">
             Empieza: <span className="font-bold text-secondary inline-flex items-center gap-1 animate-[wiggle_0.5s_ease-in-out_infinite]">
               <Mic className="h-6 w-6" />
