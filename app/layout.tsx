@@ -446,30 +446,8 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 
-        {/* Cargar CSS de forma no bloqueante usando script */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                var link = document.createElement('link');
-                link.rel = 'preload';
-                link.href = '/_next/static/css/app/layout.css';
-                link.as = 'style';
-                link.onload = function() {
-                  this.rel = 'stylesheet';
-                };
-                document.head.appendChild(link);
-              })();
-            `
-          }}
-        />
 
         {/* Preload recursos críticos para mejor LCP */}
-        <link rel="preload" href="/og.png" as="image" type="image/jpeg" />
-
-        {/* Preload chunks críticos de Next.js */}
-        <link rel="modulepreload" href="/_next/static/chunks/webpack.js" />
-        <link rel="modulepreload" href="/_next/static/chunks/main.js" />
 
         {/* Resource hints para optimizar conexiones */}
         <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="" />

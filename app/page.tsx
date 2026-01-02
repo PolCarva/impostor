@@ -923,9 +923,9 @@ export default function ImpostorGame() {
 
     // Escuchar el evento beforeinstallprompt (Chrome, Edge, etc.)
     const handleBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault()
+      // Solo guardamos el evento para poder mostrarlo manualmente si es necesario
       setDeferredPrompt(e as BeforeInstallPromptEvent)
-      setIsInstallable(true)
+      // No llamamos a preventDefault() para permitir el banner nativo del navegador
     }
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
@@ -2167,8 +2167,8 @@ export default function ImpostorGame() {
         <Card className="w-full max-w-2xl relative z-10 flex flex-col max-h-[90vh]">
           <CardContent className="p-4 md:p-6 flex flex-col flex-1 min-h-0">
             <div className="flex justify-between items-center mb-2 shrink-0 gap-2">
-              {/* Botón de instalación PWA */}
-              {!isStandalone && (isInstallable || isIOS) ? (
+              {/* Botón de instalación PWA - Solo para iOS */}
+              {!isStandalone && isIOS ? (
                 <Button onClick={handleInstallClick} size="sm" className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground shadow-[3px_3px_0_0_var(--border)] border-2 border-foreground/20">
                   <DoodleIcon icon={Download} size={18} className="stroke-[2.5]" uniqueId="download-btn" />
                   Descargar App

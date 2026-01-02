@@ -128,23 +128,17 @@ const nextConfig = {
     ]
   },
 
+  // Configuración de Turbopack
+  turbopack: {},
+
   // Optimizaciones del build
   experimental: {
     scrollRestoration: true,
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
-      },
-    },
   },
 
   // Reducir polyfills innecesarios - Legacy JavaScript
   transpilePackages: [], // No transpilar paquetes modernos
-  swcMinify: false, // Usar Terser para mejor minificación
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
