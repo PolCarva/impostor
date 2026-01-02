@@ -1912,7 +1912,7 @@ export default function ImpostorGame() {
                           <DoodleIcon
                             icon={modeConfig.icon}
                             size={24}
-                            className="stroke-[2.5] mt-1 flex-shrink-0"
+                            className="stroke-[2.5] mt-1 shrink-0"
                             uniqueId={`mode-info-${modeKey}`}
                           />
                           <div className="flex-1">
@@ -1926,15 +1926,15 @@ export default function ImpostorGame() {
                           {modeKey === "classic" && (
                             <>
                               <p className="flex items-start gap-2">
-                                <DoodleIcon icon={Users} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`classic-how-${modeKey}`} />
+                                <DoodleIcon icon={Users} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`classic-how-${modeKey}`} />
                                 <span><strong>Cómo se juega:</strong> Todos los jugadores comparten una palabra secreta, excepto el impostor que debe descubrirla sin ser descubierto.</span>
                               </p>
                               <p className="flex items-start gap-2">
-                                <DoodleIcon icon={Target} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`classic-win-${modeKey}`} />
+                                <DoodleIcon icon={Target} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`classic-win-${modeKey}`} />
                                 <span><strong>Cómo ganar:</strong> Los jugadores honestos ganan si identifican al impostor. El impostor gana si adivina la palabra sin ser descubierto.</span>
                               </p>
                               <p className="flex items-start gap-2">
-                                <DoodleIcon icon={Lightbulb} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`classic-strategy-${modeKey}`} />
+                                <DoodleIcon icon={Lightbulb} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`classic-strategy-${modeKey}`} />
                                 <span><strong>Estrategia:</strong> Da pistas claras pero no directas sobre la palabra. Observa inconsistencias en las pistas de los demás.</span>
                               </p>
                             </>
@@ -1943,15 +1943,15 @@ export default function ImpostorGame() {
                           {modeKey === "lost" && (
                             <>
                               <p className="flex items-start gap-2">
-                                <DoodleIcon icon={Compass} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`lost-how-${modeKey}`} />
+                                <DoodleIcon icon={Compass} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`lost-how-${modeKey}`} />
                                 <span><strong>Cómo se juega:</strong> Un jugador (El Perdido) tiene una palabra completamente diferente pero no lo sabe. Los impostores deben descubrir la palabra común del grupo.</span>
                               </p>
                               <p className="flex items-start gap-2">
-                                <DoodleIcon icon={Target} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`lost-win-${modeKey}`} />
+                                <DoodleIcon icon={Target} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`lost-win-${modeKey}`} />
                                 <span><strong>Cómo ganar:</strong> Los jugadores honestos (incluyendo El Perdido) ganan si identifican correctamente a los impostores.</span>
                               </p>
                               <p className="flex items-start gap-2">
-                                <DoodleIcon icon={Lightbulb} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`lost-strategy-${modeKey}`} />
+                                <DoodleIcon icon={Lightbulb} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`lost-strategy-${modeKey}`} />
                                 <span><strong>Estrategia:</strong> El Perdido dará pistas confusas sin saber por qué. Los demás deben observar quién parece perdido o da pistas incoherentes.</span>
                               </p>
                             </>
@@ -1960,15 +1960,15 @@ export default function ImpostorGame() {
                           {modeKey === "jester" && (
                             <>
                               <p className="flex items-start gap-2">
-                                <DoodleIcon icon={Crown} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`jester-how-${modeKey}`} />
+                                <DoodleIcon icon={Crown} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`jester-how-${modeKey}`} />
                                 <span><strong>Cómo se juega:</strong> Un jugador (El Bufón) conoce la palabra pero tiene un objetivo secreto: convencer al grupo de que lo elimine.</span>
                               </p>
                               <p className="flex items-start gap-2">
-                                <DoodleIcon icon={Target} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`jester-win-${modeKey}`} />
+                                <DoodleIcon icon={Target} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`jester-win-${modeKey}`} />
                                 <span><strong>Cómo ganar:</strong> El Bufón gana si es votado para ser eliminado. Los demás ganan si identifican correctamente al impostor.</span>
                               </p>
                               <p className="flex items-start gap-2">
-                                <DoodleIcon icon={Lightbulb} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`jester-strategy-${modeKey}`} />
+                                <DoodleIcon icon={Lightbulb} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`jester-strategy-${modeKey}`} />
                                 <span><strong>Estrategia:</strong> El Bufón debe dar pistas plausibles pero sospechosas. Los demás deben identificar quién parece estar jugando para ser eliminado.</span>
                               </p>
                             </>
@@ -1977,15 +1977,15 @@ export default function ImpostorGame() {
                           {modeKey === "chaos" && (
                             <>
                               <p className="flex items-start gap-2">
-                                <DoodleIcon icon={Zap} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`chaos-how-${modeKey}`} />
+                                <DoodleIcon icon={Zap} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`chaos-how-${modeKey}`} />
                                 <span><strong>Cómo se juega:</strong> Con probabilidad de 1/10, puede activarse uno de tres escenarios especiales: todos los jugadores son impostores, nadie es impostor pero todos tienen palabras diferentes, o nadie es impostor pero todos comparten la misma palabra.</span>
                               </p>
                               <p className="flex items-start gap-2">
-                                <DoodleIcon icon={Target} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`chaos-win-${modeKey}`} />
+                                <DoodleIcon icon={Target} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`chaos-win-${modeKey}`} />
                                 <span><strong>Cómo ganar:</strong> Si todos son impostores, cada uno debe descubrir la palabra sin saber que todos son impostores. Si todos tienen palabras diferentes, el objetivo es descubrir quién tiene qué palabra. Si nadie es impostor pero comparten la misma palabra, ¡todos ganan juntos!</span>
                               </p>
                               <p className="flex items-start gap-2">
-                                <DoodleIcon icon={Lightbulb} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`chaos-strategy-${modeKey}`} />
+                                <DoodleIcon icon={Lightbulb} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`chaos-strategy-${modeKey}`} />
                                 <span><strong>Estrategia:</strong> Mantén la calma y observa las inconsistencias. En el modo locura, las dinámicas cambian completamente, así que adapta tu estrategia según el escenario activado.</span>
                               </p>
                             </>
@@ -1994,15 +1994,15 @@ export default function ImpostorGame() {
                           {modeKey === "random" && (
                             <>
                               <p className="flex items-start gap-2">
-                                <DoodleIcon icon={Shuffle} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`random-how-${modeKey}`} />
+                                <DoodleIcon icon={Shuffle} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`random-how-${modeKey}`} />
                                 <span><strong>Cómo se juega:</strong> El sistema elige aleatoriamente entre Clásico, Perdido, Bufón y Locura. Ni el organizador ni los jugadores saben qué modo está activo hasta que comienza el juego.</span>
                               </p>
                               <p className="flex items-start gap-2">
-                                <DoodleIcon icon={Target} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`random-win-${modeKey}`} />
+                                <DoodleIcon icon={Target} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`random-win-${modeKey}`} />
                                 <span><strong>Cómo ganar:</strong> Depende del modo elegido aleatoriamente. ¡Descubre las reglas mientras juegas!</span>
                               </p>
                               <p className="flex items-start gap-2">
-                                <DoodleIcon icon={Lightbulb} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`random-strategy-${modeKey}`} />
+                                <DoodleIcon icon={Lightbulb} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`random-strategy-${modeKey}`} />
                                 <span><strong>Estrategia:</strong> Mantén la mente abierta y observa atentamente. Cualquier cosa puede pasar en el modo aleatorio.</span>
                               </p>
                             </>
@@ -2302,8 +2302,8 @@ export default function ImpostorGame() {
                         onClick={() => toggleCategory(category)}
                         className={`cursor-pointer relative p-2.5 text-left transition-all duration-200 ${
                           isSelected
-                            ? "rounded-[100px_10px_100px_10px/10px_100px_10px_100px] bg-primary text-primary-foreground border-[3px] border-primary-foreground/30 md:shadow-[4px_4px_0_0_rgba(0,0,0,0.3)] md:translate-x-[-2px] md:translate-y-[-2px] rotate-[-1deg]"
-                            : "rounded-[80px_8px_80px_8px/8px_80px_8px_80px] bg-muted border-[2px] border-border hover:border-primary/50 md:hover:translate-x-[-2px] md:hover:translate-y-[-2px] md:hover:shadow-[3px_3px_0_0_var(--border)]"
+                            ? "rounded-[100px_10px_100px_10px/10px_100px_10px_100px] bg-primary text-primary-foreground border-[3px] border-primary-foreground/30 md:shadow-[4px_4px_0_0_rgba(0,0,0,0.3)] md:translate-x-[-2px] md:translate-y-[-2px] -rotate-1"
+                            : "rounded-[80px_8px_80px_8px/8px_80px_8px_80px] bg-muted border-2 border-border hover:border-primary/50 md:hover:translate-x-[-2px] md:hover:translate-y-[-2px] md:hover:shadow-[3px_3px_0_0_var(--border)]"
                         }`}
                         style={{ transform: isSelected ? `rotate(${-1 + (index % 3) * 0.5}deg)` : `rotate(${(index % 3 - 1) * 0.3}deg)` }}
                       >
@@ -2331,8 +2331,8 @@ export default function ImpostorGame() {
                             onClick={() => toggleCategory(categoryName)}
                             className={`relative w-full p-2.5 text-left transition-all duration-200 ${
                               isSelected
-                                ? "rounded-[100px_10px_100px_10px/10px_100px_10px_100px] bg-primary text-primary-foreground border-[3px] border-primary-foreground/30 md:shadow-[4px_4px_0_0_rgba(0,0,0,0.3)] rotate-[-1deg]"
-                                : "rounded-[80px_8px_80px_8px/8px_80px_8px_80px] bg-muted border-[2px] border-border hover:border-primary/50 md:hover:translate-x-[-2px] md:hover:translate-y-[-2px] md:hover:shadow-[3px_3px_0_0_var(--border)]"
+                                ? "rounded-[100px_10px_100px_10px/10px_100px_10px_100px] bg-primary text-primary-foreground border-[3px] border-primary-foreground/30 md:shadow-[4px_4px_0_0_rgba(0,0,0,0.3)] -rotate-1"
+                                : "rounded-[80px_8px_80px_8px/8px_80px_8px_80px] bg-muted border-2 border-border hover:border-primary/50 md:hover:translate-x-[-2px] md:hover:translate-y-[-2px] md:hover:shadow-[3px_3px_0_0_var(--border)]"
                             }`}
                             style={{ transform: `rotate(${(index % 3 - 1) * 0.5}deg)` }}
                           >
@@ -2499,7 +2499,7 @@ export default function ImpostorGame() {
 
               {/* Sección principal: Agregar Jugadores */}
               <div className="mb-4 p-4 bg-primary/10 rounded-[25px_10px_25px_10px/10px_25px_10px_25px] border-[3px] border-primary/30">
-                <label className="text-base font-title font-bold text-foreground block mb-3 flex items-center gap-2">
+                <label className="text-base font-title font-bold text-foreground mb-3 flex items-center gap-2">
                   <DoodleIcon icon={Users} size={20} thick className="stroke-[2.5]" uniqueId="players-label" />
                   Agregar Jugadores
                 </label>
@@ -2698,7 +2698,7 @@ export default function ImpostorGame() {
           >
             <div className="flip-card-inner w-full h-full">
               {/* Front of card */}
-              <div className="flip-card-front absolute w-full h-full rounded-[20px] border-[4px] border-foreground/80 bg-card shadow-[8px_8px_0_0_var(--primary)] cursor-pointer hover:shadow-[10px_10px_0_0_var(--primary)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all select-none overflow-hidden">
+              <div className="flip-card-front absolute w-full h-full rounded-[20px] border-4 border-foreground/80 bg-card shadow-[8px_8px_0_0_var(--primary)] cursor-pointer hover:shadow-[10px_10px_0_0_var(--primary)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all select-none overflow-hidden">
                 <div className="absolute inset-4 border-2 border-dashed border-muted rounded-xl" />
                 <div className="h-full flex flex-col items-center justify-center p-8 relative">
                   <div className="mb-6 animate-[bounce-soft_2s_ease-in-out_infinite]">
@@ -2718,7 +2718,7 @@ export default function ImpostorGame() {
               </div>
 
               {/* Back of card */}
-              <div className="flip-card-back absolute w-full h-full rounded-[20px] border-[4px] border-foreground/80 bg-card shadow-[8px_8px_0_0_var(--primary)] select-none overflow-hidden">
+              <div className="flip-card-back absolute w-full h-full rounded-[20px] border-4 border-foreground/80 bg-card shadow-[8px_8px_0_0_var(--primary)] select-none overflow-hidden">
                 <div className="absolute inset-4 border-2 border-dashed border-muted rounded-xl" />
                 <div className="h-full flex flex-col items-center justify-center p-8 relative">
                   {(() => {
