@@ -15,7 +15,7 @@ import {
   FolderOpen, UserSearch, Users, Target, RefreshCw, Gamepad,
   Sparkles as SparklesIcon, PenTool, Box, CreditCard, MessageSquare,
   Mic, Hand, AlertCircle, Flame, BookOpen, Download, Share, HelpCircle,
-  Coffee, Compass, Crown, Lightbulb, ChevronLeft, ChevronRight, ChevronUp, ChevronDown
+  Coffee, Compass, Crown, Lightbulb, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Zap
 } from "lucide-react"
 import {
   trackGameStart,
@@ -599,6 +599,12 @@ const GAME_MODES: Record<GameMode, GameModeConfig> = {
     icon: Crown,
     minPlayers: 4,
   },
+  chaos: {
+    name: "Locura",
+    description: "Con probabilidad aleatoria, todos pueden ser impostores, nadie será impostor pero todos tendrán palabras diferentes, o nadie será impostor pero todos compartirán la misma palabra",
+    icon: Zap,
+    minPlayers: 3,
+  },
 }
 
 const COLOR_PALETTES = {
@@ -805,7 +811,7 @@ const COLOR_PALETTES = {
 type GameState = "categories" | "setup" | "playing" | "finished" | "theme" | "edit-custom-category"
 type PaletteName = keyof typeof COLOR_PALETTES
 
-type GameMode = "classic" | "lost" | "jester"
+type GameMode = "classic" | "lost" | "jester" | "chaos"
 
 interface GameModeConfig {
   name: string
@@ -843,6 +849,10 @@ export default function ImpostorGame() {
   const [lostPlayerIndex, setLostPlayerIndex] = useState<number>(-1)
   const [lostPlayerWord, setLostPlayerWord] = useState("")
   const [jesterPlayerIndex, setJesterPlayerIndex] = useState<number>(-1)
+  const [chaosAllImpostors, setChaosAllImpostors] = useState(false)
+  const [chaosAllDifferentWords, setChaosAllDifferentWords] = useState(false)
+  const [chaosAllSameWord, setChaosAllSameWord] = useState(false)
+  const [chaosPlayerWords, setChaosPlayerWords] = useState<Record<number, string>>({})
   const [editingCategoryName, setEditingCategoryName] = useState("")
   const [editingCategoryWords, setEditingCategoryWords] = useState<string[]>([])
   const [aiPrompt, setAiPrompt] = useState("")
@@ -1050,6 +1060,93 @@ export default function ImpostorGame() {
     setLostPlayerIndex(-1)
     setLostPlayerWord("")
     setJesterPlayerIndex(-1)
+    setChaosAllImpostors(false)
+    setChaosAllDifferentWords(false)
+    setChaosAllSameWord(false)
+    setChaosPlayerWords({})
+
+    // Modo Locura: con probabilidad 1/6, activar escenarios especiales
+    if (selectedGameMode === "chaos") {
+      const chaosRoll = Math.floor(Math.random() * 10) // 0-9
+
+      if (chaosRoll === 0) {
+        // Decidir aleatoriamente entre: todos impostores, todos palabras diferentes, o nadie impostor
+        const chaosType = Math.floor(Math.random() * 3) // 0, 1 o 2
+
+        if (chaosType === 0) {
+          // Escenario 1: TODOS son impostores
+          setChaosAllImpostors(true)
+          setChaosAllDifferentWords(false)
+          setChaosAllSameWord(false)
+          // Todos los jugadores son impostores
+          setImpostorIndices([...Array(players.length).keys()])
+          // Mantener la palabra seleccionada para que los impostores la descubran
+          setSelectedWord(randomWord)
+        } else if (chaosType === 1) {
+          // Escenario 2: NADIE es impostor, pero TODOS tienen palabras diferentes
+          setChaosAllImpostors(false)
+          setChaosAllDifferentWords(true)
+          setChaosAllSameWord(false)
+          // Nadie es impostor
+          setImpostorIndices([])
+
+          // Asignar palabras diferentes a cada jugador
+          const playerWords: Record<number, string> = {}
+          const usedWords = new Set<string>()
+
+          // Obtener más palabras si es necesario (asegurarse de tener suficientes)
+          let extendedWordPool = [...availableWords]
+          while (extendedWordPool.length < players.length) {
+            const additionalWords = getAvailableWords().filter(word => !extendedWordPool.includes(word))
+            extendedWordPool = [...extendedWordPool, ...additionalWords]
+          }
+
+          for (let i = 0; i < players.length; i++) {
+            // Buscar una palabra que no haya sido usada
+            let availableWordsForPlayer = extendedWordPool.filter(word => !usedWords.has(word))
+            if (availableWordsForPlayer.length === 0) {
+              // Fallback: usar cualquier palabra disponible
+              availableWordsForPlayer = extendedWordPool
+              usedWords.clear()
+            }
+
+            const randomWordForPlayer = availableWordsForPlayer[Math.floor(Math.random() * availableWordsForPlayer.length)]
+            playerWords[i] = randomWordForPlayer
+            usedWords.add(randomWordForPlayer)
+          }
+
+          setChaosPlayerWords(playerWords)
+          // No hay palabra seleccionada cuando todos tienen palabras diferentes
+          setSelectedWord("")
+        } else {
+          // Escenario 3: NADIE es impostor, TODOS comparten la misma palabra
+          setChaosAllImpostors(false)
+          setChaosAllDifferentWords(false)
+          setChaosAllSameWord(true)
+          // Nadie es impostor
+          setImpostorIndices([])
+          // Todos comparten la misma palabra
+          setSelectedWord(randomWord)
+        }
+        setFirstPlayerIndex(randomFirstPlayer)
+        setCurrentPlayer(0)
+        setIsFlipped(false)
+        setPlayersSeenCard(new Array(players.length).fill(false))
+        setGameState("playing")
+
+        // Track game start
+        const hasCustomCategory = categoriesToUse.some(cat => cat in customCategories)
+        trackGameStart({
+          playerCount: players.length,
+          impostorCount: chaosType === 0 ? players.length : 0, // 0: todos impostores, 1: nadie impostor (palabras diferentes), 2: nadie impostor (misma palabra)
+          categoriesCount: categoriesToUse.length,
+          categories: categoriesToUse,
+          isCustomCategoryUsed: hasCustomCategory,
+        })
+        trackScreenView('playing')
+        return
+      }
+    }
 
     // Assign special roles based on game mode
     if (selectedGameMode === "lost") {
@@ -1163,6 +1260,15 @@ export default function ImpostorGame() {
   const isCurrentPlayerImpostor = impostorIndices.includes(currentPlayer)
 
   const getCurrentPlayerRole = () => {
+    // Modo Locura: todos impostores
+    if (chaosAllImpostors) return "impostor"
+
+    // Modo Locura: todos palabras diferentes (nadie es impostor)
+    if (chaosAllDifferentWords) return "normal"
+
+    // Modo Locura: nadie es impostor, todos comparten la misma palabra
+    if (chaosAllSameWord) return "normal"
+
     if (impostorIndices.includes(currentPlayer)) return "impostor"
     if (currentPlayer === lostPlayerIndex) return "lost"
     if (currentPlayer === jesterPlayerIndex) return "jester"
@@ -1170,6 +1276,11 @@ export default function ImpostorGame() {
   }
 
   const getCurrentPlayerWord = () => {
+    // Modo Locura: todos palabras diferentes
+    if (chaosAllDifferentWords && chaosPlayerWords[currentPlayer]) {
+      return chaosPlayerWords[currentPlayer]
+    }
+
     if (currentPlayer === lostPlayerIndex) return lostPlayerWord
     return selectedWord
   }
@@ -1840,6 +1951,23 @@ export default function ImpostorGame() {
                               <p className="flex items-start gap-2">
                                 <DoodleIcon icon={Lightbulb} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`jester-strategy-${modeKey}`} />
                                 <span><strong>Estrategia:</strong> El Bufón debe dar pistas plausibles pero sospechosas. Los demás deben identificar quién parece estar jugando para ser eliminado.</span>
+                              </p>
+                            </>
+                          )}
+
+                          {modeKey === "chaos" && (
+                            <>
+                              <p className="flex items-start gap-2">
+                                <DoodleIcon icon={Zap} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`chaos-how-${modeKey}`} />
+                                <span><strong>Cómo se juega:</strong> Con probabilidad de 1/10, puede activarse uno de tres escenarios especiales: todos los jugadores son impostores, nadie es impostor pero todos tienen palabras diferentes, o nadie es impostor pero todos comparten la misma palabra.</span>
+                              </p>
+                              <p className="flex items-start gap-2">
+                                <DoodleIcon icon={Target} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`chaos-win-${modeKey}`} />
+                                <span><strong>Cómo ganar:</strong> Si todos son impostores, cada uno debe descubrir la palabra sin saber que todos son impostores. Si todos tienen palabras diferentes, el objetivo es descubrir quién tiene qué palabra. Si nadie es impostor pero comparten la misma palabra, ¡todos ganan juntos!</span>
+                              </p>
+                              <p className="flex items-start gap-2">
+                                <DoodleIcon icon={Lightbulb} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`chaos-strategy-${modeKey}`} />
+                                <span><strong>Estrategia:</strong> Mantén la calma y observa las inconsistencias. En el modo locura, las dinámicas cambian completamente, así que adapta tu estrategia según el escenario activado.</span>
                               </p>
                             </>
                           )}
@@ -2584,7 +2712,7 @@ export default function ImpostorGame() {
                           <div className="mb-4 animate-[twinkle_2s_ease-in-out_infinite]">
                             <DoodleIcon icon={Target} size={72} thick uniqueId="card-back-word" />
                           </div>
-                          <h3 className="text-3xl md:text-4xl font-title font-bold text-secondary mb-4 text-center">{selectedWord}</h3>
+                          <h3 className="text-3xl md:text-4xl font-title font-bold text-secondary mb-4 text-center">{playerWord}</h3>
                           <p className="text-muted-foreground text-center text-sm flex items-center justify-center gap-1">
                             <MessageSquare className="h-4 w-4" />
                             Describe la palabra sin decirla
@@ -2710,6 +2838,62 @@ export default function ImpostorGame() {
                 </p>
                 <p>• ¡El Bufón gana si es eliminado por el grupo!</p>
                 <p>• Los demás deben identificar correctamente al impostor</p>
+              </div>
+            )}
+
+            {selectedGameMode === "chaos" && (
+              <div className="space-y-2 text-sm text-muted-foreground">
+                {chaosAllImpostors ? (
+                  <>
+                    <p className="flex justify-center gap-2">
+                      <DoodleIcon icon={Zap} size={16} className="stroke-[2.5] text-destructive" uniqueId="chaos-all-impostors" />
+                      <strong className="text-destructive">¡MODO LOCURA ACTIVADO!</strong>
+                    </p>
+                    <p className="flex justify-center gap-2">
+                      <DoodleIcon icon={UserSearch} size={16} className="stroke-[2.5] text-destructive" uniqueId="chaos-impostors" />
+                      <strong className="text-destructive">¡TODOS son impostores!</strong>
+                    </p>
+                    <p>• Todos deben descubrir la palabra sin ser descubiertos</p>
+                    <p>• ¡Cada uno por su cuenta!</p>
+                  </>
+                ) : chaosAllDifferentWords ? (
+                  <>
+                    <p className="flex justify-center gap-2">
+                      <DoodleIcon icon={Zap} size={16} className="stroke-[2.5] text-secondary" uniqueId="chaos-all-different" />
+                      <strong className="text-secondary">¡MODO LOCURA ACTIVADO!</strong>
+                    </p>
+                    <p className="flex justify-center gap-2">
+                      <DoodleIcon icon={Target} size={16} className="stroke-[2.5] text-secondary" uniqueId="chaos-words" />
+                      <strong className="text-secondary">¡TODOS tienen palabras diferentes!</strong>
+                    </p>
+                    <p>• Nadie es impostor, pero cada uno tiene una palabra única</p>
+                    <p>• ¡Descubre quién tiene qué palabra!</p>
+                  </>
+                ) : chaosAllSameWord ? (
+                  <>
+                    <p className="flex justify-center gap-2">
+                      <DoodleIcon icon={Zap} size={16} className="stroke-[2.5] text-green-500" uniqueId="chaos-all-same" />
+                      <strong className="text-green-500">¡MODO LOCURA ACTIVADO!</strong>
+                    </p>
+                    <p className="flex justify-center gap-2">
+                      <DoodleIcon icon={Target} size={16} className="stroke-[2.5] text-green-500" uniqueId="chaos-same-word" />
+                      <strong className="text-green-500">¡NADIE es impostor, todos comparten la misma palabra!</strong>
+                    </p>
+                    <p>• Todos tienen la misma palabra secreta</p>
+                    <p>• ¡Trabajen juntos para describirla!</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="flex justify-center gap-2">
+                      <DoodleIcon icon={UserSearch} size={16} className="stroke-[2.5] text-destructive" uniqueId="chaos-normal-impostor" />
+                      <strong className="text-destructive">{impostorIndices.length} Impostor{impostorIndices.length > 1 ? "es" : ""}</strong>
+                      debe{impostorIndices.length > 1 ? "n" : ""} descubrir la palabra
+                    </p>
+                    <p>• Los demás jugadores comparten la palabra secreta</p>
+                    <p>• ¡Gana el equipo que identifique correctamente!</p>
+                    <p className="text-xs italic mt-2">💡 El modo Locura puede activarse aleatoriamente</p>
+                  </>
+                )}
               </div>
             )}
           </div>
