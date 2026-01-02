@@ -15,7 +15,7 @@ import {
   FolderOpen, UserSearch, Users, Target, RefreshCw, Gamepad,
   Sparkles as SparklesIcon, PenTool, Box, CreditCard, MessageSquare,
   Mic, Hand, AlertCircle, Flame, BookOpen, Download, Share, HelpCircle,
-  Coffee, Compass, Crown, Lightbulb, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Zap
+  Coffee, Compass, Crown, Lightbulb, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Zap, Shuffle
 } from "lucide-react"
 import {
   trackGameStart,
@@ -605,6 +605,12 @@ const GAME_MODES: Record<GameMode, GameModeConfig> = {
     icon: Zap,
     minPlayers: 3,
   },
+  random: {
+    name: "Aleatorio",
+    description: "Elige aleatoriamente entre todos los modos de juego disponibles. ¡Nadie sabrá cuál está activo!",
+    icon: Shuffle,
+    minPlayers: 3,
+  },
 }
 
 const COLOR_PALETTES = {
@@ -811,7 +817,7 @@ const COLOR_PALETTES = {
 type GameState = "categories" | "setup" | "playing" | "finished" | "theme" | "edit-custom-category"
 type PaletteName = keyof typeof COLOR_PALETTES
 
-type GameMode = "classic" | "lost" | "jester" | "chaos"
+type GameMode = "classic" | "lost" | "jester" | "chaos" | "random"
 
 interface GameModeConfig {
   name: string
@@ -846,6 +852,7 @@ export default function ImpostorGame() {
   const [numImpostors, setNumImpostors] = useState(1)
   const [customCategories, setCustomCategories] = useState<Record<string, string[]>>({})
   const [selectedGameMode, setSelectedGameMode] = useState<GameMode>("classic")
+  const [actualGameMode, setActualGameMode] = useState<GameMode>("classic") // Modo real cuando está en modo random
   const [lostPlayerIndex, setLostPlayerIndex] = useState<number>(-1)
   const [lostPlayerWord, setLostPlayerWord] = useState("")
   const [jesterPlayerIndex, setJesterPlayerIndex] = useState<number>(-1)
@@ -1024,6 +1031,16 @@ export default function ImpostorGame() {
   }
 
   const startGame = () => {
+    // Si está en modo random, elegir un modo aleatorio
+    let gameModeToUse: GameMode = selectedGameMode
+    if (selectedGameMode === "random") {
+      const availableModes: GameMode[] = ["classic", "lost", "jester", "chaos"]
+      gameModeToUse = availableModes[Math.floor(Math.random() * availableModes.length)]
+      setActualGameMode(gameModeToUse)
+    } else {
+      setActualGameMode(selectedGameMode)
+    }
+
     if (players.length < GAME_MODES[selectedGameMode].minPlayers) return
 
     // Get available words based on selected categories
@@ -1066,10 +1083,12 @@ export default function ImpostorGame() {
     setChaosPlayerWords({})
 
     // Modo Locura: con probabilidad 1/6, activar escenarios especiales
-    if (selectedGameMode === "chaos") {
+    if (actualGameMode === "chaos") {
       const chaosRoll = Math.floor(Math.random() * 10) // 0-9
 
-      if (chaosRoll === 0) {
+      // Probabilidad 100% si venimos de modo Aleatorio, sino 1/10 normal
+      const forceSpecialScenario = selectedGameMode === "random"
+      if (forceSpecialScenario || chaosRoll === 0) {
         // Decidir aleatoriamente entre: todos impostores, todos palabras diferentes, o nadie impostor
         const chaosType = Math.floor(Math.random() * 3) // 0, 1 o 2
 
@@ -1149,7 +1168,7 @@ export default function ImpostorGame() {
     }
 
     // Assign special roles based on game mode
-    if (selectedGameMode === "lost") {
+    if (actualGameMode === "lost") {
       // Select a player who gets a different word (not an impostor)
       const nonImpostorIndices = shuffledIndices.filter(i => !selectedImpostors.includes(i))
       const lostIndex = nonImpostorIndices[Math.floor(Math.random() * nonImpostorIndices.length)]
@@ -1166,7 +1185,7 @@ export default function ImpostorGame() {
         differentWord = fallbackWords[Math.floor(Math.random() * fallbackWords.length)]
       }
       setLostPlayerWord(differentWord)
-    } else if (selectedGameMode === "jester") {
+    } else if (actualGameMode === "jester") {
       // Select a jester (not an impostor)
       const nonImpostorIndices = shuffledIndices.filter(i => !selectedImpostors.includes(i))
       const jesterIndex = nonImpostorIndices[Math.floor(Math.random() * nonImpostorIndices.length)]
@@ -1971,6 +1990,23 @@ export default function ImpostorGame() {
                               </p>
                             </>
                           )}
+
+                          {modeKey === "random" && (
+                            <>
+                              <p className="flex items-start gap-2">
+                                <DoodleIcon icon={Shuffle} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`random-how-${modeKey}`} />
+                                <span><strong>Cómo se juega:</strong> El sistema elige aleatoriamente entre Clásico, Perdido, Bufón y Locura. Ni el organizador ni los jugadores saben qué modo está activo hasta que comienza el juego.</span>
+                              </p>
+                              <p className="flex items-start gap-2">
+                                <DoodleIcon icon={Target} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`random-win-${modeKey}`} />
+                                <span><strong>Cómo ganar:</strong> Depende del modo elegido aleatoriamente. ¡Descubre las reglas mientras juegas!</span>
+                              </p>
+                              <p className="flex items-start gap-2">
+                                <DoodleIcon icon={Lightbulb} size={20} className="stroke-[2.5] mt-0.5 flex-shrink-0" uniqueId={`random-strategy-${modeKey}`} />
+                                <span><strong>Estrategia:</strong> Mantén la mente abierta y observa atentamente. Cualquier cosa puede pasar en el modo aleatorio.</span>
+                              </p>
+                            </>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -2176,15 +2212,48 @@ export default function ImpostorGame() {
                     <HelpCircle className="h-3 w-3 text-muted-foreground hover:text-primary" />
                   </Button>
                 </div>
-                <div className="flex justify-center overflow-x-auto scrollbar-hide">
-                  <div className="flex gap-1 px-2 min-w-max">
-                    {(Object.entries(GAME_MODES) as [GameMode, GameModeConfig][]).map(([modeKey, modeConfig]) => {
+                <div className="flex flex-col gap-1">
+                  {/* Primera fila: 3 modos */}
+                  <div className="flex justify-center gap-1 px-1">
+                    {(['classic', 'lost', 'jester'] as GameMode[]).map((modeKey) => {
+                      const modeConfig = GAME_MODES[modeKey]
                       const isSelected = selectedGameMode === modeKey
                       return (
                         <button
                           key={modeKey}
                           onClick={() => setSelectedGameMode(modeKey)}
-                          className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs transition-all duration-200 border whitespace-nowrap ${
+                          className={`flex items-center gap-1 px-1.5 py-1 rounded-full text-xs transition-all duration-200 border whitespace-nowrap ${
+                            isSelected
+                              ? "bg-primary text-primary-foreground border-primary-foreground/30"
+                              : "bg-muted text-muted-foreground border-border hover:border-primary/50 hover:text-primary"
+                          }`}
+                        >
+                          <DoodleIcon
+                            icon={modeConfig.icon}
+                            size={12}
+                            className={`stroke-[2.5] ${isSelected ? 'text-primary-foreground' : 'text-muted-foreground'}`}
+                            uniqueId={`mode-compact-${modeKey}`}
+                          />
+                          <span className="font-medium">{modeConfig.name}</span>
+                          {isSelected && (
+                            <div className="rounded-full p-0.5 animate-[bounce-soft_1s_ease-in-out_infinite]">
+                              <Check className="h-2 w-2 text-primary-foreground" />
+                            </div>
+                          )}
+                        </button>
+                      )
+                    })}
+                  </div>
+                  {/* Segunda fila: 2 modos */}
+                  <div className="flex justify-center gap-1 px-1">
+                    {(['chaos', 'random'] as GameMode[]).map((modeKey) => {
+                      const modeConfig = GAME_MODES[modeKey]
+                      const isSelected = selectedGameMode === modeKey
+                      return (
+                        <button
+                          key={modeKey}
+                          onClick={() => setSelectedGameMode(modeKey)}
+                          className={`flex items-center gap-1 px-1.5 py-1 rounded-full text-xs transition-all duration-200 border whitespace-nowrap ${
                             isSelected
                               ? "bg-primary text-primary-foreground border-primary-foreground/30"
                               : "bg-muted text-muted-foreground border-border hover:border-primary/50 hover:text-primary"
@@ -2365,7 +2434,7 @@ export default function ImpostorGame() {
   }
 
   if (gameState === "setup") {
-    const maxImpostors = Math.max(1, players.length - (selectedGameMode === "lost" || selectedGameMode === "jester" ? 2 : 1))
+    const maxImpostors = Math.max(1, players.length - (actualGameMode === "lost" || actualGameMode === "jester" ? 2 : 1))
 
     return (
       <div
@@ -2793,11 +2862,11 @@ export default function ImpostorGame() {
             <div className="text-center mb-4">
               <h3 className="text-lg font-title font-bold text-foreground flex items-center justify-center gap-2">
                 <DoodleIcon icon={GAME_MODES[selectedGameMode].icon} size={20} className="stroke-[2.5]" uniqueId="mode-finished" />
-                Modo: {GAME_MODES[selectedGameMode].name}
+                Modo: {GAME_MODES[selectedGameMode].name}{selectedGameMode === "random" ? " 🤫" : ""}
               </h3>
             </div>
 
-            {selectedGameMode === "classic" && (
+            {actualGameMode === "classic" && selectedGameMode !== "random" && (
               <div className="space-y-2 text-sm text-muted-foreground">
                 <p className="flex justify-center gap-2">
                   <DoodleIcon icon={UserSearch} size={16} className="stroke-[2.5] text-destructive" uniqueId="classic-impostor" />
@@ -2809,7 +2878,7 @@ export default function ImpostorGame() {
               </div>
             )}
 
-            {selectedGameMode === "lost" && (
+            {actualGameMode === "lost" && selectedGameMode !== "random" && (
               <div className="space-y-2 text-sm text-muted-foreground">
                 <p className="flex justify-center gap-2">
                   <DoodleIcon icon={Compass} size={16} className="stroke-[2.5] text-orange-500" uniqueId="lost-player" />
@@ -2825,7 +2894,7 @@ export default function ImpostorGame() {
               </div>
             )}
 
-            {selectedGameMode === "jester" && (
+            {actualGameMode === "jester" && selectedGameMode !== "random" && (
               <div className="space-y-2 text-sm text-muted-foreground">
                 <p className="flex justify-center gap-2">
                   <DoodleIcon icon={Crown} size={16} className="stroke-[2.5] text-purple-500" uniqueId="jester-player" />
@@ -2841,7 +2910,7 @@ export default function ImpostorGame() {
               </div>
             )}
 
-            {selectedGameMode === "chaos" && (
+            {actualGameMode === "chaos" && selectedGameMode !== "random" && (
               <div className="space-y-2 text-sm text-muted-foreground">
                 {chaosAllImpostors ? (
                   <>
@@ -2894,6 +2963,18 @@ export default function ImpostorGame() {
                     <p className="text-xs italic mt-2">💡 El modo Locura puede activarse aleatoriamente</p>
                   </>
                 )}
+              </div>
+            )}
+
+            {selectedGameMode === "random" && (
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <p className="flex justify-center gap-2">
+                  <DoodleIcon icon={Shuffle} size={16} className="stroke-[2.5] text-purple-500" uniqueId="random-mode" />
+                  <strong className="text-purple-500">Modo Aleatorio Activo</strong>
+                </p>
+                <p>• Se ha elegido aleatoriamente uno de los modos disponibles</p>
+                <p>• ¡Descubre las reglas mientras juegas!</p>
+                <p className="text-xs italic mt-2">🎲 El modo específico permanece secreto para todos</p>
               </div>
             )}
           </div>

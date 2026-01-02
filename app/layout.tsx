@@ -465,8 +465,7 @@ export default function RootLayout({
         />
 
         {/* Preload recursos críticos para mejor LCP */}
-        <link rel="preload" href="/icon.svg" as="image" type="image/svg+xml" />
-        <link rel="preload" href="/og.jpeg" as="image" type="image/jpeg" />
+        <link rel="preload" href="/og.png" as="image" type="image/jpeg" />
 
         {/* Preload chunks críticos de Next.js */}
         <link rel="modulepreload" href="/_next/static/chunks/webpack.js" />
