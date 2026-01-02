@@ -1082,12 +1082,12 @@ export default function ImpostorGame() {
     setChaosAllSameWord(false)
     setChaosPlayerWords({})
 
-    // Modo Locura: con probabilidad 1/6, activar escenarios especiales
+    // Modo Locura: con probabilidad 1/6 o 50% si es random, activar escenarios especiales
     if (actualGameMode === "chaos") {
       const chaosRoll = Math.floor(Math.random() * 10) // 0-9
 
-      // Probabilidad 100% si venimos de modo Aleatorio, sino 1/10 normal
-      const forceSpecialScenario = selectedGameMode === "random"
+      // Probabilidad 50% si venimos de modo Aleatorio, sino 1/10 normal
+      const forceSpecialScenario = selectedGameMode === "random" && Math.random() < 0.5
       if (forceSpecialScenario || chaosRoll === 0) {
         // Decidir aleatoriamente entre: todos impostores, todos palabras diferentes, o nadie impostor
         const chaosType = Math.floor(Math.random() * 3) // 0, 1 o 2
