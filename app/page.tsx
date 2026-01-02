@@ -1943,7 +1943,7 @@ export default function ImpostorGame() {
                           {modeKey === "lost" && (
                             <>
                               <p className="flex items-start gap-2">
-                                <DoodleIcon icon={Compass} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`lost-how-${modeKey}`} />
+                                <DoodleIcon icon={Users} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`lost-how-${modeKey}`} />
                                 <span><strong>Cómo se juega:</strong> Un jugador (El Perdido) tiene una palabra completamente diferente pero no lo sabe. Los impostores deben descubrir la palabra común del grupo.</span>
                               </p>
                               <p className="flex items-start gap-2">
@@ -1960,7 +1960,7 @@ export default function ImpostorGame() {
                           {modeKey === "jester" && (
                             <>
                               <p className="flex items-start gap-2">
-                                <DoodleIcon icon={Crown} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`jester-how-${modeKey}`} />
+                                <DoodleIcon icon={Users} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`jester-how-${modeKey}`} />
                                 <span><strong>Cómo se juega:</strong> Un jugador (El Bufón) conoce la palabra pero tiene un objetivo secreto: convencer al grupo de que lo elimine.</span>
                               </p>
                               <p className="flex items-start gap-2">
@@ -1977,16 +1977,24 @@ export default function ImpostorGame() {
                           {modeKey === "chaos" && (
                             <>
                               <p className="flex items-start gap-2">
-                                <DoodleIcon icon={Zap} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`chaos-how-${modeKey}`} />
-                                <span><strong>Cómo se juega:</strong> Con probabilidad de 1/10, puede activarse uno de tres escenarios especiales: todos los jugadores son impostores, nadie es impostor pero todos tienen palabras diferentes, o nadie es impostor pero todos comparten la misma palabra.</span>
+                                <DoodleIcon icon={Users} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`chaos-how-${modeKey}`} />
+                                <span>
+                                  <strong>Cómo se juega:</strong> Con probabilidad de 1/10, puede activarse uno de tres escenarios especiales:
+                                  <br />
+                                  1. Todos los jugadores son impostores
+                                  <br />
+                                  2. Nadie es impostor pero todos tienen palabras diferentes
+                                  <br />
+                                  3. Nadie es impostor pero todos comparten la misma palabra
+                                </span>
                               </p>
                               <p className="flex items-start gap-2">
                                 <DoodleIcon icon={Target} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`chaos-win-${modeKey}`} />
-                                <span><strong>Cómo ganar:</strong> Si todos son impostores, cada uno debe descubrir la palabra sin saber que todos son impostores. Si todos tienen palabras diferentes, el objetivo es descubrir quién tiene qué palabra. Si nadie es impostor pero comparten la misma palabra, ¡todos ganan juntos!</span>
+                                <span><strong>Cómo ganar:</strong> Igual que el modo clásico, con la particularidad de que cada tanto TODOS DICEN INCOHERENCIAS Y NADIE ENTIENDE NADA!</span>
                               </p>
                               <p className="flex items-start gap-2">
                                 <DoodleIcon icon={Lightbulb} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`chaos-strategy-${modeKey}`} />
-                                <span><strong>Estrategia:</strong> Mantén la calma y observa las inconsistencias. En el modo locura, las dinámicas cambian completamente, así que adapta tu estrategia según el escenario activado.</span>
+                                <span><strong>Estrategia:</strong> Mantén la calma y observa las inconsistencias. En el modo locura, las dinámicas cambian completamente, así que adapta tu estrategia según el escenario que creas que estáactivado.</span>
                               </p>
                             </>
                           )}
@@ -1994,7 +2002,7 @@ export default function ImpostorGame() {
                           {modeKey === "random" && (
                             <>
                               <p className="flex items-start gap-2">
-                                <DoodleIcon icon={Shuffle} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`random-how-${modeKey}`} />
+                                <DoodleIcon icon={Users} size={20} className="stroke-[2.5] mt-0.5 shrink-0" uniqueId={`random-how-${modeKey}`} />
                                 <span><strong>Cómo se juega:</strong> El sistema elige aleatoriamente entre Clásico, Perdido, Bufón y Locura. Ni el organizador ni los jugadores saben qué modo está activo hasta que comienza el juego.</span>
                               </p>
                               <p className="flex items-start gap-2">
