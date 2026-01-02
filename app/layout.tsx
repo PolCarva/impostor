@@ -14,7 +14,7 @@ const pangolin = Pangolin({
 })
 
 // URL base del sitio - cambiar en producción
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://impostor.pablocarvalho.dev"
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://impostor.gratis"
 
 export const viewport: Viewport = {
   width: "device-width",

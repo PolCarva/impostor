@@ -3,22 +3,22 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://impostor.pablocarvalho.dev</loc>
+    <loc>https://impostor.gratis</loc>
     <lastmod>2024-12-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <!-- Versiones en diferentes idiomas hispanos -->
-    <xhtml:link rel="alternate" hreflang="es" href="https://impostor.pablocarvalho.dev"/>
-    <xhtml:link rel="alternate" hreflang="es-ES" href="https://impostor.pablocarvalho.dev"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="https://impostor.pablocarvalho.dev"/>
-    <xhtml:link rel="alternate" hreflang="es-MX" href="https://impostor.pablocarvalho.dev"/>
-    <xhtml:link rel="alternate" hreflang="es-CO" href="https://impostor.pablocarvalho.dev"/>
-    <xhtml:link rel="alternate" hreflang="es-CL" href="https://impostor.pablocarvalho.dev"/>
-    <xhtml:link rel="alternate" hreflang="es-UY" href="https://impostor.pablocarvalho.dev"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://impostor.pablocarvalho.dev"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://impostor.gratis"/>
+    <xhtml:link rel="alternate" hreflang="es-ES" href="https://impostor.gratis"/>
+    <xhtml:link rel="alternate" hreflang="es-AR" href="https://impostor.gratis"/>
+    <xhtml:link rel="alternate" hreflang="es-MX" href="https://impostor.gratis"/>
+    <xhtml:link rel="alternate" hreflang="es-CO" href="https://impostor.gratis"/>
+    <xhtml:link rel="alternate" hreflang="es-CL" href="https://impostor.gratis"/>
+    <xhtml:link rel="alternate" hreflang="es-UY" href="https://impostor.gratis"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://impostor.gratis"/>
     <!-- Imágenes asociadas -->
     <image:image>
-      <image:loc>https://impostor.pablocarvalho.dev/og.png</image:loc>
+      <image:loc>https://impostor.gratis/og.png</image:loc>
       <image:title>El Impostor - Juego de Fiesta Gratis</image:title>
       <image:caption>El mejor juego de fiesta para grupos de amigos y familia</image:caption>
     </image:image>

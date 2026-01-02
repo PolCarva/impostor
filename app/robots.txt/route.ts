@@ -2,14 +2,14 @@ import { NextResponse } from 'next/server'
 
 export async function GET() {
   const robotsTxt = `# robots.txt para El Impostor - El Juego del Verano 2026
-# https://impostor.pablocarvalho.dev
+# https://impostor.gratis
 
 # Permitir todos los crawlers
 User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://impostor.pablocarvalho.dev/sitemap.xml
+Sitemap: https://impostor.gratis/sitemap.xml
 
 # Google
 User-agent: Googlebot
@@ -45,7 +45,7 @@ Disallow: /_next/static/
 Disallow: /_next/image
 
 # Host preferido
-Host: https://impostor.pablocarvalho.dev
+Host: https://impostor.gratis
 `
 
   return new NextResponse(robotsTxt, {
