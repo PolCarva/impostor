@@ -835,6 +835,9 @@ export default function ImpostorGame() {
   const [isFlipped, setIsFlipped] = useState(false)
   const [playersSeenCard, setPlayersSeenCard] = useState<boolean[]>([])
   const [newPlayerName, setNewPlayerName] = useState("")
+  const [playerMode, setPlayerMode] = useState<"manual" | "quick">("manual")
+  const [quickPlayerCount, setQuickPlayerCount] = useState(4)
+  const [isClient, setIsClient] = useState(false)
   const [selectedWord, setSelectedWord] = useState("")
   const [impostorIndices, setImpostorIndices] = useState<number[]>([])
   const [firstPlayerIndex, setFirstPlayerIndex] = useState(0)
@@ -964,6 +967,11 @@ export default function ImpostorGame() {
     }
   }, [currentPalette])
 
+  // Marcar cuando estamos en el cliente para evitar problemas de hidratación
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
   const toggleCategory = (category: string) => {
     const isCurrentlySelected = selectedCategories.includes(category)
     const isCustom = category in customCategories
@@ -999,14 +1007,35 @@ export default function ImpostorGame() {
     return selectedWords
   }
 
-  const addPlayer = () => {
-    if (newPlayerName.trim() && players.length < 20) {
-      const newPlayers = [...players, newPlayerName.trim()]
-      setPlayers(newPlayers)
+  const handleModeChange = (mode: "manual" | "quick") => {
+    setPlayerMode(mode)
+    // Limpiar datos del modo anterior para evitar confusión
+    if (mode === "manual") {
+      setQuickPlayerCount(4)
+    } else {
       setNewPlayerName("")
-      
-      // Track player added
-      trackPlayerAdd(newPlayers.length)
+    }
+  }
+
+  const addPlayer = () => {
+    if (playerMode === "manual") {
+      if (newPlayerName.trim() && players.length < 20) {
+        const newPlayers = [...players, newPlayerName.trim()]
+        setPlayers(newPlayers)
+        setNewPlayerName("")
+
+        // Track player added
+        trackPlayerAdd(newPlayers.length)
+      }
+    } else {
+      // Modo rápido: generar jugadores J1, J2, J3...
+      if (quickPlayerCount > 0 && quickPlayerCount <= 20) {
+        const newPlayers = Array.from({ length: quickPlayerCount }, (_, i) => `Jugador ${i + 1}`)
+        setPlayers(newPlayers)
+
+        // Track players added
+        trackPlayerAdd(newPlayers.length)
+      }
     }
   }
 
@@ -2512,23 +2541,76 @@ export default function ImpostorGame() {
                   Agregar Jugadores
                 </label>
                 
-                <div className="flex flex-col sm:flex-row gap-2 mb-3 overflow-hidden px-1 items-center">
-                  <div className="flex-1 min-w-0">
-                    <Input
-                      id="player-name-input"
-                      name="player-name"
-                      placeholder="Nombre del jugador..."
-                      value={newPlayerName}
-                      onChange={(e) => setNewPlayerName(e.target.value)}
-                      onKeyDown={(e) => e.key === "Enter" && addPlayer()}
-                      className="text-base w-full h-11"
-                    />
+                {/* Selector de modo - solo mostrar después del primer render para evitar hidratación */}
+                {isClient && (
+                  <div className="flex gap-2 mb-3 px-1">
+                    <Button
+                      variant={playerMode === "manual" ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => handleModeChange("manual")}
+                      className="flex-1 gap-1"
+                    >
+                      <PenTool className="h-4 w-4" />
+                      Personalizado
+                    </Button>
+                    <Button
+                      variant={playerMode === "quick" ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => handleModeChange("quick")}
+                      className="flex-1 gap-1"
+                    >
+                      <Zap className="h-4 w-4" />
+                      Rápido
+                    </Button>
                   </div>
-                  <Button onClick={addPlayer} className="gap-2 px-6 shrink-0" size="lg">
-                    <Plus className="h-5 w-5" />
-                    Agregar
-                  </Button>
-                </div>
+                )}
+
+                {/* Controles según el modo seleccionado */}
+                {playerMode === "manual" ? (
+                  <div className="flex flex-col sm:flex-row gap-2 mb-3 overflow-hidden px-1 items-center">
+                    <div className="flex-1 min-w-0">
+                      <Input
+                        id="player-name-input"
+                        name="player-name"
+                        placeholder="Nombre del jugador..."
+                        value={newPlayerName}
+                        onChange={(e) => setNewPlayerName(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && addPlayer()}
+                        className="text-base w-full h-11"
+                      />
+                    </div>
+                    <Button onClick={addPlayer} className="gap-2 px-6 shrink-0" size="lg">
+                      <Plus className="h-5 w-5" />
+                      Agregar
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex flex-col sm:flex-row gap-2 mb-3 overflow-hidden px-1 items-center">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <label htmlFor="player-count" className="text-sm font-medium text-muted-foreground whitespace-nowrap">
+                          Cantidad:
+                        </label>
+                        <Input
+                          id="player-count"
+                          type="number"
+                          min={1}
+                          max={20}
+                          value={quickPlayerCount}
+                          onChange={(e) => setQuickPlayerCount(Math.min(20, Math.max(1, parseInt(e.target.value) || 1)))}
+                          className="text-base w-20 h-11 text-center"
+                        />
+                        <span className="text-sm text-muted-foreground">
+                          {quickPlayerCount === 1 ? 'jugador' : 'jugadores'}
+                        </span>
+                      </div>
+                    </div>
+                    <Button onClick={addPlayer} className="gap-2 px-6 shrink-0" size="lg">
+                      <Zap className="h-5 w-5" />
+                      Generar
+                    </Button>
+                  </div>
+                )}
 
                 {players.length > 0 && (
                   <div className="space-y-2 max-h-64 overflow-y-auto p-2">
