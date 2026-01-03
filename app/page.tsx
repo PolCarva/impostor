@@ -972,6 +972,18 @@ export default function ImpostorGame() {
     setIsClient(true)
   }, [])
 
+  // Ajustar automáticamente el número de impostores cuando cambia el modo o número de jugadores
+  useEffect(() => {
+    if (players.length > 0) {
+      const hasSpecialRole = selectedGameMode === "lost" || selectedGameMode === "jester"
+      const newMaxImpostors = Math.max(1, players.length - (hasSpecialRole ? 3 : 2))
+
+      if (numImpostors > newMaxImpostors) {
+        setNumImpostors(newMaxImpostors)
+      }
+    }
+  }, [selectedGameMode, players.length, numImpostors])
+
   const toggleCategory = (category: string) => {
     const isCurrentlySelected = selectedCategories.includes(category)
     const isCustom = category in customCategories
@@ -2471,7 +2483,11 @@ export default function ImpostorGame() {
   }
 
   if (gameState === "setup") {
-    const maxImpostors = Math.max(1, players.length - (actualGameMode === "lost" || actualGameMode === "jester" ? 2 : 1))
+    // Modos con roles especiales adicionales (El Perdido, Bufón) permiten hasta N-3 impostores
+    // Modos normales permiten hasta N-2 impostores
+    // Para "random", tratamos como modo normal ya que no sabemos qué modo se elegirá
+    const hasSpecialRole = selectedGameMode === "lost" || selectedGameMode === "jester"
+    const maxImpostors = Math.max(1, players.length - (hasSpecialRole ? 3 : 2))
 
     return (
       <div
