@@ -2828,7 +2828,7 @@ export default function ImpostorGame() {
           >
             <div className="flip-card-inner w-full h-full">
               {/* Front of card */}
-              <div className="flip-card-front absolute w-full h-full rounded-[20px] border-4 border-foreground/80 bg-card shadow-[8px_8px_0_0_var(--primary)] cursor-pointer hover:shadow-[10px_10px_0_0_var(--primary)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all select-none overflow-hidden">
+              <div className={`flip-card-front absolute w-full h-full rounded-[20px] border-4 border-foreground/80 bg-card shadow-[8px_8px_0_0_var(--primary)] cursor-pointer hover:shadow-[10px_10px_0_0_var(--primary)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all select-none overflow-hidden ${isFlipped ? 'opacity-0' : 'opacity-100'}`}>
                 <div className="absolute inset-4 border-2 border-dashed border-muted rounded-xl" />
                 <div className="h-full flex flex-col items-center justify-center p-8 relative">
                   <div className="mb-6 animate-[bounce-soft_2s_ease-in-out_infinite]">
