@@ -836,7 +836,7 @@ export default function ImpostorGame() {
   const [playersSeenCard, setPlayersSeenCard] = useState<boolean[]>([])
   const [newPlayerName, setNewPlayerName] = useState("")
   const [playerMode, setPlayerMode] = useState<"manual" | "quick">("manual")
-  const [quickPlayerCount, setQuickPlayerCount] = useState(4)
+  const [quickPlayerCount, setQuickPlayerCount] = useState<number | string>(4)
   const [isClient, setIsClient] = useState(false)
   const [selectedWord, setSelectedWord] = useState("")
   const [impostorIndices, setImpostorIndices] = useState<number[]>([])
@@ -1031,7 +1031,7 @@ export default function ImpostorGame() {
 
   const addPlayer = () => {
     if (playerMode === "manual") {
-      if (newPlayerName.trim() && players.length < 20) {
+      if (newPlayerName.trim()) {
         const newPlayers = [...players, newPlayerName.trim()]
         setPlayers(newPlayers)
         setNewPlayerName("")
@@ -1041,8 +1041,9 @@ export default function ImpostorGame() {
       }
     } else {
       // Modo rápido: generar jugadores J1, J2, J3...
-      if (quickPlayerCount > 0 && quickPlayerCount <= 20) {
-        const newPlayers = Array.from({ length: quickPlayerCount }, (_, i) => `Jugador ${i + 1}`)
+      const count = typeof quickPlayerCount === 'string' ? parseInt(quickPlayerCount) : quickPlayerCount
+      if (count > 0) {
+        const newPlayers = Array.from({ length: count }, (_, i) => `J${i + 1}`)
         setPlayers(newPlayers)
 
         // Track players added
@@ -2189,7 +2190,7 @@ export default function ImpostorGame() {
                         Juego de deducción social completamente gratis, sin descargas necesarias. 
                         Disponible directamente en tu navegador, perfecto para fiestas de cumpleaños, reuniones familiares y momentos con amigos. 
                         Puedes crear tus propias categorías personalizadas o usar las predefinidas. 
-                        Juego de palabras interactivo para grupos de 3 a 20 jugadores.
+                        Juego de palabras interactivo para grupos de 3 o más jugadores.
                       </p>
                       <p className="text-sm text-foreground">
                         ¿Buscas más juegos del creador? El Impostor es similar a otros juegos de deducción como
@@ -2611,13 +2612,36 @@ export default function ImpostorGame() {
                           id="player-count"
                           type="number"
                           min={1}
-                          max={20}
                           value={quickPlayerCount}
-                          onChange={(e) => setQuickPlayerCount(Math.min(20, Math.max(1, parseInt(e.target.value) || 1)))}
+                          onChange={(e) => {
+                            const value = e.target.value
+                            if (value === '') {
+                              setQuickPlayerCount('')
+                            } else {
+                              const numValue = parseInt(value)
+                              if (!isNaN(numValue) && numValue >= 1) {
+                                setQuickPlayerCount(numValue)
+                              }
+                            }
+                          }}
+                          onBlur={() => {
+                            const count = typeof quickPlayerCount === 'string' ? parseInt(quickPlayerCount) : quickPlayerCount
+                            if (quickPlayerCount === '' || isNaN(count) || count < 1) {
+                              setQuickPlayerCount(4) // Valor por defecto si está vacío o inválido
+                            }
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              const count = typeof quickPlayerCount === 'string' ? parseInt(quickPlayerCount) : quickPlayerCount
+                              if (quickPlayerCount === '' || isNaN(count) || count < 1) {
+                                setQuickPlayerCount(4)
+                              }
+                            }
+                          }}
                           className="text-base w-20 h-11 text-center"
                         />
                         <span className="text-sm text-muted-foreground">
-                          {quickPlayerCount === 1 ? 'jugador' : 'jugadores'}
+                          {(quickPlayerCount === 1 || quickPlayerCount === '1') ? 'jugador' : 'jugadores'}
                         </span>
                       </div>
                     </div>
@@ -3113,7 +3137,7 @@ export default function ImpostorGame() {
 
             <h3>Juego de Deducción Social para Grupos</h3>
             <p>
-              Diseñado específicamente para grupos de 3 a 20 jugadores, El Impostor crea momentos inolvidables donde la comunicación y la observación
+              Diseñado específicamente para grupos de 3 o más jugadores, El Impostor crea momentos inolvidables donde la comunicación y la observación
               son las claves para ganar. Un jugador es seleccionado aleatoriamente como el impostor, mientras que todos los demás comparten
               una palabra secreta común. El objetivo del impostor es descubrir cuál es esa palabra sin delatarse, mientras que los demás
               jugadores deben identificar quién es el impostor entre ellos.
