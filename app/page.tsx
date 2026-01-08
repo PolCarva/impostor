@@ -54,6 +54,26 @@ const hashString = (str: string): number => {
   return Math.abs(hash)
 }
 
+// Función para mezclar un array usando una semilla aleatoria
+function shuffleArrayWithSeed<T>(array: T[], seed: number): T[] {
+  const shuffled = [...array]
+  const random = (seed: number) => {
+    const x = Math.sin(seed) * 10000
+    return x - Math.floor(x)
+  }
+
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(random(seed + i) * (i + 1))
+    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+  }
+  return shuffled
+}
+
+// Función para generar una semilla única basada en timestamp y datos del juego
+const generateGameSeed = (playerCount: number, timestamp: number = Date.now()): number => {
+  return timestamp + playerCount * 1000 + Math.floor(Math.random() * 10000)
+}
+
 // Impostor Icon Component - renders app/icon.svg with currentColor and DoodleIcon styles
 const ImpostorIcon = ({ size = 48, className = "", uniqueId = "", randomRotate = true, thick = false, style = {} }: { size?: number, className?: string, uniqueId?: string, randomRotate?: boolean, thick?: boolean, style?: React.CSSProperties }) => {
   // Generate a unique identifier for consistent styling
@@ -218,6 +238,124 @@ const WORD_CATEGORIES = {
     "Caribe",
     "Isla de Pascua",
     "Gibraltar",
+    "Canadá",
+    "México",
+    "Colombia",
+    "Perú",
+    "Venezuela",
+    "Ecuador",
+    "Bolivia",
+    "Paraguay",
+    "Guatemala",
+    "Honduras",
+    "El Salvador",
+    "Nicaragua",
+    "Costa Rica",
+    "Panamá",
+    "Cuba",
+    "República Dominicana",
+    "Puerto Rico",
+    "Jamaica",
+    "Haití",
+    "Trinidad y Tobago",
+    "Barbados",
+    "Bahamas",
+    "Bélgica",
+    "Países Bajos",
+    "Luxemburgo",
+    "Suiza",
+    "Austria",
+    "Hungría",
+    "República Checa",
+    "Eslovaquia",
+    "Polonia",
+    "Suecia",
+    "Noruega",
+    "Dinamarca",
+    "Finlandia",
+    "Islandia",
+    "Irlanda",
+    "Portugal",
+    "Grecia",
+    "Turquía",
+    "Israel",
+    "Egipto",
+    "Marruecos",
+    "Túnez",
+    "Argelia",
+    "Sudáfrica",
+    "Kenia",
+    "Tanzania",
+    "Etiopía",
+    "Nigeria",
+    "Ghana",
+    "Costa de Marfil",
+    "Senegal",
+    "Camerún",
+    "Zambia",
+    "Zimbabwe",
+    "Mozambique",
+    "Angola",
+    "Namibia",
+    "Botswana",
+    "Madagascar",
+    "Mauricio",
+    "Reunión",
+    "Seychelles",
+    "Maldivas",
+    "Sri Lanka",
+    "Bangladesh",
+    "Nepal",
+    "Bután",
+    "Tailandia",
+    "Camboya",
+    "Vietnam",
+    "Laos",
+    "Malasia",
+    "Singapur",
+    "Indonesia",
+    "Filipinas",
+    "Corea del Sur",
+    "Corea del Norte",
+    "Mongolia",
+    "China",
+    "Taiwán",
+    "Hong Kong",
+    "Macao",
+    "India",
+    "Pakistán",
+    "Afganistán",
+    "Irán",
+    "Irak",
+    "Siria",
+    "Líbano",
+    "Jordania",
+    "Arabia Saudita",
+    "Emiratos Árabes Unidos",
+    "Qatar",
+    "Kuwait",
+    "Bahréin",
+    "Omán",
+    "Yemen",
+    "Rusia",
+    "Ucrania",
+    "Bielorrusia",
+    "Moldavia",
+    "Rumania",
+    "Bulgaria",
+    "Serbia",
+    "Croacia",
+    "Bosnia",
+    "Montenegro",
+    "Kosovo",
+    "Macedonia del Norte",
+    "Albania",
+    "Eslovenia",
+    "Estonia",
+    "Letonia",
+    "Lituania",
+    "Georgia",
+    "Armenia",
   ],
 
   "Jugadores de fútbol": [
@@ -839,6 +977,7 @@ export default function ImpostorGame() {
   const [quickPlayerCount, setQuickPlayerCount] = useState<number | string>(4)
   const [isClient, setIsClient] = useState(false)
   const [selectedWord, setSelectedWord] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState("")
   const [impostorIndices, setImpostorIndices] = useState<number[]>([])
   const [firstPlayerIndex, setFirstPlayerIndex] = useState(0)
   // Cargar tema desde localStorage o usar default
@@ -863,6 +1002,13 @@ export default function ImpostorGame() {
   const [chaosAllDifferentWords, setChaosAllDifferentWords] = useState(false)
   const [chaosAllSameWord, setChaosAllSameWord] = useState(false)
   const [chaosPlayerWords, setChaosPlayerWords] = useState<Record<number, string>>({})
+  const [impostorHelpEnabled, setImpostorHelpEnabled] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('impostor-help-enabled')
+      return saved ? JSON.parse(saved) : false
+    }
+    return false
+  })
   const [editingCategoryName, setEditingCategoryName] = useState("")
   const [editingCategoryWords, setEditingCategoryWords] = useState<string[]>([])
   const [aiPrompt, setAiPrompt] = useState("")
@@ -950,6 +1096,11 @@ export default function ImpostorGame() {
   useEffect(() => {
     localStorage.setItem('custom-categories', JSON.stringify(customCategories))
   }, [customCategories])
+
+  // Guardar configuración de ayuda al impostor en localStorage cuando cambie
+  useEffect(() => {
+    localStorage.setItem('impostor-help-enabled', JSON.stringify(impostorHelpEnabled))
+  }, [impostorHelpEnabled])
 
   // Aplicar colores del tema actual
   useEffect(() => {
@@ -1092,14 +1243,15 @@ export default function ImpostorGame() {
       : selectedCategories
 
     // Select a random category from the available ones
-    const selectedCategory = categoriesToUse[Math.floor(Math.random() * categoriesToUse.length)]
+    const selectedCategoryName = categoriesToUse[Math.floor(Math.random() * categoriesToUse.length)]
+    setSelectedCategory(selectedCategoryName)
 
     // Get words from the selected category
     let categoryWords
-    if (DEFAULT_CATEGORIES[selectedCategory as keyof typeof DEFAULT_CATEGORIES]) {
-      categoryWords = DEFAULT_CATEGORIES[selectedCategory as keyof typeof DEFAULT_CATEGORIES] || []
+    if (DEFAULT_CATEGORIES[selectedCategoryName as keyof typeof DEFAULT_CATEGORIES]) {
+      categoryWords = DEFAULT_CATEGORIES[selectedCategoryName as keyof typeof DEFAULT_CATEGORIES] || []
     } else {
-      categoryWords = customCategories[selectedCategory] || []
+      categoryWords = customCategories[selectedCategoryName] || []
     }
 
     // If category is empty, fallback to all available words
@@ -1110,10 +1262,16 @@ export default function ImpostorGame() {
     // Select the main word from this category
     const randomWord = categoryWords[Math.floor(Math.random() * categoryWords.length)]
 
-    const shuffledIndices = [...Array(players.length).keys()].sort(() => Math.random() - 0.5)
+    // Generar semilla única para esta partida
+    const gameSeed = generateGameSeed(players.length)
+
+    // Mezclar índices de jugadores con semilla aleatoria
+    const shuffledIndices = shuffleArrayWithSeed([...Array(players.length).keys()], gameSeed)
     const selectedImpostors = shuffledIndices.slice(0, numImpostors)
 
-    const randomFirstPlayer = Math.floor(Math.random() * players.length)
+    // Seleccionar persona que empieza (diferente semilla para evitar correlación)
+    const firstPlayerSeed = generateGameSeed(players.length, Date.now() + 1)
+    const randomFirstPlayer = shuffleArrayWithSeed([...Array(players.length).keys()], firstPlayerSeed)[0]
 
     // Reset special roles
     setLostPlayerIndex(-1)
@@ -1126,13 +1284,15 @@ export default function ImpostorGame() {
 
     // Modo Locura: con probabilidad 1/6 o 50% si es random, activar escenarios especiales
     if (actualGameMode === "chaos") {
-      const chaosRoll = Math.floor(Math.random() * 10) // 0-9
+      const chaosSeed = generateGameSeed(players.length, Date.now() + 5)
+      const chaosRoll = Math.floor((Math.sin(chaosSeed) * 10000 - Math.floor(Math.sin(chaosSeed) * 10000)) * 10) // 0-9 usando semilla
 
       // Probabilidad 50% si venimos de modo Aleatorio, sino 1/10 normal
-      const forceSpecialScenario = selectedGameMode === "random" && Math.random() < 0.5
+      const forceSpecialScenario = selectedGameMode === "random" && (Math.sin(chaosSeed + 1000) * 10000 - Math.floor(Math.sin(chaosSeed + 1000) * 10000)) < 0.5
       if (forceSpecialScenario || chaosRoll === 0) {
         // Decidir aleatoriamente entre: todos impostores, todos palabras diferentes, o nadie impostor
-        const chaosType = Math.floor(Math.random() * 3) // 0, 1 o 2
+        const chaosTypeSeed = generateGameSeed(players.length, Date.now() + 6)
+        const chaosType = Math.floor((Math.sin(chaosTypeSeed) * 10000 - Math.floor(Math.sin(chaosTypeSeed) * 10000)) * 3) // 0, 1 o 2 usando semilla
 
         if (chaosType === 0) {
           // Escenario 1: TODOS son impostores
@@ -1171,7 +1331,10 @@ export default function ImpostorGame() {
               usedWords.clear()
             }
 
-            const randomWordForPlayer = availableWordsForPlayer[Math.floor(Math.random() * availableWordsForPlayer.length)]
+            // Usar semilla diferente para cada jugador
+            const playerWordSeed = generateGameSeed(players.length, Date.now() + 7 + i)
+            const shuffledAvailableWords = shuffleArrayWithSeed(availableWordsForPlayer, playerWordSeed)
+            const randomWordForPlayer = shuffledAvailableWords[0]
             playerWords[i] = randomWordForPlayer
             usedWords.add(randomWordForPlayer)
           }
@@ -1189,7 +1352,10 @@ export default function ImpostorGame() {
           // Todos comparten la misma palabra
           setSelectedWord(randomWord)
         }
-        setFirstPlayerIndex(randomFirstPlayer)
+        // Usar semilla diferente para el primer jugador en modo caos
+        const chaosFirstPlayerSeed = generateGameSeed(players.length, Date.now() + 8)
+        const chaosFirstPlayer = shuffleArrayWithSeed([...Array(players.length).keys()], chaosFirstPlayerSeed)[0]
+        setFirstPlayerIndex(chaosFirstPlayer)
         setCurrentPlayer(0)
         setIsFlipped(false)
         setPlayersSeenCard(new Array(players.length).fill(false))
@@ -1211,26 +1377,33 @@ export default function ImpostorGame() {
 
     // Assign special roles based on game mode
     if (actualGameMode === "lost") {
-      // Select a player who gets a different word (not an impostor)
+      // Select a player who gets a different word (not an impostor) - usar semilla diferente
+      const lostSeed = generateGameSeed(players.length, Date.now() + 2)
       const nonImpostorIndices = shuffledIndices.filter(i => !selectedImpostors.includes(i))
-      const lostIndex = nonImpostorIndices[Math.floor(Math.random() * nonImpostorIndices.length)]
+      const shuffledNonImpostors = shuffleArrayWithSeed(nonImpostorIndices, lostSeed)
+      const lostIndex = shuffledNonImpostors[0]
       setLostPlayerIndex(lostIndex)
 
-      // Get a different word from the SAME category
+      // Get a different word from the SAME category - usar semilla diferente
+      const wordSeed = generateGameSeed(players.length, Date.now() + 3)
       let differentWord
       const availableDifferentWords = categoryWords.filter(word => word !== randomWord)
       if (availableDifferentWords.length > 0) {
-        differentWord = availableDifferentWords[Math.floor(Math.random() * availableDifferentWords.length)]
+        const shuffledWords = shuffleArrayWithSeed(availableDifferentWords, wordSeed)
+        differentWord = shuffledWords[0]
       } else {
         // Fallback: if only one word in category, use any other word from available words (but try to avoid the main word)
         const fallbackWords = availableWords.filter(word => word !== randomWord)
-        differentWord = fallbackWords[Math.floor(Math.random() * fallbackWords.length)]
+        const shuffledFallbackWords = shuffleArrayWithSeed(fallbackWords, wordSeed)
+        differentWord = shuffledFallbackWords[0]
       }
       setLostPlayerWord(differentWord)
     } else if (actualGameMode === "jester") {
-      // Select a jester (not an impostor)
+      // Select a jester (not an impostor) - usar semilla diferente
+      const jesterSeed = generateGameSeed(players.length, Date.now() + 4)
       const nonImpostorIndices = shuffledIndices.filter(i => !selectedImpostors.includes(i))
-      const jesterIndex = nonImpostorIndices[Math.floor(Math.random() * nonImpostorIndices.length)]
+      const shuffledNonImpostors = shuffleArrayWithSeed(nonImpostorIndices, jesterSeed)
+      const jesterIndex = shuffledNonImpostors[0]
       setJesterPlayerIndex(jesterIndex)
     }
 
@@ -2328,6 +2501,36 @@ export default function ImpostorGame() {
                 </div>
               </div>
 
+              {/* Opción de Ayuda al Impostor */}
+              <div className="mb-3">
+                <div className="flex items-center justify-center gap-2">
+                  <button
+                    onClick={() => setImpostorHelpEnabled(!impostorHelpEnabled)}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-full text-sm transition-all duration-200 border ${
+                      impostorHelpEnabled
+                        ? "bg-accent text-accent-foreground border-accent-foreground/30"
+                        : "bg-muted/50 text-muted-foreground border-border hover:border-accent/50 hover:text-accent-foreground"
+                    }`}
+                  >
+                    <DoodleIcon
+                      icon={Lightbulb}
+                      size={16}
+                      className={`stroke-[2.5] ${impostorHelpEnabled ? 'text-accent-foreground' : 'text-muted-foreground'}`}
+                      uniqueId="impostor-help-toggle"
+                    />
+                    <span className="font-medium">Ayuda al Impostor</span>
+                    {impostorHelpEnabled && (
+                      <div className="rounded-full p-0.5 animate-[bounce-soft_1s_ease-in-out_infinite]">
+                        <Check className="h-3 w-3 text-accent-foreground" />
+                      </div>
+                    )}
+                  </button>
+                </div>
+                <p className="text-xs text-muted-foreground text-center mt-1">
+                  Los impostores verán la categoría de la palabra secreta
+                </p>
+              </div>
+
               <p className="text-muted-foreground text-sm md:text-base flex items-center justify-center gap-2">
                 ¡Elige las categorías para jugar!
               </p>
@@ -2862,9 +3065,16 @@ export default function ImpostorGame() {
                             <DoodleIcon icon={UserSearch} size={72} thick uniqueId="card-back-impostor" />
                           </div>
                           <h3 className="text-4xl font-title font-bold text-destructive mb-4">¡IMPOSTOR!</h3>
-                          <p className="text-muted-foreground text-center text-sm flex items-center justify-center gap-1">
+                          <p className="text-muted-foreground text-center text-sm flex items-center justify-center gap-1 mb-2">
                             Descubre la palabra sin ser descubierto
                           </p>
+                          {impostorHelpEnabled && selectedCategory && (
+                            <div className="bg-accent/50 px-3 py-2 rounded-lg border border-accent">
+                              <p className="text-xs text-accent-foreground text-center font-semibold">
+                                Categoría: <span className="text-primary">{selectedCategory}</span>
+                              </p>
+                            </div>
+                          )}
                         </>
                       )
                     } else if (playerRole === "lost") {
