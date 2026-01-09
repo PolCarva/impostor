@@ -4330,7 +4330,6 @@ export default function ImpostorGame() {
             aria-label="Volver a configuración de jugadores"
           >
             <ArrowLeft className="h-4 w-4" />
-            Volver
           </Button>
 
           <div className="text-center mb-8">
@@ -4843,7 +4842,6 @@ export default function ImpostorGame() {
           <div className="flex items-center justify-center gap-4">
             <Button onClick={goToLastPlayerCard} variant="outline" size="lg" className="gap-2">
               <ArrowLeft className="h-5 w-5" />
-              Atrás
             </Button>
             <Button onClick={resetGame} size="lg" className="gap-2">
               <RefreshCw className="h-5 w-5" />
