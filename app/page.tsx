@@ -1,8 +1,7 @@
 "use client";
 
-"use client";
-
 import { useState, useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -142,6 +141,8 @@ const ImpostorIcon = ({
   thick?: boolean;
   style?: React.CSSProperties;
 }) => {
+  const [animationStyles, setAnimationStyles] = useState<React.CSSProperties>({});
+
   // Generate a unique identifier for consistent styling
   const uniqueKey = `impostor-icon-${size}-${uniqueId || ""}`;
 
@@ -163,6 +164,14 @@ const ImpostorIcon = ({
   const durationHash = hashString(`${uniqueKey}-duration`);
   const animationDuration = `${3 + (durationHash % 350) / 100}s`; // 3.00s to 6.49s
 
+  useEffect(() => {
+    // Apply random animations only after component mounts to prevent hydration mismatch
+    setAnimationStyles({
+      animationDelay: animationDelay,
+      animationDuration: animationDuration,
+    });
+  }, [animationDelay, animationDuration]);
+
   return (
     <div
       className={`doodle-icon ${thickClass} ${randomClass} ${className}`}
@@ -172,8 +181,7 @@ const ImpostorIcon = ({
         display: "inline-block",
         color: "currentColor",
         ...style,
-        animationDelay: animationDelay,
-        animationDuration: animationDuration,
+        ...animationStyles,
       }}
     >
       <div
@@ -213,6 +221,8 @@ const DoodleIcon = ({
   uniqueId?: string;
   style?: React.CSSProperties;
 }) => {
+  const [animationStyles, setAnimationStyles] = useState<React.CSSProperties>({});
+
   // Generate a unique identifier combining icon name, size, and optional uniqueId
   const iconName = Icon.name || "icon";
   const uniqueKey = `${iconName}-${size}-${uniqueId || ""}`;
@@ -235,6 +245,14 @@ const DoodleIcon = ({
   const durationHash = hashString(`${uniqueKey}-duration`);
   const animationDuration = `${3 + (durationHash % 350) / 100}s`; // 3.00s to 6.49s
 
+  useEffect(() => {
+    // Apply random animations only after component mounts to prevent hydration mismatch
+    setAnimationStyles({
+      animationDelay: animationDelay,
+      animationDuration: animationDuration,
+    });
+  }, [animationDelay, animationDuration]);
+
   return (
     <Icon
       className={`doodle-icon ${thickClass} stroke-[2.5] ${randomClass} ${className}`}
@@ -244,8 +262,7 @@ const DoodleIcon = ({
       strokeWidth={thick ? 3 : 2.5}
       style={{
         ...style,
-        animationDelay: animationDelay,
-        animationDuration: animationDuration,
+        ...animationStyles,
       }}
     />
   );
@@ -1092,8 +1109,6 @@ const WORD_CATEGORIES = {
 
     "Publicista",
     "Community manager",
-    "Especialista en marketing",
-    "Especialista en redes sociales",
     "Diseñador de marca",
 
     "Cocinero",
@@ -1496,16 +1511,39 @@ interface GameModeConfig {
   minPlayers: number;
 }
 
-export default function ImpostorGame() {
+function ImpostorGame() {
+  // Cargar configuraciones desde localStorage
+  const loadFromStorage = (key: string, defaultValue: any) => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem(`impostor-${key}`);
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch {
+          return defaultValue;
+        }
+      }
+    }
+    return defaultValue;
+  };
+
   const [gameState, setGameState] = useState<GameState>("categories");
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [players, setPlayers] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(() =>
+    loadFromStorage("selectedCategories", [])
+  );
+  const [players, setPlayers] = useState<string[]>(() =>
+    loadFromStorage("players", [])
+  );
   const [currentPlayer, setCurrentPlayer] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [playersSeenCard, setPlayersSeenCard] = useState<boolean[]>([]);
   const [newPlayerName, setNewPlayerName] = useState("");
-  const [playerMode, setPlayerMode] = useState<"manual" | "quick">("manual");
-  const [quickPlayerCount, setQuickPlayerCount] = useState<number | string>(4);
+  const [playerMode, setPlayerMode] = useState<"manual" | "quick">(() =>
+    loadFromStorage("playerMode", "manual")
+  );
+  const [quickPlayerCount, setQuickPlayerCount] = useState<number | string>(() =>
+    loadFromStorage("quickPlayerCount", 4)
+  );
   const [isClient, setIsClient] = useState(false);
   const [selectedWord, setSelectedWord] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -1523,12 +1561,18 @@ export default function ImpostorGame() {
   });
   const [previousGameState, setPreviousGameState] =
     useState<GameState>("categories");
-  const [numImpostors, setNumImpostors] = useState(1);
+  const [numImpostors, setNumImpostors] = useState(() =>
+    loadFromStorage("numImpostors", 1)
+  );
   const [customCategories, setCustomCategories] = useState<
     Record<string, string[]>
-  >({});
-  const [selectedGameMode, setSelectedGameMode] = useState<GameMode>("classic");
-  const [actualGameMode, setActualGameMode] = useState<GameMode>("classic"); // Modo real cuando está en modo random
+  >(() => loadFromStorage("customCategories", {}));
+  const [selectedGameMode, setSelectedGameMode] = useState<GameMode>(() =>
+    loadFromStorage("selectedGameMode", "classic")
+  );
+  const [actualGameMode, setActualGameMode] = useState<GameMode>(() =>
+    loadFromStorage("actualGameMode", "classic")
+  ); // Modo real cuando está en modo random
   const [lostPlayerIndex, setLostPlayerIndex] = useState<number>(-1);
   const [lostPlayerWord, setLostPlayerWord] = useState("");
   const [jesterPlayerIndex, setJesterPlayerIndex] = useState<number>(-1);
@@ -1672,6 +1716,55 @@ export default function ImpostorGame() {
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  // Persistir configuraciones en localStorage
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("impostor-selectedCategories", JSON.stringify(selectedCategories));
+    }
+  }, [selectedCategories]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("impostor-players", JSON.stringify(players));
+    }
+  }, [players]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("impostor-playerMode", JSON.stringify(playerMode));
+    }
+  }, [playerMode]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("impostor-quickPlayerCount", JSON.stringify(quickPlayerCount));
+    }
+  }, [quickPlayerCount]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("impostor-numImpostors", JSON.stringify(numImpostors));
+    }
+  }, [numImpostors]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("impostor-customCategories", JSON.stringify(customCategories));
+    }
+  }, [customCategories]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("impostor-selectedGameMode", JSON.stringify(selectedGameMode));
+    }
+  }, [selectedGameMode]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("impostor-actualGameMode", JSON.stringify(actualGameMode));
+    }
+  }, [actualGameMode]);
 
   // Ajustar automáticamente el número de impostores cuando cambia el modo o número de jugadores
   useEffect(() => {
@@ -2126,11 +2219,20 @@ export default function ImpostorGame() {
   };
 
   const goBackToCategories = () => {
+    // Solo resetear estados del progreso del juego, mantener configuraciones
     setCurrentPlayer(0);
     setIsFlipped(false);
     setPlayersSeenCard([]);
     setSelectedWord("");
     setImpostorIndices([]);
+    setLostPlayerIndex(-1);
+    setLostPlayerWord("");
+    setJesterPlayerIndex(-1);
+    setChaosAllImpostors(false);
+    setChaosAllDifferentWords(false);
+    setChaosAllSameWord(false);
+    setChaosPlayerWords([]);
+    setFirstPlayerIndex(0);
     setGameState("categories");
 
     // Track screen view
@@ -2138,11 +2240,20 @@ export default function ImpostorGame() {
   };
 
   const goBackToSetup = () => {
+    // Solo resetear estados del progreso del juego, mantener configuraciones
     setCurrentPlayer(0);
     setIsFlipped(false);
     setPlayersSeenCard([]);
     setSelectedWord("");
     setImpostorIndices([]);
+    setLostPlayerIndex(-1);
+    setLostPlayerWord("");
+    setJesterPlayerIndex(-1);
+    setChaosAllImpostors(false);
+    setChaosAllDifferentWords(false);
+    setChaosAllSameWord(false);
+    setChaosPlayerWords([]);
+    setFirstPlayerIndex(0);
     setGameState("setup");
 
     // Track screen view
@@ -2150,8 +2261,10 @@ export default function ImpostorGame() {
   };
 
   const goToLastPlayerCard = () => {
+    // Mantener todas las configuraciones, solo cambiar al último jugador
     setCurrentPlayer(players.length - 1);
     setIsFlipped(false);
+    // No resetear playersSeenCard para mantener el progreso visto
     setGameState("playing");
 
     // Track screen view
@@ -2789,7 +2902,10 @@ export default function ImpostorGame() {
                         key={index}
                         className="flex items-center gap-1.5 p-2 bg-muted rounded-[15px_5px_15px_5px/5px_15px_5px_15px] border-2 border-border group hover:border-primary/50 transition-all"
                         style={{
-                          transform: `rotate(${((index % 3) - 1) * 0.5}deg)`,
+                          // Only apply transforms on client to prevent hydration mismatch
+                          ...(isClient ? {
+                            transform: `rotate(${((index % 3) - 1) * 0.5}deg)`,
+                          } : {}),
                         }}
                       >
                         <Input
@@ -3589,7 +3705,7 @@ export default function ImpostorGame() {
                             <span className="font-medium">
                               {modeConfig.name}
                             </span>
-                            {isSelected && (
+                            {isClient && isSelected && (
                               <div className="rounded-full p-0.5 animate-[bounce-soft_1s_ease-in-out_infinite]">
                                 <Check className="h-2 w-2 text-primary-foreground" />
                               </div>
@@ -3861,7 +3977,7 @@ export default function ImpostorGame() {
                       : "bg-primary/20"
                   }`}
                 >
-                  {selectedCategories.length === 0 ? (
+                  {(!isClient || selectedCategories.length === 0) ? (
                     <>
                       <DoodleIcon
                         icon={Gamepad}
@@ -4138,8 +4254,11 @@ export default function ImpostorGame() {
                         key={`${player}-${index}`}
                         className="flex items-center justify-between p-3 bg-muted rounded-[15px_5px_15px_5px/5px_15px_5px_15px] border-2 border-border group hover:border-primary/50 transition-all duration-300 ease-in-out"
                         style={{
-                          transform: `rotate(${((index % 3) - 1) * 0.3}deg)`,
-                          animation: "slideIn 0.3s ease-out",
+                          // Only apply transforms on client to prevent hydration mismatch
+                          ...(isClient ? {
+                            transform: `rotate(${((index % 3) - 1) * 0.3}deg)`,
+                            animation: "slideIn 0.3s ease-out",
+                          } : {}),
                         }}
                       >
                         <div className="flex items-center gap-2">
@@ -5022,3 +5141,7 @@ export default function ImpostorGame() {
     </div>
   );
 }
+
+export default dynamic(() => Promise.resolve(ImpostorGame), {
+  ssr: false,
+});
