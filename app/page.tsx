@@ -49,6 +49,7 @@ import {
   Mic,
   Hand,
   AlertCircle,
+  ArrowLeft,
   Flame,
   BookOpen,
   Download,
@@ -2122,6 +2123,39 @@ export default function ImpostorGame() {
     // Track game restart
     trackGameRestart();
     trackScreenView("setup");
+  };
+
+  const goBackToCategories = () => {
+    setCurrentPlayer(0);
+    setIsFlipped(false);
+    setPlayersSeenCard([]);
+    setSelectedWord("");
+    setImpostorIndices([]);
+    setGameState("categories");
+
+    // Track screen view
+    trackScreenView("categories");
+  };
+
+  const goBackToSetup = () => {
+    setCurrentPlayer(0);
+    setIsFlipped(false);
+    setPlayersSeenCard([]);
+    setSelectedWord("");
+    setImpostorIndices([]);
+    setGameState("setup");
+
+    // Track screen view
+    trackScreenView("setup");
+  };
+
+  const goToLastPlayerCard = () => {
+    setCurrentPlayer(players.length - 1);
+    setIsFlipped(false);
+    setGameState("playing");
+
+    // Track screen view
+    trackScreenView("playing");
   };
 
   const isCurrentPlayerImpostor = impostorIndices.includes(currentPlayer);
@@ -4287,6 +4321,18 @@ export default function ImpostorGame() {
         <DoodleStars />
         <DoodleCircles />
         <div className="w-full max-w-md flex flex-col items-center relative z-10">
+          {/* Back button */}
+          <Button
+            onClick={goBackToSetup}
+            variant="outline"
+            size="sm"
+            className="absolute -top-2 left-0 gap-1 z-20"
+            aria-label="Volver a configuración de jugadores"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Volver
+          </Button>
+
           <div className="text-center mb-8">
             <div className="inline-flex items-center gap-2 bg-muted px-5 py-2 rounded-full border-2 border-border mb-4">
               <DoodleIcon
@@ -4794,10 +4840,16 @@ export default function ImpostorGame() {
               {players[firstPlayerIndex]}
             </span>
           </p>
-          <Button onClick={resetGame} size="lg" className="gap-2">
-            <RefreshCw className="h-5 w-5" />
-            Volver a Jugar
-          </Button>
+          <div className="flex items-center justify-center gap-4">
+            <Button onClick={goToLastPlayerCard} variant="outline" size="lg" className="gap-2">
+              <ArrowLeft className="h-5 w-5" />
+              Atrás
+            </Button>
+            <Button onClick={resetGame} size="lg" className="gap-2">
+              <RefreshCw className="h-5 w-5" />
+              Volver a Jugar
+            </Button>
+          </div>
         </CardContent>
       </Card>
 
