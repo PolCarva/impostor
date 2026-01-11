@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 export async function GET() {
-  const robotsTxt = `# robots.txt para El Impostor - El Juego del Verano 2026
+  const robotsTxt = `# robots.txt para El Impostor Gratis - Juego del Verano 2026 Online
 # https://impostor.gratis
 
 # Permitir todos los crawlers

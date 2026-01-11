@@ -1,34 +1,21 @@
 import { MetadataRoute } from 'next'
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://impostor.gratis'
-
 export default function sitemap(): MetadataRoute.Sitemap {
-  const currentDate = new Date().toISOString()
-  
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://impostor.gratis'
+
   return [
     {
       url: siteUrl,
-      lastModified: currentDate,
+      lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 1,
-      alternates: {
-        languages: {
-          es: siteUrl,
-          'es-ES': siteUrl,
-          'es-AR': siteUrl,
-          'es-MX': siteUrl,
-          'es-CO': siteUrl,
-          'es-CL': siteUrl,
-          'es-UY': siteUrl,
-        },
-      },
+      priority: 1.0,
+    },
+    // Páginas principales
+    {
+      url: `${siteUrl}/`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 1.0,
     },
   ]
 }
-
-
-
-
-
-
-

@@ -1688,6 +1688,16 @@ function ImpostorGame() {
     localStorage.setItem("custom-categories", JSON.stringify(customCategories));
   }, [customCategories]);
 
+  // Limpiar categorías seleccionadas que ya no existen
+  useEffect(() => {
+    const availableCategories = [
+      ...Object.keys(DEFAULT_CATEGORIES),
+      ...Object.keys(customCategories)
+    ];
+
+    setSelectedCategories(prev => prev.filter(category => availableCategories.includes(category)));
+  }, [customCategories]);
+
   // Guardar configuración de ayuda al impostor en localStorage cuando cambie
   useEffect(() => {
     localStorage.setItem(
@@ -1795,8 +1805,10 @@ function ImpostorGame() {
 
     if (isCurrentlySelected) {
       setSelectedCategories(selectedCategories.filter((c) => c !== category));
+      console.log("selectedCategories", selectedCategories);
     } else {
       setSelectedCategories([...selectedCategories, category]);
+      console.log("selectedCategories", selectedCategories);
     }
   };
 
@@ -3463,7 +3475,7 @@ function ImpostorGame() {
                         ¿Qué es el juego del Impostor?
                       </h2>
                       <p className="text-sm text-foreground mb-3">
-                        El Impostor es un juego de fiesta gratis donde todos los
+                        El <strong>Impostor gratis</strong> es un juego de fiesta gratis donde todos los
                         jugadores reciben una palabra secreta, excepto uno: el
                         impostor. El impostor debe descubrir cuál es la palabra
                         sin ser descubierto, mientras los demás intentan
@@ -3544,7 +3556,7 @@ function ImpostorGame() {
                         Características del juego
                       </h2>
                       <p className="text-sm text-foreground mb-3">
-                        Juego de deducción social completamente gratis, sin
+                        <strong>Impostor gratis</strong>: juego de deducción social completamente gratis, sin
                         descargas necesarias. Disponible directamente en tu
                         navegador, perfecto para fiestas de cumpleaños,
                         reuniones familiares y momentos con amigos. Puedes crear
@@ -4973,14 +4985,15 @@ function ImpostorGame() {
       {/* SEO Content - Hidden from users but visible to search engines */}
       <div className="sr-only">
         <article>
-          <h1>El Impostor - El Juego del Verano 2026</h1>
+          <h1>El Impostor Gratis - Juego del Verano 2026 Online</h1>
 
-          <section>
-            <h2>¿Qué es El Impostor?</h2>
+          <section id="que-es-impostor">
+            <h2>¿Qué es El Impostor Gratis?</h2>
             <p>
               El Impostor es el juego del verano 2026, un divertido juego de
-              fiesta gratuito que combina elementos de deducción social con
-              juegos de palabras. Inspirado en juegos populares como Among Us,
+              fiesta <strong>gratis online</strong> que combina elementos de deducción social con
+              juegos de palabras. Juega al <strong>Impostor gratis</strong> directamente en tu navegador sin descargas.
+              Inspirado en juegos populares como Among Us,
               El Impostor lleva la experiencia de encontrar al traidor a un
               formato completamente verbal, perfecto para reuniones familiares,
               fiestas de cumpleaños y encuentros con amigos.
@@ -4999,10 +5012,10 @@ function ImpostorGame() {
             </p>
           </section>
 
-          <section>
-            <h2>¿Cómo Jugar al Impostor?</h2>
+          <section id="como-jugar-impostor">
+            <h2>¿Cómo Jugar al Impostor Gratis?</h2>
             <p>
-              El juego del verano 2026 sigue reglas simples pero efectivas.
+              El juego del verano 2026 gratis online sigue reglas simples pero efectivas.
               Primero, todos los jugadores seleccionan las categorías de
               palabras que quieren usar. El juego incluye categorías
               predefinidas como geografía, deportes, comida, profesiones,
@@ -5106,7 +5119,7 @@ function ImpostorGame() {
           </section>
 
           <section>
-            <h2>¿Por qué El Impostor es el Juego del Verano 2026?</h2>
+            <h2 id="por-que-juego-verano-2026">¿Por qué El Impostor Gratis es el Juego del Verano 2026?</h2>
             <p>
               En un mundo cada vez más digital, El Impostor trae de vuelta la
               alegría de los juegos de mesa tradicionales combinados con la
