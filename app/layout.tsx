@@ -27,27 +27,33 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  // Metadatos básicos
+  // Metadatos básicos - estrategia alineada con impostor.me, diferenciador: 100% gratis sin publicidad
   title: {
-    default: "El Impostor Gratis - Juego del Verano 2026 Online",
-    template: "%s | El Impostor Gratis - Juego del Verano 2026 Online",
+    default: "Juego Impostor Online Gratis - Jugar a El Impostor con Amigos | 100% Gratis Sin Publicidad",
+    template: "%s | Juego Impostor Online Gratis Sin Publicidad",
   },
-  description: "¡Juega al Impostor gratis! El juego del verano 2026 online sin descargar. Juego de fiesta donde un impostor debe descubrir la palabra secreta. Perfecto para grupos de amigos y familia.",
+  description: "Juego Impostor online gratis, sin publicidad. El juego viral de TikTok e Instagram. Juega a El Impostor con amigos: mecánica de roles ocultos, partidas rápidas de deducción. 100% gratis, sin descargas.",
   
-  // Keywords para SEO
+  // Keywords para SEO - competir con impostor.me y long-tail "gratis sin publicidad"
   keywords: [
-    // Principales - Impostor gratis
+    // Principales - mismos que impostor.me para competir
+    "juego impostor online gratis",
+    "jugar a el impostor con amigos",
+    "el impostor gratis",
     "impostor gratis",
     "juego impostor gratis",
-    "el impostor gratis",
     "impostor juego gratis",
     "jugar impostor gratis",
     "impostor online gratis",
-    // Juego del verano 2026
-    "juego del verano 2026",
-    "el juego del verano 2026",
-    "verano 2026",
-    "juego verano 2026",
+    // Diferenciador: gratis sin publicidad
+    "impostor gratis sin publicidad",
+    "juego impostor gratis sin publicidad",
+    "el impostor sin publicidad",
+    "juego impostor 100 por ciento gratis",
+    // Viral / TikTok / Instagram
+    "juego viral tiktok",
+    "juego viral instagram",
+    "quien es el impostor juego",
     "impostor",
     "juego del impostor",
     "el impostor",
@@ -59,7 +65,8 @@ export const metadata: Metadata = {
     "impostor juego de palabras",
     "impostor juego de mesa",
     "impostor party game",
-    // Relacionados - manteniendo algunos de juego de fiesta
+    // Reuniones / grupos (como impostor.me)
+    "juego para reuniones online",
     "juego de fiesta",
     "juego para grupos",
     "juego de palabras",
@@ -70,12 +77,9 @@ export const metadata: Metadata = {
     "juego de adivinanzas",
     // Long tail
     "juego del impostor para fiestas",
-    "juego del verano 2026 impostor",
     "juego tipo among us con palabras",
     "juego para jugar en grupo",
     "juego de preguntas impostor",
-    "quien es el impostor juego",
-    // Español
     "juegos de fiesta gratis",
     "juegos para grupos grandes",
     "juegos para reuniones familiares",
@@ -120,36 +124,36 @@ export const metadata: Metadata = {
     },
   },
 
-  // Open Graph para redes sociales
+  // Open Graph para redes sociales - alineado con impostor.me, diferenciador gratis sin publicidad
   openGraph: {
     type: "website",
     locale: "es_ES",
     alternateLocale: ["es_AR", "es_MX", "es_CO", "es_CL", "es_UY"],
     url: siteUrl,
-    siteName: "El Impostor Gratis - Juego del Verano 2026",
-    title: "El Impostor Gratis - ¡Juega Online Sin Descargar!",
-    description: "¡Juega al Impostor gratis online! El juego del verano 2026. Descubre quién es el impostor en este juego de fiesta gratis donde un jugador debe descubrir la palabra secreta sin ser descubierto. Perfecto para grupos de amigos, familia y reuniones. ¡Diversión garantizada para todos!",
+    siteName: "Juego Impostor Online Gratis - El Impostor con Amigos",
+    title: "Juego Impostor Online Gratis - Jugar a El Impostor con Amigos | 100% Gratis Sin Publicidad",
+    description: "El juego viral de TikTok e Instagram. ¿Quién es el impostor? Juega a El Impostor con amigos: 100% gratis, sin publicidad, sin descargas. Mecánica de roles ocultos y partidas rápidas de deducción.",
     images: [
       {
         url: `${siteUrl}/og.png`,
         width: 1200,
         height: 630,
-        alt: "El Impostor - El Juego del Verano 2026 - Encuentra al impostor entre tus amigos",
+        alt: "Juego Impostor Online Gratis - Jugar a El Impostor con Amigos | 100% Gratis Sin Publicidad",
         type: "image/png",
       },
     ],
   },
 
-  // Twitter Card
+  // Twitter Card - competir con impostor.me
   twitter: {
     card: "summary_large_image",
     site: "@pablocarvalho",
     creator: "@pablocarvalho",
-    title: "El Impostor Gratis - ¡Juega Online Sin Descargar!",
-    description: "¡Juega al Impostor gratis online! El juego del verano 2026. Descubre quién es el impostor en este juego de fiesta gratis perfecto para grupos de amigos y familia. ¿Podrás encontrar al impostor?",
+    title: "Juego Impostor Online Gratis - Jugar a El Impostor con Amigos | 100% Gratis Sin Publicidad",
+    description: "El juego viral de TikTok e Instagram. ¿Quién es el impostor? Juega con amigos: 100% gratis, sin publicidad. Partidas rápidas de deducción en el navegador.",
     images: {
       url: `${siteUrl}/og.png`,
-      alt: "El Impostor - El Juego del Verano 2026 - Encuentra al impostor",
+      alt: "Juego Impostor Online Gratis - Jugar a El Impostor con Amigos | 100% Gratis Sin Publicidad",
     },
   },
 
@@ -208,7 +212,7 @@ export const metadata: Metadata = {
   },
 }
 
-// JSON-LD Structured Data
+// JSON-LD Structured Data - estrategia SEO alineada con impostor.me, diferenciador: 100% gratis sin publicidad
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
@@ -217,8 +221,8 @@ const jsonLd = {
       "@type": "WebSite",
       "@id": `${siteUrl}/#website`,
       url: siteUrl,
-      name: "El Impostor Gratis - Juego del Verano 2026 Online",
-      description: "Juega al Impostor gratis online. El juego del verano 2026. El mejor juego de fiesta gratis. Encuentra al impostor entre tus amigos.",
+      name: "Juego Impostor Online Gratis - Jugar a El Impostor con Amigos",
+      description: "Juego Impostor online gratis, sin publicidad. El juego viral de TikTok e Instagram. Juega a El Impostor con amigos: 100% gratis, sin descargas.",
       publisher: {
         "@id": `${siteUrl}/#organization`,
       },
@@ -233,7 +237,7 @@ const jsonLd = {
     {
       "@type": "Organization",
       "@id": `${siteUrl}/#organization`,
-      name: "El Impostor",
+      name: "El Impostor Gratis",
       url: siteUrl,
       logo: {
         "@type": "ImageObject",
@@ -249,9 +253,9 @@ const jsonLd = {
     {
       "@type": "VideoGame",
       "@id": `${siteUrl}/#game`,
-      name: "El Impostor Gratis",
-      alternateName: ["Impostor Gratis", "Juego del Impostor Gratis", "Impostor Game Free", "The Impostor Free"],
-      description: "Juega al Impostor gratis online. El juego del verano 2026. Juego de fiesta donde un jugador es el impostor y debe descubrir la palabra secreta sin ser descubierto. Perfecto para grupos de amigos, familia y fiestas.",
+      name: "Juego Impostor Online Gratis",
+      alternateName: ["El Impostor Gratis", "Impostor Gratis Sin Publicidad", "Juego del Impostor Gratis", "Impostor Game Free", "The Impostor Free"],
+      description: "Juego Impostor online gratis, sin publicidad. El juego viral de TikTok e Instagram. Mecánica de roles ocultos y partidas rápidas de deducción. 100% gratis, sin publicidad, sin descargas. Juega a El Impostor con amigos.",
       url: siteUrl,
       image: `${siteUrl}/og.png`,
       author: {
@@ -271,6 +275,7 @@ const jsonLd = {
         price: "0",
         priceCurrency: "USD",
         availability: "https://schema.org/InStock",
+        description: "100% gratis, sin publicidad",
       },
       aggregateRating: {
         "@type": "AggregateRating",
@@ -281,7 +286,7 @@ const jsonLd = {
       },
       numberOfPlayers: {
         "@type": "QuantitativeValue",
-        minValue: 3,
+        minValue: 4,
         maxValue: 20,
       },
       playMode: ["MultiPlayer", "CoOp"],
@@ -294,8 +299,8 @@ const jsonLd = {
       "@type": "WebPage",
       "@id": `${siteUrl}/#webpage`,
       url: siteUrl,
-      name: "El Impostor Gratis - Juego del Verano 2026 Online | Encuentra al Impostor",
-      description: "¡Juega gratis al Impostor online! El juego del verano 2026. Juega gratis al Impostor, el mejor juego de fiesta y reuniones. Un jugador es el impostor y debe descubrir la palabra secreta sin ser descubierto.",
+      name: "Juego Impostor Online Gratis - Jugar a El Impostor con Amigos | 100% Gratis Sin Publicidad",
+      description: "El juego viral de TikTok e Instagram. ¿Quién es el impostor? Juega a El Impostor con amigos: 100% gratis, sin publicidad. Mecánica de roles ocultos, partidas rápidas de deducción.",
       isPartOf: {
         "@id": `${siteUrl}/#website`,
       },
@@ -308,41 +313,57 @@ const jsonLd = {
         target: siteUrl,
       },
     },
-    // FAQPage Schema para SEO
+    // FAQPage Schema - preguntas alineadas con impostor.me, respuestas destacando 100% gratis sin publicidad
     {
       "@type": "FAQPage",
       "@id": `${siteUrl}/#faq`,
       mainEntity: [
         {
           "@type": "Question",
-          name: "¿Qué es el juego del Impostor?",
+          name: "¿Qué es El Impostor?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "El Impostor es un juego de fiesta donde todos los jugadores reciben una palabra secreta, excepto uno: el impostor. El impostor debe descubrir cuál es la palabra sin ser descubierto, mientras los demás intentan identificarlo.",
+            text: "Es un juego de deducción social donde todos reciben una palabra secreta excepto uno: el Impostor. El objetivo es descubrirlo antes de que él descubra la palabra.",
           },
         },
         {
           "@type": "Question",
-          name: "¿Cuántos jugadores se necesitan para jugar al Impostor?",
+          name: "¿Necesito instalar algo?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Se necesitan mínimo 3 jugadores para jugar al Impostor. El juego es más divertido con grupos de 5 a 10 personas, y puede jugarse con hasta 20 jugadores.",
+            text: "No. El juego funciona directamente en el navegador de tu móvil, tablet o PC. Solo necesitas conexión a internet.",
           },
         },
         {
           "@type": "Question",
-          name: "¿El juego del Impostor es gratis?",
+          name: "¿Es gratis?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "¡Sí! El Impostor es completamente gratis. No necesitas descargar nada, solo abre la página web y comienza a jugar con tus amigos.",
+            text: "Sí, 100% gratuito y sin publicidad. Sin compras ocultas. A diferencia de otras versiones, aquí juegas sin anuncios.",
           },
         },
         {
           "@type": "Question",
-          name: "¿Cómo se juega al Impostor?",
+          name: "¿Cuántos jugadores pueden jugar?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Cada jugador mira su carta en secreto. Todos excepto el impostor ven la palabra secreta. Por turnos, cada jugador da una pista sobre la palabra. Después de las rondas, todos votan para descubrir quién es el impostor.",
+            text: "Mínimo 4 jugadores son necesarios para que la dinámica funcione bien. Recomendamos grupos de entre 4 y 10 personas.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "¿Podemos jugar a distancia?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "¡Claro! Podéis usar una videollamada (Zoom, Meet, Discord) para hablar y veros las caras, y usar esta web para gestionar las cartas y votaciones.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "¿Dónde puedo ver las reglas completas?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Las reglas están explicadas en la propia web. Cómo se juega: Recibe tu palabra (todos excepto el Impostor la ven), Describe y Debate (cada uno da pistas, el Impostor finge), Vota y Gana (expulsáis al sospechoso; si atrapan al Impostor ganan los amigos, si escapa gana él).",
           },
         },
       ],
@@ -476,11 +497,11 @@ export default function RootLayout({
         <meta httpEquiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com;" />
         <meta httpEquiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains" />
 
-        {/* Dublin Core Metadata */}
-        <meta name="DC.title" content="El Impostor Gratis - Juego del Verano 2026 Online" />
+        {/* Dublin Core Metadata - competir con impostor.me, diferenciador gratis sin publicidad */}
+        <meta name="DC.title" content="Juego Impostor Online Gratis - Jugar a El Impostor con Amigos | 100% Gratis Sin Publicidad" />
         <meta name="DC.creator" content="Pablo Carvalho" />
-        <meta name="DC.subject" content="impostor gratis, juego impostor gratis, juego del verano 2026, juego de fiesta, juego de palabras, party game" />
-        <meta name="DC.description" content="Juega al Impostor gratis online. El juego del verano 2026. Juego de fiesta gratis donde un jugador es el impostor" />
+        <meta name="DC.subject" content="juego impostor online gratis, jugar a el impostor con amigos, impostor gratis sin publicidad, juego viral tiktok instagram, juego de deducción, quien es el impostor" />
+        <meta name="DC.description" content="Juego Impostor online gratis, sin publicidad. El juego viral de TikTok e Instagram. Juega a El Impostor con amigos: 100% gratis, sin descargas." />
         <meta name="DC.language" content="es" />
         <meta name="DC.type" content="InteractiveResource" />
 
@@ -513,20 +534,17 @@ export default function RootLayout({
           {children}
         </main>
         
-        {/* SEO content for crawlers - visible but styled minimally */}
+        {/* SEO content for crawlers - estrategia impostor.me, diferenciador: 100% gratis sin publicidad */}
         <div className="sr-only">
-          <h1>El Impostor Gratis - Juego del Verano 2026 Online | Encuentra al Impostor</h1>
+          <h1>Juego Impostor Online Gratis - Jugar a El Impostor con Amigos | 100% Gratis Sin Publicidad</h1>
           <p>
-            Juega al Impostor gratis online. El Impostor es el juego del verano 2026. El mejor juego de fiesta gratis online. Juega con tus amigos y familia
-            a encontrar al impostor. Un jugador es el impostor y debe descubrir la palabra secreta
-            sin ser descubierto. Perfecto para reuniones, fiestas de cumpleaños, y momentos con amigos.
-            Similar a Among Us pero con palabras. Disponible gratis, sin descargas, directamente en tu navegador.
-            Juego de deducción social para grupos de 3 a 20 jugadores. El juego del verano 2026 es perfecto
-            para jugar en grupo, ideal para fiestas y reuniones familiares. Descubre quién es el impostor
-            mientras intentas adivinar la palabra secreta. Juego de palabras interactivo y divertido.
+            Juego Impostor online gratis, sin publicidad. El juego viral de TikTok e Instagram. ¿Quién es el impostor?
+            Juega a El Impostor con amigos: mecánica de roles ocultos, partidas rápidas de deducción.
+            Recibe tu palabra, describe y debate, vota y gana. 100% gratis, sin publicidad, sin descargas. Sin directores de juego.
+            El mejor juego para reuniones online. Compatible con móviles y navegador. Grupos de 4 a 10 personas.
           </p>
           <nav>
-            <a href="/">Inicio - El Impostor Gratis - Juego del Verano 2026 Online</a>
+            <a href="/">Inicio - Juego Impostor Online Gratis - Jugar a El Impostor con Amigos</a>
           </nav>
         </div>
         

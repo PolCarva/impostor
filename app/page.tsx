@@ -4982,172 +4982,74 @@ function ImpostorGame() {
         </CardContent>
       </Card>
 
-      {/* SEO Content - Hidden from users but visible to search engines */}
+      {/* SEO Content - Estrategia alineada con impostor.me, diferenciador: 100% gratis sin publicidad */}
       <div className="sr-only">
         <article>
-          <h1>El Impostor Gratis - Juego del Verano 2026 Online</h1>
+          <h1>Juego Impostor Online Gratis - Jugar a El Impostor con Amigos</h1>
+          <p>100% gratis, sin publicidad. El juego viral de TikTok e Instagram.</p>
 
-          <section id="que-es-impostor">
-            <h2>¿Qué es El Impostor Gratis?</h2>
+          <section id="quien-es-el-impostor">
+            <h2>El juego viral de TikTok e Instagram. ¿Quién es el impostor?</h2>
             <p>
-              El Impostor es el juego del verano 2026, un divertido juego de
-              fiesta <strong>gratis online</strong> que combina elementos de deducción social con
-              juegos de palabras. Juega al <strong>Impostor gratis</strong> directamente en tu navegador sin descargas.
-              Inspirado en juegos populares como Among Us,
-              El Impostor lleva la experiencia de encontrar al traidor a un
-              formato completamente verbal, perfecto para reuniones familiares,
-              fiestas de cumpleaños y encuentros con amigos.
-            </p>
-
-            <h3>Juego de Deducción Social para Grupos</h3>
-            <p>
-              Diseñado específicamente para grupos de 3 o más jugadores, El
-              Impostor crea momentos inolvidables donde la comunicación y la
-              observación son las claves para ganar. Un jugador es seleccionado
-              aleatoriamente como el impostor, mientras que todos los demás
-              comparten una palabra secreta común. El objetivo del impostor es
-              descubrir cuál es esa palabra sin delatarse, mientras que los
-              demás jugadores deben identificar quién es el impostor entre
-              ellos.
+              Juego Impostor online <strong>gratis sin publicidad</strong>. Juega a El Impostor con amigos:
+              mecánica de roles ocultos, partidas rápidas de deducción. ¿Quién es el impostor?
+              Descubre al mentiroso entre vosotros. 100% gratis, sin descargas, sin anuncios.
             </p>
           </section>
 
-          <section id="como-jugar-impostor">
-            <h2>¿Cómo Jugar al Impostor Gratis?</h2>
-            <p>
-              El juego del verano 2026 gratis online sigue reglas simples pero efectivas.
-              Primero, todos los jugadores seleccionan las categorías de
-              palabras que quieren usar. El juego incluye categorías
-              predefinidas como geografía, deportes, comida, profesiones,
-              películas, videojuegos y muchas más. También puedes crear tus
-              propias categorías personalizadas con la ayuda de inteligencia
-              artificial integrada.
-            </p>
+          <section id="como-se-juega-impostor">
+            <h2>Cómo se juega a El Impostor</h2>
+            <p>Una mecánica de roles ocultos fácil de aprender. Descubre quién miente en partidas rápidas de deducción.</p>
 
-            <h3>Preparación del Juego</h3>
-            <p>
-              Una vez seleccionadas las categorías, el sistema elige
-              aleatoriamente una palabra secreta de entre todas las disponibles.
-              Todos los jugadores, excepto el impostor, ven esta palabra en sus
-              dispositivos. El impostor ve únicamente que es el impostor, sin
-              conocer la palabra secreta. El juego determina automáticamente
-              cuántos impostores participan (1 por defecto, hasta 3 en grupos
-              grandes).
-            </p>
+            <h3>Recibe tu palabra</h3>
+            <p>Todos reciben la misma palabra secreta, excepto el Impostor. Él no sabe nada, pero debe fingir que sí.</p>
 
-            <h3>Rondas de Deducción</h3>
-            <p>
-              Por turnos, cada jugador da pistas sobre la palabra secreta sin
-              decirla directamente. Los jugadores honestos dan pistas que ayuden
-              a los demás a entender la palabra, mientras que el impostor debe
-              dar pistas falsas o confusas para despistar al grupo. Después de
-              que todos hayan hablado, se realiza una votación para eliminar al
-              sospechoso de ser el impostor. Si el impostor es identificado
-              correctamente, ganan los jugadores honestos. Si no, el impostor
-              gana la ronda.
-            </p>
+            <h3>Describe y Debate</h3>
+            <p>Cada jugador da una pista sobre la palabra. El Impostor debe escuchar atentamente y mentir para no ser descubierto.</p>
+
+            <h3>Vota y Gana</h3>
+            <p>¿Quién es el sospechoso? Vota para expulsarlo. Si atrapan al Impostor, ganan los amigos. ¡Si escapa, gana él!</p>
           </section>
 
-          <section>
-            <h2>Características Principales</h2>
-
-            <h3>Juego Completamente Gratuito</h3>
+          <section id="mejor-juego-reuniones-online">
+            <h2>El mejor juego para reuniones online</h2>
             <p>
-              El Impostor es totalmente gratuito, sin compras dentro de la
-              aplicación ni limitaciones. Juega tantas partidas como quieras,
-              crea categorías personalizadas ilimitadas y disfruta de todas las
-              funciones sin costo alguno. Solo necesitas un navegador web
-              moderno.
+              Juega directamente en tu navegador web. Sin descargar apps, sin instalaciones y compatible con todos los móviles.
+              El Impostor es la forma más rápida de empezar a divertirse en grupo.
             </p>
-
-            <h3>Sin Descargas Necesarias</h3>
-            <p>
-              Accede al juego directamente desde tu navegador web. Compatible
-              con ordenadores, tablets y teléfonos móviles. También disponible
-              como aplicación web progresiva (PWA) que se puede instalar en
-              dispositivos móviles para una experiencia nativa.
-            </p>
-
-            <h3>Categorías Personalizables</h3>
-            <p>
-              Más de 10 categorías predefinidas con cientos de palabras cada
-              una, desde geografía y deportes hasta películas y profesiones.
-              Crea tus propias categorías personalizadas con palabras
-              específicas para tu grupo de amigos o temática de evento. La
-              inteligencia artificial integrada te ayuda a generar palabras
-              automáticamente para cualquier tema que imagines.
-            </p>
-
-            <h3>Juego Multijugador Local</h3>
-            <p>
-              Diseñado para jugar en el mismo espacio físico, El Impostor
-              fomenta la interacción real entre jugadores. Perfecto para
-              reuniones familiares, fiestas de oficina, cumpleaños y cualquier
-              ocasión donde quieras conectar con las personas que te rodean de
-              manera divertida y memorable.
-            </p>
+            <ul>
+              <li>100% gratis y sin publicidad (a diferencia de otras versiones)</li>
+              <li>Sin directores de juego</li>
+              <li>Partidas rápidas de 5-10 minutos</li>
+            </ul>
           </section>
 
-          <section>
-            <h2>Consejos para Jugar Mejor</h2>
+          <section id="preguntas-frecuentes">
+            <h2>Preguntas Frecuentes</h2>
+            <p>Todo lo que necesitas saber antes de empezar a mentir.</p>
 
-            <h3>Para Jugadores Honestos</h3>
-            <p>
-              Da pistas claras pero no directas sobre la palabra. Por ejemplo,
-              si la palabra es "elefante", podrías decir "es un animal grande
-              con trompa" en lugar de decir directamente características obvias.
-              Observa atentamente las pistas de los demás jugadores y busca
-              inconsistencias que delaten al impostor.
-            </p>
+            <h3>¿Qué es El Impostor?</h3>
+            <p>Es un juego de deducción social donde todos reciben una palabra secreta excepto uno: el Impostor. ¿El objetivo? Descubrirlo antes de que él descubra la palabra.</p>
 
-            <h3>Para el Impostor</h3>
-            <p>
-              El impostor debe dar pistas que suenen plausibles pero que no
-              ayuden realmente al grupo. Imita el estilo de los demás jugadores
-              y evita dar pistas demasiado vagas o demasiado específicas. Tu
-              objetivo es confundir sin parecer sospechoso.
-            </p>
+            <h3>¿Necesito instalar algo?</h3>
+            <p>No. El juego funciona directamente en el navegador de tu móvil, tablet o PC. Solo necesitas conexión a internet.</p>
 
-            <h3>Estrategias Generales</h3>
-            <p>
-              Juega con grupos de 5-8 jugadores para el mejor equilibrio. En
-              grupos más pequeños es más fácil identificar al impostor, mientras
-              que en grupos muy grandes puede ser difícil seguir todas las
-              pistas. Experimenta con diferentes categorías para mantener el
-              juego fresco e interesante.
-            </p>
+            <h3>¿Es gratis?</h3>
+            <p>Sí, 100% gratuito y sin publicidad. Sin compras ocultas. Aquí no hay anuncios: juegas gratis de verdad.</p>
+
+            <h3>¿Cuántos jugadores pueden jugar?</h3>
+            <p>Mínimo 4 jugadores son necesarios para que la dinámica funcione bien. Recomendamos grupos de entre 4 y 10 personas.</p>
+
+            <h3>¿Podemos jugar a distancia?</h3>
+            <p>¡Claro! Podéis usar una videollamada (Zoom, Meet, Discord) para hablar y veros las caras, y usar esta web para gestionar las cartas y votaciones.</p>
+
+            <h3>¿Dónde puedo ver las reglas completas?</h3>
+            <p>Las reglas están en la propia web: Recibe tu palabra, Describe y Debate, Vota y Gana. Sin descargas, sin registro.</p>
           </section>
 
-          <section>
-            <h2 id="por-que-juego-verano-2026">¿Por qué El Impostor Gratis es el Juego del Verano 2026?</h2>
-            <p>
-              En un mundo cada vez más digital, El Impostor trae de vuelta la
-              alegría de los juegos de mesa tradicionales combinados con la
-              innovación tecnológica. Es perfecto para el verano 2026 porque une
-              a las personas en momentos de diversión compartida, fomenta la
-              comunicación y crea recuerdos inolvidables. Ya sea en una reunión
-              familiar, una fiesta con amigos o un encuentro casual, El Impostor
-              garantiza risas y conexión real entre los participantes.
-            </p>
-
-            <p>
-              Más allá de ser solo un juego, El Impostor es una herramienta para
-              fortalecer vínculos sociales en la era digital. Mientras otros
-              juegos nos mantienen aislados frente a pantallas, este juego nos
-              reúne alrededor de una experiencia compartida, recordándonos la
-              importancia de la interacción humana genuina.
-            </p>
-          </section>
-
-          <section>
-            <h2>Juegos Similares y Alternativas</h2>
-            <p>
-              Si te gusta El Impostor, también disfrutarás de juegos como Among
-              Us, Mafia, Werewolf, o juegos de mesa como Coup, The Resistance o
-              Deception: Murder in Hong Kong. Para juegos de palabras, también
-              puedes probar Wordle Infinito, otro juego creado por el mismo
-              desarrollador.
-            </p>
+          <section id="listo-jugar">
+            <h2>¿Listo para jugar?</h2>
+            <p>Únete ahora y demuestra tus habilidades de decepción. No necesitas instalar nada. Empezar Partida Gratis.</p>
           </section>
         </article>
       </div>
