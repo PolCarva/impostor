@@ -4,10 +4,9 @@ import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/ge
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
 
 const modelsToTry = [
-  'gemini-2.0-flash-exp',
+  'gemini-2.0-flash',
   'gemini-1.5-flash',
   'gemini-1.5-pro',
-  'gemini-1.0-pro'
 ]
 
 export async function POST(request: NextRequest) {
@@ -93,8 +92,8 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
           model: modelName
         })
 
-      } catch (modelError) {
-        console.warn(`❌ Error con modelo ${modelName}:`, modelError.message)
+      } catch (modelError: any) {
+        console.warn(`❌ Error con modelo ${modelName}:`, modelError?.message || modelError)
         lastError = modelError
         continue // Probar siguiente modelo
       }
@@ -110,10 +109,14 @@ SOLO devuelve los 10 elementos separados por comas, sin numeración, sin explica
       { status: 500 }
     )
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('❌ Error en API route:', error)
     return NextResponse.json(
-      { error: 'Error interno del servidor' },
+      {
+        error: 'Error interno del servidor',
+        details: error?.message || 'Error desconocido',
+        hint: 'Verifica que GEMINI_API_KEY esté configurada correctamente en .env'
+      },
       { status: 500 }
     )
   }
