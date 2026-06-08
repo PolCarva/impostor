@@ -2,53 +2,53 @@
 
 import { useEffect } from 'react'
 
-// Lazy load Google Analytics para no bloquear el render inicial
-export function GoogleAnalytics() {
-  useEffect(() => {
-    // Cargar GTM después de la hidratación para no bloquear LCP
-    const loadGTM = () => {
-      // Configurar gtag global
-      window.dataLayer = window.dataLayer || [];
-      function gtag(...args: any[]) {
-        window.dataLayer.push(args);
-      }
+const GA_MEASUREMENT_ID = 'G-6KWCZZKQMJ'
 
-      // Configurar GTM
-      gtag('js', new Date());
-      gtag('config', 'G-6KWCZZKQMJ', {
-        page_title: document.title,
-        page_location: window.location.href,
-      });
-
-      // Cargar el script de GTM
-      const script = document.createElement('script');
-      script.src = 'https://www.googletagmanager.com/gtag/js?id=G-6KWCZZKQMJ';
-      script.async = true;
-      document.head.appendChild(script);
-    };
-
-    // Cargar GTM después de un pequeño delay para priorizar el contenido
-    const timer = setTimeout(loadGTM, 100);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  return null; // No renderizar nada, solo configurar
+function initGtagStub() {
+  window.dataLayer = window.dataLayer || []
+  window.gtag = function gtag() {
+    // Formato oficial de Google: push(arguments), no rest params
+    window.dataLayer.push(arguments)
+  }
 }
 
 // Extender window para TypeScript
 declare global {
   interface Window {
-    dataLayer: any[];
-    gtag: (...args: any[]) => void;
+    dataLayer: IArguments[]
+    gtag: (...args: any[]) => void
   }
+}
+
+// Lazy load Google Analytics para no bloquear el render inicial
+export function GoogleAnalytics() {
+  useEffect(() => {
+    initGtagStub()
+
+    window.gtag('js', new Date())
+    window.gtag('config', GA_MEASUREMENT_ID, {
+      page_title: document.title,
+      page_location: window.location.href,
+    })
+
+    const script = document.createElement('script')
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`
+    script.async = true
+    document.head.appendChild(script)
+  }, [])
+
+  return null
 }
 
 // Función personalizada de GA que usa gtag directamente
 export function sendGAEvent(eventName: string, parameters?: Record<string, any>) {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', eventName, parameters || {});
+  if (typeof window === 'undefined') return
+
+  if (!window.gtag) {
+    initGtagStub()
   }
+
+  window.gtag('event', eventName, parameters || {})
 }
 
 // ==========================================
