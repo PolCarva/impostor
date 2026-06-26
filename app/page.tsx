@@ -1900,10 +1900,8 @@ function ImpostorGame() {
       const availableModes: GameMode[] = ["classic", "lost", "jester", "chaos"];
       gameModeToUse =
         availableModes[Math.floor(Math.random() * availableModes.length)];
-      setActualGameMode(gameModeToUse);
-    } else {
-      setActualGameMode(selectedGameMode);
     }
+    setActualGameMode(gameModeToUse);
 
     if (players.length < GAME_MODES[selectedGameMode].minPlayers) return;
 
@@ -1970,7 +1968,7 @@ function ImpostorGame() {
     setChaosPlayerWords({});
 
     // Modo Locura: con probabilidad 1/6 o 50% si es random, activar escenarios especiales
-    if (actualGameMode === "chaos") {
+    if (gameModeToUse === "chaos") {
       const chaosSeed = generateGameSeed(players.length, Date.now() + 5);
       const chaosRoll = Math.floor(
         (Math.sin(chaosSeed) * 10000 -
@@ -2093,7 +2091,7 @@ function ImpostorGame() {
     }
 
     // Assign special roles based on game mode
-    if (actualGameMode === "lost") {
+    if (gameModeToUse === "lost") {
       // Select a player who gets a different word (not an impostor) - usar semilla diferente
       const lostSeed = generateGameSeed(players.length, Date.now() + 2);
       const nonImpostorIndices = shuffledIndices.filter(
@@ -2130,7 +2128,7 @@ function ImpostorGame() {
         differentWord = shuffledFallbackWords[0];
       }
       setLostPlayerWord(differentWord);
-    } else if (actualGameMode === "jester") {
+    } else if (gameModeToUse === "jester") {
       // Select a jester (not an impostor) - usar semilla diferente
       const jesterSeed = generateGameSeed(players.length, Date.now() + 4);
       const nonImpostorIndices = shuffledIndices.filter(
@@ -3646,7 +3644,9 @@ function ImpostorGame() {
               </Button>
             </div>
 
-            <div className="text-center mb-4 shrink-0 relative">
+            {/* Contenido scrolleable */}
+            <div className="flex-1 overflow-y-auto overflow-x-hidden pr-2 -mr-2 min-h-0">
+            <div className="text-center mb-4 relative">
               <Button
                 variant="ghost"
                 size="icon"
@@ -3804,8 +3804,6 @@ function ImpostorGame() {
               </p>
             </div>
 
-            {/* Contenido scrolleable */}
-            <div className="flex-1 overflow-y-auto overflow-x-hidden pr-2 -mr-2 min-h-0">
               {/* Categorías Default */}
               <div className="mb-4 overflow-hidden">
                 <h3 className="text-lg font-title font-bold text-foreground mb-2 flex items-center gap-2">
